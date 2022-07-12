@@ -41,15 +41,15 @@ typedef enum speed {
 
 using namespace std;
 
-int main() {
+int write_to_mouse(QByteArray &data) {
     struct libusb_device_handle * device_handle = NULL;
     struct libusb_config_descriptor *cfg_desc = NULL;
     libusb_context *context = NULL;
     int result;
     result = libusb_init(&context);             // Initialize libusb
     if(result < 0) {
-        cout << "Error initializing libusb: " << libusb_error_name(result);
-        exit(-1);
+//        cout << "Error initializing libusb: " << libusb_error_name(result);
+        return -1;
     }
 //    libusb_set_option(context, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_WARNING);      // Set debugging output to max level
     libusb_device **list;
@@ -67,13 +67,13 @@ int main() {
         }
     }
     if(!found) {
-        return 0;
+        return -2;
     }
     libusb_open(found, &device_handle);
     if(!device_handle) {
-        cout << "Error finding USB device" << endl;
+//        cout << "Error finding USB device" << endl;
         libusb_exit(context);
-        exit(-2);
+        return -3;
     }
     // Enable auto-detaching of the kernel driver. If a kernel driver currently has an interface claimed, it will be automatically be detached when we claim that interface.
     // When the interface is restored, the kernel driver is allowed to be re-attached. This can alternatively be manually done via libusb_detach_kernel_driver().
@@ -88,40 +88,54 @@ int main() {
         }
     }
     libusb_detach_kernel_driver(device_handle, interface_number);
-    cout << "Interface number: " << interface_number << endl;
+//    cout << "Interface number: " << interface_number << endl;
     result = libusb_claim_interface(device_handle, interface_number);
     if(result < 0) {
-        cout << "Error claiming interface: " << libusb_error_name(result) << endl;
+//        cout << "Error claiming interface: " << libusb_error_name(result) << endl;
         if(device_handle) {
             libusb_close(device_handle);
         }
         libusb_exit(context);
-        exit(-3);
+        return -4;
     }
-    int curr_mode = STATIC;
-    int curr_dev = TAIL;
-    int curr_speed = SPEED_8 * static_cast<int>(curr_mode > 1);
-    QByteArray arr = "\x4d\xa1";
-    arr.append(curr_dev);
-    arr.append(curr_mode);
-    arr.append(curr_speed);
-    arr.append("\x08\x08");
-    int r = 0;
-    int g = 0;
-    int b = 255;
-    arr.append(r);
-    arr.append(g);
-    arr.append(b);
-    arr.append("\x00", (PACKET_SIZE - arr.count()));
-    result = libusb_control_transfer(device_handle, 0x0021, 0x0009, 0x024d, 0x0001, reinterpret_cast<unsigned char *>(arr.data()), arr.count(), 50);
+    result = libusb_control_transfer(device_handle, 0x0021, 0x0009, 0x024d, 0x0001, reinterpret_cast<unsigned char *>(data.data()), data.count(), 50);
     if((result == LIBUSB_SUCCESS) || (result == PACKET_SIZE)) {
-        cout << "Sucess" << endl;
+        result = 0;
+//        cout << "Sucess" << endl;
     } else {
-        cout << "Failure " << libusb_error_name(result) << ";  code: " << result << endl;
+        result = -5;
+//        cout << "Failure " << libusb_error_name(result) << ";  code: " << result << endl;
     }
     libusb_release_interface(device_handle, interface_number);          // We are done with our device and will now release the interface we previously claimed as well as the device
     libusb_attach_kernel_driver(device_handle, interface_number);
     libusb_close(device_handle);
     libusb_exit(context);                                               // Shutdown libusb
+    return result;
+}
+
+int mouse_set_color_for_device(devices dev, modes mod, speed spd, uint8_t r, uint8_t g, uint8_t b) {
+    QByteArray clr_mod_spd_arr = "\x4d\xa1";
+    clr_mod_spd_arr.append(dev);
+    clr_mod_spd_arr.append(mod);
+    clr_mod_spd_arr.append(spd * static_cast<int>(mod > 1));
+    clr_mod_spd_arr.append("\x08\x08");
+    clr_mod_spd_arr.append(r);
+    clr_mod_spd_arr.append(g);
+    clr_mod_spd_arr.append(b);
+    clr_mod_spd_arr.append("\x00", (PACKET_SIZE - clr_mod_spd_arr.count()));
+    return write_to_mouse(clr_mod_spd_arr);
+}
+
+int mouse_non_sleep() {
+    QByteArray non_sleep_arr = "\x4d\x90\xde\x30\xfe\xff\xff\xff\xda\x98\x20\x76\xd5\xd1\xae\x68\xa0\xe6\xe9\x03\xbc\xd8\x28\x00\xf3\xe0\x81\x77\xb8\xee\x37\x06";
+    return write_to_mouse(non_sleep_arr);
+}
+
+int main() {
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 255;
+    mouse_set_color_for_device(TAIL, STATIC, SPEED_8, r, g, b);
+//    mouse_non_sleep();
     return 0;
 }
