@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
     #define MAINWINDOW_H
 
+    #include <QTimer>
+    #include <QDebug>
     #include <QByteArray>
     #include <QMainWindow>
     #include <QApplication>
@@ -54,6 +56,9 @@
             int mouse_non_sleep();
 
             Ui::MainWindow *ui;
+#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+            QTimer *no_sleep_timer = nullptr;
+#endif
             QList<QString> tail_addtnl_effcts{tr("Tic tac"), tr("Colors changing"), tr("RGB")};
 
             bool mnl_chng_effcts = false;
@@ -63,6 +68,9 @@
             void on_cmbBx_effcts_lst_currentIndexChanged(int index);
             void on_pshBttn_chs_clr_clicked();
             void on_pshBttn_apply_to_mouse_clicked();
+#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+            void slot_timeout();
+#endif
     };
 
 #endif // MAINWINDOW_H

@@ -5,14 +5,24 @@
 #define PRODUCT_ID_WIRE         0x5009
 //#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
 #define PACKET_SIZE             32
+#define MINUTE                  60000
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     emit ui->cmbBx_dev_lst->currentIndexChanged(ui->cmbBx_dev_lst->currentIndex());
     emit ui->cmbBx_effcts_lst->currentIndexChanged(ui->cmbBx_effcts_lst->currentIndex());
+#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+    no_sleep_timer = new QTimer();
+    connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_timeout);
+    slot_timeout();
+#endif
 }
 
 MainWindow::~MainWindow() {
+#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+    no_sleep_timer->stop();
+    delete no_sleep_timer;
+#endif
     delete ui;
 }
 
@@ -56,7 +66,7 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     int result;
     result = libusb_init(&context);             // Initialize libusb
     if(result < 0) {
-//        cout << "Error initializing libusb: " << libusb_error_name(result);
+        qDebug() << "Error initializing libusb: " << libusb_error_name(result);
         return -1;
     }
 //    libusb_set_option(context, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_WARNING);      // Set debugging output to max level
@@ -68,7 +78,7 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     for(int i = 0; i < cnt; i++) {
         device = list[i];
         result = libusb_get_device_descriptor(device, &desc);
-//        cout << "Vendor:Device = " << hex << desc.idVendor << " " << hex << desc.idProduct << dec << i << endl;
+        qDebug() << "Vendor:Device = " << hex << desc.idVendor << " " << hex << desc.idProduct << dec << i << endl;
         if((result == LIBUSB_SUCCESS) && (desc.idVendor == VENDOR_ID) && ((desc.idProduct == PRODUCT_ID_WIRE)/* || (desc.idProduct == PRODUCT_ID_WIRELESS)*/)) {
             found = device;
             break;
@@ -79,7 +89,7 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     }
     libusb_open(found, &device_handle);
     if(!device_handle) {
-//        cout << "Error finding USB device" << endl;
+        qDebug() << "Error finding USB device" << endl;
         libusb_exit(context);
         return -3;
     }
@@ -96,10 +106,10 @@ int MainWindow::write_to_mouse(QByteArray &data) {
         }
     }
     libusb_detach_kernel_driver(device_handle, interface_number);
-//    cout << "Interface number: " << interface_number << endl;
+    qDebug() << "Interface number: " << interface_number << endl;
     result = libusb_claim_interface(device_handle, interface_number);
     if(result < 0) {
-//        cout << "Error claiming interface: " << libusb_error_name(result) << endl;
+        qDebug() << "Error claiming interface: " << libusb_error_name(result) << endl;
         if(device_handle) {
             libusb_close(device_handle);
         }
@@ -109,10 +119,10 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     result = libusb_control_transfer(device_handle, 0x0021, 0x0009, 0x024d, 0x0001, reinterpret_cast<unsigned char *>(data.data()), data.count(), 50);
     if((result == LIBUSB_SUCCESS) || (result == PACKET_SIZE)) {
         result = 0;
-//        cout << "Sucess" << endl;
+        qDebug() << "Sucess" << endl;
     } else {
         result = -5;
-//        cout << "Failure " << libusb_error_name(result) << ";  code: " << result << endl;
+        qDebug() << "Failure " << libusb_error_name(result) << ";  code: " << result << endl;
     }
     libusb_release_interface(device_handle, interface_number);          // We are done with our device and will now release the interface we previously claimed as well as the device
     libusb_attach_kernel_driver(device_handle, interface_number);
@@ -138,3 +148,12 @@ int MainWindow::mouse_non_sleep() {
     QByteArray non_sleep_arr = "\x4d\x90\xde\x30\xfe\xff\xff\xff\xda\x98\x20\x76\xd5\xd1\xae\x68\xa0\xe6\xe9\x03\xbc\xd8\x28\x00\xf3\xe0\x81\x77\xb8\xee\x37\x06";
     return write_to_mouse(non_sleep_arr);
 }
+
+#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+void MainWindow::slot_timeout() {
+    no_sleep_timer->stop();
+    mouse_non_sleep();
+    no_sleep_timer->setInterval(MINUTE);
+    no_sleep_timer->start();
+}
+#endif
