@@ -6,6 +6,33 @@
 #define PRODUCT_ID      0x5009
 #define PACKET_SIZE     32
 
+typedef enum devices {
+    TAIL    = 0,
+    WHEEL   = 1
+} devices;
+
+typedef enum modes {        //modes 2..6 not allowed for WHEEL
+    DISABLE         = 0,
+    STATIC          = 1,
+    BREATH          = 2,
+    TIC_TAC         = 3,
+    TEST_1          = 4,    //has no effect
+    COLORS_CHANGING = 5,
+    RGB             = 6
+} modes;
+
+typedef enum speed {
+    SPEED_WRONG = 0,        //the fastest blink for WHEEL, but has no effect for TAIL, maybe a bug(not usable value)
+    SPEED_1     = 1,
+    SPEED_2     = 2,
+    SPEED_3     = 3,
+    SPEED_4     = 4,
+    SPEED_5     = 5,
+    SPEED_6     = 6,
+    SPEED_7     = 7,
+    SPEED_8     = 8
+} speed;
+
 using namespace std;
 
 int main() {
@@ -49,7 +76,7 @@ int main() {
     libusb_set_auto_detach_kernel_driver(device_handle, 1);
     libusb_get_active_config_descriptor(found, &cfg_desc);
     int interface_number = cfg_desc->interface[0].altsetting[0].bInterfaceNumber;
-    result = libusb_claim_interface(device_handle, interface_number/*1*/);          //need solve the problem, why after 'interface_number' not always working
+    result = libusb_claim_interface(device_handle, /*interface_number*/ 1);          //need solve the problem, why after 'interface_number' not working properly
     if(result < 0) {
         cout << "Error claiming interface: " << libusb_error_name(result) << endl;
         if(device_handle) {
@@ -58,9 +85,16 @@ int main() {
         libusb_exit(context);
         exit(-3);
     }
-    QByteArray arr = "\x4d\xa1\x01\x01\x01\x08\x08";
-    int r = 255;
-    int g = 0;
+    int curr_mode = STATIC;
+    int curr_dev = WHEEL;
+    int curr_speed = SPEED_8 * static_cast<int>(curr_mode > 1);
+    QByteArray arr = "\x4d\xa1";
+    arr.append(curr_dev);
+    arr.append(curr_mode);
+    arr.append(curr_speed);
+    arr.append("\x08\x08");
+    int r = 0;
+    int g = 255;
     int b = 0;
     arr.append(r);
     arr.append(g);
