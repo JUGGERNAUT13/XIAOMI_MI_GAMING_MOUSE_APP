@@ -11,7 +11,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 LIBS += -lusb-1.0
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    mainwindow.cpp
 
 CODECFORSRC = UTF-8
 
@@ -24,3 +25,9 @@ tr.commands = lupdate \"$$_PRO_FILE_\" && lrelease \"$$_PRO_FILE_\"
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    mainwindow.ui
+
+HEADERS += \
+    mainwindow.h
