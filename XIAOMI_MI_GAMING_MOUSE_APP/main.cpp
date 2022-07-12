@@ -1,14 +1,20 @@
 #include <iostream>
-#include <QString>
+#include <QByteArray>
 #include <libusb-1.0/libusb.h>
 
-#define VENDOR_ID       0x2717
-#define PRODUCT_ID      0x5009
-#define PACKET_SIZE     32
+#define VENDOR_ID               0x2717
+#define PRODUCT_ID_WIRE         0x5009
+//#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
+#define PACKET_SIZE             32
+
+typedef enum interface_protocol_type {
+    KEYBOARD        = 1,
+    MOUSE           = 2
+} interface_protocol_type;
 
 typedef enum devices {
-    TAIL    = 0,
-    WHEEL   = 1
+    TAIL            = 0,
+    WHEEL           = 1
 } devices;
 
 typedef enum modes {        //modes 2..6 not allowed for WHEEL
@@ -22,15 +28,15 @@ typedef enum modes {        //modes 2..6 not allowed for WHEEL
 } modes;
 
 typedef enum speed {
-    SPEED_WRONG = 0,        //the fastest blink for WHEEL, but has no effect for TAIL, maybe a bug(not usable value)
-    SPEED_1     = 1,
-    SPEED_2     = 2,
-    SPEED_3     = 3,
-    SPEED_4     = 4,
-    SPEED_5     = 5,
-    SPEED_6     = 6,
-    SPEED_7     = 7,
-    SPEED_8     = 8
+    SPEED_WRONG     = 0,    //the fastest blink for WHEEL, but has no effect for TAIL, maybe a bug(not usable value)
+    SPEED_1         = 1,
+    SPEED_2         = 2,
+    SPEED_3         = 3,
+    SPEED_4         = 4,
+    SPEED_5         = 5,
+    SPEED_6         = 6,
+    SPEED_7         = 7,
+    SPEED_8         = 8
 } speed;
 
 using namespace std;
@@ -55,7 +61,7 @@ int main() {
         device = list[i];
         result = libusb_get_device_descriptor(device, &desc);
 //        cout << "Vendor:Device = " << hex << desc.idVendor << " " << hex << desc.idProduct << dec << i << endl;
-        if((result == LIBUSB_SUCCESS) && (desc.idVendor == VENDOR_ID) && (desc.idProduct == PRODUCT_ID)) {
+        if((result == LIBUSB_SUCCESS) && (desc.idVendor == VENDOR_ID) && ((desc.idProduct == PRODUCT_ID_WIRE)/* || (desc.idProduct == PRODUCT_ID_WIRELESS)*/)) {
             found = device;
             break;
         }
@@ -69,15 +75,21 @@ int main() {
         libusb_exit(context);
         exit(-2);
     }
-    // Enable auto-detaching of the kernel driver.
-    // If a kernel driver currently has an interface claimed, it will be automatically be detached
-    // when we claim that interface. When the interface is restored, the kernel driver is allowed
-    // to be re-attached. This can alternatively be manually done via libusb_detach_kernel_driver().
-    libusb_set_auto_detach_kernel_driver(device_handle, 1);
+    // Enable auto-detaching of the kernel driver. If a kernel driver currently has an interface claimed, it will be automatically be detached when we claim that interface.
+    // When the interface is restored, the kernel driver is allowed to be re-attached. This can alternatively be manually done via libusb_detach_kernel_driver().
+//    libusb_set_auto_detach_kernel_driver(device_handle, 1);
     libusb_get_active_config_descriptor(found, &cfg_desc);
-    int interface_number = cfg_desc->interface[0].altsetting[0].bInterfaceNumber;
+    int interface_number = -1;
+    for(int i = 0; i < static_cast<int>(cfg_desc->bNumInterfaces); i++) {
+        for(int j = 0; j < static_cast<int>(cfg_desc->interface[i].num_altsetting); j++) {
+            if(static_cast<int>(cfg_desc->interface[i].altsetting[j].bInterfaceProtocol) == KEYBOARD) {
+                interface_number = static_cast<int>(cfg_desc->interface[i].altsetting[j].bInterfaceNumber);
+            }
+        }
+    }
+    libusb_detach_kernel_driver(device_handle, interface_number);
     cout << "Interface number: " << interface_number << endl;
-    result = libusb_claim_interface(device_handle, /*interface_number*/ 1);          //need solve the problem, why after 'interface_number' not working properly
+    result = libusb_claim_interface(device_handle, interface_number);
     if(result < 0) {
         cout << "Error claiming interface: " << libusb_error_name(result) << endl;
         if(device_handle) {
@@ -101,16 +113,15 @@ int main() {
     arr.append(g);
     arr.append(b);
     arr.append("\x00", (PACKET_SIZE - arr.count()));
-    result = libusb_control_transfer(device_handle, 0x0021, 0x0009, 0x024d, 0x0001, reinterpret_cast<unsigned char *>(arr.data()), arr.count(), 100);
+    result = libusb_control_transfer(device_handle, 0x0021, 0x0009, 0x024d, 0x0001, reinterpret_cast<unsigned char *>(arr.data()), arr.count(), 50);
     if((result == LIBUSB_SUCCESS) || (result == PACKET_SIZE)) {
         cout << "Sucess" << endl;
     } else {
-        cout << "Failure " << libusb_error_name(result) << endl;
+        cout << "Failure " << libusb_error_name(result) << ";  code: " << result << endl;
     }
-    // We are done with our device and will now release the interface we previously claimed as well as the device
-    libusb_release_interface(device_handle, interface_number);
+    libusb_release_interface(device_handle, interface_number);          // We are done with our device and will now release the interface we previously claimed as well as the device
+    libusb_attach_kernel_driver(device_handle, interface_number);
     libusb_close(device_handle);
-    // Shutdown libusb
-    libusb_exit(context);
+    libusb_exit(context);                                               // Shutdown libusb
     return 0;
 }
