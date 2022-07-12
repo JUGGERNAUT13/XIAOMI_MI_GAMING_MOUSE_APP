@@ -76,6 +76,7 @@ int main() {
     libusb_set_auto_detach_kernel_driver(device_handle, 1);
     libusb_get_active_config_descriptor(found, &cfg_desc);
     int interface_number = cfg_desc->interface[0].altsetting[0].bInterfaceNumber;
+    cout << "Interface number: " << interface_number << endl;
     result = libusb_claim_interface(device_handle, /*interface_number*/ 1);          //need solve the problem, why after 'interface_number' not working properly
     if(result < 0) {
         cout << "Error claiming interface: " << libusb_error_name(result) << endl;
@@ -86,7 +87,7 @@ int main() {
         exit(-3);
     }
     int curr_mode = STATIC;
-    int curr_dev = WHEEL;
+    int curr_dev = TAIL;
     int curr_speed = SPEED_8 * static_cast<int>(curr_mode > 1);
     QByteArray arr = "\x4d\xa1";
     arr.append(curr_dev);
@@ -94,8 +95,8 @@ int main() {
     arr.append(curr_speed);
     arr.append("\x08\x08");
     int r = 0;
-    int g = 255;
-    int b = 0;
+    int g = 0;
+    int b = 255;
     arr.append(r);
     arr.append(g);
     arr.append(b);
