@@ -62,7 +62,43 @@ void MainWindow::on_pshBttn_apply_to_mouse_clicked() {
 }
 
 int MainWindow::write_to_mouse_hid(QByteArray &data) {
-    hid_device *handle = hid_open(VENDOR_ID, PRODUCT_ID_WIRE, NULL);
+    struct hid_device_info *devs = hid_enumerate(0x0, 0x0);
+    struct hid_device_info *cur_dev = nullptr;
+    int cnt = 0;
+    uint crrnt_prdct_id = 0;
+    QList<QString> path_lst;
+    QList<uint> prod_id_lst;
+    while(devs) {
+        if((devs->vendor_id == VENDOR_ID) && ((devs->product_id == PRODUCT_ID_WIRE)/* || (devs->product_id == PRODUCT_ID_WIRELESS)*/) && (devs->interface_number == KEYBOARD) && (crrnt_prdct_id != devs->product_id)) {
+            cur_dev = devs;
+//            qDebug() << "Device Found\n  type: " << hex << cur_dev->vendor_id << " " << cur_dev->product_id << "\n  path: " << cur_dev->path << "\n  serial_number: " << cur_dev->serial_number;
+            crrnt_prdct_id = devs->product_id;
+            path_lst.append(devs->path);
+            prod_id_lst.append(crrnt_prdct_id);
+            cnt++;
+        }
+        devs = devs->next;
+    }
+    hid_free_enumeration(devs);
+    if(!cur_dev) {
+        return -1;
+    }
+    hid_free_enumeration(cur_dev);
+    if(cnt == 2) {
+        crrnt_prdct_id = PRODUCT_ID_WIRE;
+    }
+    QString path;
+    for(int i = 0; i < path_lst.count(); i++) {
+        if(prod_id_lst[i] == crrnt_prdct_id) {
+            path = path_lst[i];
+        }
+    }
+//    hid_device *handle = hid_open(VENDOR_ID, crrnt_prdct_id, NULL);
+//    if(!handle) {
+//        handle = hid_open(VENDOR_ID, PRODUCT_ID_WIRELESS, NULL);
+//    }
+    hid_device *handle = hid_open_path(path.toLatin1().data());
+    ui->centralwidget->setEnabled(crrnt_prdct_id == PRODUCT_ID_WIRE);
     int result = -1;
     if(handle) {
         result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
@@ -74,6 +110,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
         const wchar_t *string = hid_error(handle);
         qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof (string) / sizeof(const wchar_t *))) << ";  code:" << result;
     }
+    hid_close(handle);
     return result;
 }
 
