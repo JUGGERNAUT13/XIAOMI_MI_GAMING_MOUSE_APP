@@ -8,11 +8,27 @@ CONFIG += app c++11
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-LIBS += -lusb-1.0
+linux|macx {
+    LIBS += -ludev -L$$PWD/lib.linux -lhidapi-hidraw
+    PRE_TARGETDEPS += $$PWD/lib.linux/libhidapi-hidraw.a
+}
+
+win32 {
+    LIBS += -L$$PWD/lib.win32/ -lhidapi
+}
+
+INCLUDEPATH += $$PWD
+
+HEADERS += \
+    $$PWD/hidapi.h \
+    $$PWD/mainwindow.h
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp
+    $$PWD/main.cpp \
+    $$PWD/mainwindow.cpp
+
+FORMS += \
+    $$PWD/mainwindow.ui
 
 CODECFORSRC = UTF-8
 
@@ -25,9 +41,3 @@ tr.commands = lupdate \"$$_PRO_FILE_\" && lrelease \"$$_PRO_FILE_\"
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-FORMS += \
-    mainwindow.ui
-
-HEADERS += \
-    mainwindow.h

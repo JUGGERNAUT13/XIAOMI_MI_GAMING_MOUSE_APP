@@ -6,9 +6,9 @@
     #include <QMainWindow>
     #include <QApplication>
     #include <QColorDialog>
-    #include <libusb-1.0/libusb.h>
+    #include "hidapi.h"
 
-//    #define USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+    #define USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
 
     namespace Ui {
         class MainWindow;
@@ -52,9 +52,11 @@
                 SPEED_8         = 8
             } speed;
 
-            int write_to_mouse(QByteArray &data);
+            int write_to_mouse_hid(QByteArray &data);
             int mouse_set_color_for_device(devices dev, effects effct, speed spd, uint8_t r, uint8_t g, uint8_t b);
+#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
             int mouse_non_sleep();
+#endif
 
             Ui::MainWindow *ui;
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
