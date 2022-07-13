@@ -30,6 +30,9 @@ SOURCES += \
 FORMS += \
     $$PWD/mainwindow.ui
 
+RESOURCES += \
+    images.qrc
+
 CODECFORSRC = UTF-8
 
 system(lrelease \"$$_PRO_FILE_\")

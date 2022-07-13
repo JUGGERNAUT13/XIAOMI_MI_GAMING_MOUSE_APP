@@ -5,12 +5,40 @@
 #define PRODUCT_ID_WIRE         0x5009
 //#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
 #define PACKET_SIZE             32
-#define MINUTE                  60000
+#define MINUTE                  290000
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     emit ui->cmbBx_dev_lst->currentIndexChanged(ui->cmbBx_dev_lst->currentIndex());
     emit ui->cmbBx_effcts_lst->currentIndexChanged(ui->cmbBx_effcts_lst->currentIndex());
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
+    connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
+    connect(ui->pshBttn_mnmz, &QPushButton::clicked, this, &MainWindow::hide);
+    minimizeAction = new QAction(tr("Minimize"), this);
+    connect(minimizeAction, &QAction::triggered, this, &MainWindow::hide);
+    maximizeAction = new QAction(tr("Maximize"), this);
+    connect(maximizeAction, &QAction::triggered, this, &MainWindow::showMaximized);
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, &QAction::triggered, this, &MainWindow::showNormal);
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
+    connect(trayIcon, &QSystemTrayIcon::activated, this, [=]() {
+        if(QApplication::mouseButtons().testFlag(Qt::LeftButton)) {
+            this->setVisible(!this->isVisible());
+        }
+    });
+    QIcon ico(":/images/icon.ico");
+    trayIcon->setIcon(ico);
+    qApp->setWindowIcon(ico);
+    trayIcon->show();
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
     no_sleep_timer = new QTimer();
     connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_timeout);
@@ -23,6 +51,12 @@ MainWindow::~MainWindow() {
     no_sleep_timer->stop();
     delete no_sleep_timer;
 #endif
+    delete minimizeAction;
+    delete maximizeAction;
+    delete restoreAction;
+    delete quitAction;
+    delete trayIconMenu;
+    delete trayIcon;
     delete ui;
 }
 
@@ -142,3 +176,20 @@ void MainWindow::slot_timeout() {
     no_sleep_timer->start();
 }
 #endif
+
+void MainWindow::resizeEvent(QResizeEvent *) {
+    QPixmap bkgnd(":/images/background.png");
+    QPixmap bkgnd_sldr(":/images/background_slider.png");
+    QPalette main_palette;
+    main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    this->setPalette(main_palette);
+    ui->label->setPixmap(QPixmap(bkgnd_sldr.scaled(ui->label->width(), this->size().height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    clck_pos = event->pos();
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event) {
+    move((event->globalX() - clck_pos.x()), (event->globalY() - clck_pos.y()));
+}

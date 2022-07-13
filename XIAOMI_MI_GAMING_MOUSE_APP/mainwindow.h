@@ -1,11 +1,14 @@
 #ifndef MAINWINDOW_H
     #define MAINWINDOW_H
 
+    #include <QMenu>
     #include <QTimer>
     #include <QDebug>
+    #include <QMouseEvent>
     #include <QMainWindow>
     #include <QApplication>
     #include <QColorDialog>
+    #include <QSystemTrayIcon>
     #include "hidapi.h"
 
     #define USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
@@ -62,7 +65,14 @@
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
             QTimer *no_sleep_timer = nullptr;
 #endif
+            QAction *minimizeAction = nullptr;
+            QAction *maximizeAction = nullptr;
+            QAction *restoreAction = nullptr;
+            QAction *quitAction = nullptr;
+            QMenu *trayIconMenu = nullptr;
+            QSystemTrayIcon *trayIcon = nullptr;
             QList<QString> tail_addtnl_effcts{tr("Tic tac"), tr("Colors changing"), tr("RGB")};
+            QPoint clck_pos;
 
             bool mnl_chng_effcts = false;
 
@@ -74,6 +84,9 @@
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
             void slot_timeout();
 #endif
+            void resizeEvent(QResizeEvent *) override;
+            void mousePressEvent(QMouseEvent *event) override;
+            void mouseMoveEvent(QMouseEvent *event) override;
     };
 
 #endif // MAINWINDOW_H
