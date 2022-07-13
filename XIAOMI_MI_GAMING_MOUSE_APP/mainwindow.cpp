@@ -44,17 +44,19 @@ void MainWindow::on_cmbBx_effcts_lst_currentIndexChanged(int index) {
 void MainWindow::on_pshBttn_chs_clr_clicked() {
     QColorDialog dlg(this);
     dlg.setOption(QColorDialog::DontUseNativeDialog, true);
-    dlg.setCurrentColor(QColor(ui->pshBttn_chs_clr->styleSheet().split(" ").last()));
+    dlg.setCurrentColor(QColor(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last()));
     if(dlg.exec() == QDialog::Accepted) {
         QColor color = dlg.selectedColor();
         if(color.isValid()) {
-            ui->pshBttn_chs_clr->setStyleSheet("background-color: " + color.name());
+            QColor dsbl_color(color.red(), color.green(), color.blue(), 127);
+            ui->pshBttn_chs_clr->setStyleSheet("QPushButton{background-color: " + color.name(QColor::HexArgb) + "; " + "border: 0px;}\n"
+                                               "QPushButton:disabled{background-color: " + dsbl_color.name(QColor::HexArgb) + "; " + "border: 0px;}");
         }
     }
 }
 
 void MainWindow::on_pshBttn_apply_to_mouse_clicked() {
-    QColor clr(ui->pshBttn_chs_clr->styleSheet().split(" ").last());
+    QColor clr(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last());
     int effct = ui->cmbBx_effcts_lst->currentIndex() + static_cast<int>(ui->cmbBx_effcts_lst->currentIndex() > TIC_TAC);
     mouse_set_color_for_device(static_cast<devices>(ui->cmbBx_dev_lst->currentIndex()), static_cast<effects>(effct), static_cast<speed>(ui->hrzntlSldr_effct_spd->value()), clr.red(), clr.green(), clr.blue());
 }
@@ -78,7 +80,7 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     for(int i = 0; i < cnt; i++) {
         device = list[i];
         result = libusb_get_device_descriptor(device, &desc);
-        qDebug() << "Vendor:Device = " << hex << desc.idVendor << " " << hex << desc.idProduct << dec << i << endl;
+//        qDebug() << "Vendor:Device = " << hex << desc.idVendor << " " << hex << desc.idProduct << dec << i;
         if((result == LIBUSB_SUCCESS) && (desc.idVendor == VENDOR_ID) && ((desc.idProduct == PRODUCT_ID_WIRE)/* || (desc.idProduct == PRODUCT_ID_WIRELESS)*/)) {
             found = device;
             break;
@@ -89,7 +91,7 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     }
     libusb_open(found, &device_handle);
     if(!device_handle) {
-        qDebug() << "Error finding USB device" << endl;
+        qDebug() << "Error finding USB device";
         libusb_exit(context);
         return -3;
     }
@@ -105,11 +107,15 @@ int MainWindow::write_to_mouse(QByteArray &data) {
             }
         }
     }
-    libusb_detach_kernel_driver(device_handle, interface_number);
-    qDebug() << "Interface number: " << interface_number << endl;
+    bool flg_active = static_cast<bool>(libusb_kernel_driver_active(device_handle, interface_number));
+    if(flg_active) {
+        libusb_detach_kernel_driver(device_handle, interface_number);
+//        qDebug() << "Detached";
+    }
+//    qDebug() << "Interface number: " << interface_number;
     result = libusb_claim_interface(device_handle, interface_number);
     if(result < 0) {
-        qDebug() << "Error claiming interface: " << libusb_error_name(result) << endl;
+        qDebug() << "Error claiming interface: " << libusb_error_name(result);
         if(device_handle) {
             libusb_close(device_handle);
         }
@@ -119,15 +125,21 @@ int MainWindow::write_to_mouse(QByteArray &data) {
     result = libusb_control_transfer(device_handle, 0x0021, 0x0009, 0x024d, 0x0001, reinterpret_cast<unsigned char *>(data.data()), data.count(), 50);
     if((result == LIBUSB_SUCCESS) || (result == PACKET_SIZE)) {
         result = 0;
-        qDebug() << "Sucess" << endl;
+//        qDebug() << "Sucess";
     } else {
         result = -5;
-        qDebug() << "Failure " << libusb_error_name(result) << ";  code: " << result << endl;
+        qDebug() << "Failure " << libusb_error_name(result) << ";  code: " << result;
     }
     libusb_release_interface(device_handle, interface_number);          // We are done with our device and will now release the interface we previously claimed as well as the device
-    libusb_attach_kernel_driver(device_handle, interface_number);
+//    qDebug() << "Released";
+    if(flg_active) {
+        libusb_attach_kernel_driver(device_handle, interface_number);
+//        qDebug() << "Attached";
+    }
     libusb_close(device_handle);
+//    qDebug() << "Lib closed";
     libusb_exit(context);                                               // Shutdown libusb
+//    qDebug() << "Context exit";
     return result;
 }
 

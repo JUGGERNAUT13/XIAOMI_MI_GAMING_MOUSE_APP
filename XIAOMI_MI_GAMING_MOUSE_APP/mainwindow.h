@@ -3,11 +3,12 @@
 
     #include <QTimer>
     #include <QDebug>
-    #include <QByteArray>
     #include <QMainWindow>
     #include <QApplication>
     #include <QColorDialog>
     #include <libusb-1.0/libusb.h>
+
+//    #define USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
 
     namespace Ui {
         class MainWindow;

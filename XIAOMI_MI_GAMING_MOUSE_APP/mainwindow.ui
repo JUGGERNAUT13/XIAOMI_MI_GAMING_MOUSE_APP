@@ -306,8 +306,21 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="styleSheet">
-          <string notr="true">background-color: #FF00FF00</string>
+          <string notr="true">QPushButton {
+background-color: #FF00FF00;
+border: 0px;
+}
+QPushButton:disabled {
+background-color: #7F00FF00;
+border: 0px;
+}</string>
          </property>
          <property name="text">
           <string notr="true"/>
