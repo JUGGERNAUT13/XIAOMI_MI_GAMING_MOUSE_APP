@@ -89,7 +89,7 @@
             bool mnl_chng_effcts = false;
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
-            int16_t img_cnt_dir = -1;
+            int8_t img_cnt_dir = -1;
 
 
         private slots:
@@ -101,6 +101,7 @@
             void slot_no_sleep_timeout();
 #endif
             void slot_anim_timeout();
+            void showEvent(QShowEvent *) override;
             void resizeEvent(QResizeEvent *) override;
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;

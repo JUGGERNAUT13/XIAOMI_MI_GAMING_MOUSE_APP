@@ -36,11 +36,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             this->setVisible(!this->isVisible());
         }
     });
+    anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
     QIcon ico(":/images/icon.ico");
     trayIcon->setIcon(ico);
     qApp->setWindowIcon(ico);
     trayIcon->show();
-    std::function<void(int16_t crnt_val, int16_t end_val, int16_t cnt_dir)> anim_1 = [=](int16_t crnt_val, int16_t end_val, int16_t cnt_dir) {
+    std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_1 = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
         if(ui->pshBttn_bttns_top->isChecked()) {
             anim_img_nam = "positionToStrabismus_0";
         } else {
@@ -68,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         }
         slot_anim_timeout();
     };
-    std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int16_t cnt_dir)> anim_3 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int16_t cnt_dir) {
+    std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_3 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
         anim_img_nam = img_nam;
         crrnt_img = crnt_val;
         img_end_val = end_val;
@@ -204,7 +205,8 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
     }
     hid_free_enumeration(devs);
     if(!cur_dev) {
-        ui->centralwidget->setEnabled(false);
+        ui->frm_main->setEnabled(false);
+        ui->frm_slider->setEnabled(false);
         return -1;
     }
     hid_free_enumeration(cur_dev);
@@ -222,7 +224,8 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
 //        handle = hid_open(VENDOR_ID, PRODUCT_ID_WIRELESS, NULL);
 //    }
     hid_device *handle = hid_open_path(path.toLatin1().data());
-    ui->centralwidget->setEnabled(crrnt_prdct_id == PRODUCT_ID_WIRE);
+    ui->frm_main->setEnabled(crrnt_prdct_id == PRODUCT_ID_WIRE);
+    ui->frm_slider->setEnabled(crrnt_prdct_id == PRODUCT_ID_WIRE);
     int result = -1;
     if(handle) {
         result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
@@ -279,7 +282,13 @@ void MainWindow::slot_anim_timeout() {
     if(crrnt_img != img_end_val) {
         anim_timer->setInterval(ANIM_INTERVAL_MS);
         anim_timer->start();
+    } else {
+        anim_img_nam = ":/images/anim/" + anim_img_nam + tmp + ".png";
     }
+}
+
+void MainWindow::showEvent(QShowEvent *) {
+    resizeEvent(nullptr);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *) {
@@ -288,8 +297,8 @@ void MainWindow::resizeEvent(QResizeEvent *) {
     main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     this->setPalette(main_palette);
     ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
-    QPixmap mouse_img(":/images/anim/positionToStrabismus_015.png");
-    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    QPixmap mouse_img(anim_img_nam);
+    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->frm_main->width(), (ui->frm_main->height() / 2), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
