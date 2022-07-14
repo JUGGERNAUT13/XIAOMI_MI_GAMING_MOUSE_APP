@@ -5,7 +5,8 @@
 #define PRODUCT_ID_WIRE         0x5009
 //#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
 #define PACKET_SIZE             32
-#define MINUTE                  290000
+#define NO_SLEEP_INTERVAL_MS    290000
+#define ANIM_INTERVAL_MS        30
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -39,10 +40,96 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     trayIcon->setIcon(ico);
     qApp->setWindowIcon(ico);
     trayIcon->show();
+    std::function<void(int16_t crnt_val, int16_t end_val, int16_t cnt_dir)> anim_1 = [=](int16_t crnt_val, int16_t end_val, int16_t cnt_dir) {
+        if(ui->pshBttn_bttns_top->isChecked()) {
+            anim_img_nam = "positionToStrabismus_0";
+        } else {
+            anim_img_nam = "siderToStrabismus_0";
+        }
+        crrnt_img = crnt_val;
+        img_end_val = end_val;
+        img_cnt_dir = cnt_dir;
+        slot_anim_timeout();
+    };
+    std::function<void(pages crrnt_page)> anim_2 = [=](pages crrnt_page) {
+        if(ui->pshBttn_bttns_top->isChecked()) {
+            anim_img_nam = "trailToPosition_0";
+        } else {
+            anim_img_nam = "siderToTrail_0";
+        }
+        if(((crrnt_page == LIGHTNING) && ui->pshBttn_bttns_top->isChecked()) || ((crrnt_page == BUTTONS) && !ui->pshBttn_bttns_top->isChecked()))  {
+            crrnt_img = 15;
+            img_end_val = -1;
+            img_cnt_dir = -1;
+        } else {
+            crrnt_img = 0;
+            img_end_val = 16;
+            img_cnt_dir = 1;
+        }
+        slot_anim_timeout();
+    };
+    std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int16_t cnt_dir)> anim_3 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int16_t cnt_dir) {
+        anim_img_nam = img_nam;
+        crrnt_img = crnt_val;
+        img_end_val = end_val;
+        img_cnt_dir = cnt_dir;
+        slot_anim_timeout();
+    };
+    QVector<QPushButton *>bttns_lst {ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
+    for(int i = 0; i < bttns_lst.count(); i++) {
+        connect(bttns_lst[i], &QPushButton::clicked, this, [=]() {
+            ui->stckdWdgt_main_pages->setCurrentIndex(i);
+            prev_page = crrnt_page;
+            crrnt_page = static_cast<pages>(i);
+            if((prev_page == HOME) || (prev_page == SPEED) || (prev_page == UPDATE)) {
+                if(crrnt_page == BUTTONS) {
+                    anim_1(15, -1, -1);
+                } else if((crrnt_page == LIGHTNING) && ui->pshBttn_lghtnng_tail->isChecked()) {
+                    anim_3("trailToStrabismus_0", 15, -1, -1);
+                }
+            } else if(prev_page == BUTTONS) {
+                if((crrnt_page == HOME) || (crrnt_page == SPEED) || (crrnt_page == UPDATE)) {
+                    anim_1(0, 16, 1);
+                } else if(crrnt_page == LIGHTNING) {
+                    if(ui->pshBttn_lghtnng_head->isChecked()) {
+                        anim_1(0, 16, 1);
+                    } else {
+                        anim_2(crrnt_page);
+                    }
+                }
+            } else if(prev_page == LIGHTNING) {
+                if((crrnt_page == HOME) || (crrnt_page == SPEED) || (crrnt_page == UPDATE)) {
+                    if(ui->pshBttn_lghtnng_tail->isChecked()) {
+                        anim_3("trailToStrabismus_0", 0, 16, 1);
+                    }
+                } else if(crrnt_page == BUTTONS) {
+                    if(ui->pshBttn_lghtnng_head->isChecked()) {
+                        anim_1(15, -1, -1);
+                    } else {
+                        anim_2(crrnt_page);
+                    }
+                }
+            }
+        });
+    }
+    connect(ui->pshBttn_bttns_top, &QPushButton::clicked, this, [=]() {
+        anim_3("siderToPosition_0", 0, 16, 1);
+    });
+    connect(ui->pshBttn_bttns_side, &QPushButton::clicked, this, [=]() {
+        anim_3("siderToPosition_0", 15, -1, -1);
+    });
+    connect(ui->pshBttn_lghtnng_head, &QPushButton::clicked, this, [=]() {
+        anim_3("trailToStrabismus_0", 0, 16, 1);
+    });
+    connect(ui->pshBttn_lghtnng_tail, &QPushButton::clicked, this, [=]() {
+        anim_3("trailToStrabismus_0", 15, -1, -1);
+    });
+    anim_timer = new QTimer();
+    connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
     no_sleep_timer = new QTimer();
-    connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_timeout);
-    slot_timeout();
+    connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_no_sleep_timeout);
+    slot_no_sleep_timeout();
 #endif
 }
 
@@ -51,6 +138,8 @@ MainWindow::~MainWindow() {
     no_sleep_timer->stop();
     delete no_sleep_timer;
 #endif
+    anim_timer->stop();
+    delete anim_timer;
     delete minimizeAction;
     delete maximizeAction;
     delete restoreAction;
@@ -115,6 +204,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
     }
     hid_free_enumeration(devs);
     if(!cur_dev) {
+        ui->centralwidget->setEnabled(false);
         return -1;
     }
     hid_free_enumeration(cur_dev);
@@ -169,21 +259,37 @@ int MainWindow::mouse_non_sleep() {
     return write_to_mouse_hid(non_sleep_arr);
 }
 
-void MainWindow::slot_timeout() {
+void MainWindow::slot_no_sleep_timeout() {
     no_sleep_timer->stop();
     mouse_non_sleep();
-    no_sleep_timer->setInterval(MINUTE);
+    no_sleep_timer->setInterval(NO_SLEEP_INTERVAL_MS);
     no_sleep_timer->start();
 }
 #endif
 
+void MainWindow::slot_anim_timeout() {
+    anim_timer->stop();
+    QString tmp = QString::number(crrnt_img);
+    if(crrnt_img < 10) {
+        tmp.prepend("0");
+    }
+    QPixmap mouse_img(":/images/anim/" + anim_img_nam + tmp + ".png");
+    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    crrnt_img += img_cnt_dir;
+    if(crrnt_img != img_end_val) {
+        anim_timer->setInterval(ANIM_INTERVAL_MS);
+        anim_timer->start();
+    }
+}
+
 void MainWindow::resizeEvent(QResizeEvent *) {
     QPixmap bkgnd(":/images/background.png");
-    QPixmap bkgnd_sldr(":/images/background_slider.png");
     QPalette main_palette;
     main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     this->setPalette(main_palette);
-    ui->label->setPixmap(QPixmap(bkgnd_sldr.scaled(ui->label->width(), this->size().height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));
+    ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
+    QPixmap mouse_img(":/images/anim/positionToStrabismus_015.png");
+    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
