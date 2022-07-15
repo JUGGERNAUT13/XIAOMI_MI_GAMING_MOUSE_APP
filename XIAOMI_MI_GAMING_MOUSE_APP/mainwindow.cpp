@@ -41,40 +41,32 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     trayIcon->setIcon(ico);
     qApp->setWindowIcon(ico);
     trayIcon->show();
-    std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_1 = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
-        if(ui->pshBttn_bttns_top->isChecked()) {
-            anim_img_nam = "positionToStrabismus_0";
-        } else {
-            anim_img_nam = "siderToStrabismus_0";
-        }
+    std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_1 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
+        anim_img_nam = img_nam;
         crrnt_img = crnt_val;
         img_end_val = end_val;
         img_cnt_dir = cnt_dir;
         slot_anim_timeout();
     };
-    std::function<void(pages crrnt_page)> anim_2 = [=](pages crrnt_page) {
+    std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_2 = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
+        if(ui->pshBttn_bttns_top->isChecked()) {
+            anim_img_nam = "positionToStrabismus_0";
+        } else {
+            anim_img_nam = "siderToStrabismus_0";
+        }
+        anim_1(anim_img_nam, crnt_val, end_val, cnt_dir);
+    };
+    std::function<void(pages crrnt_page)> anim_3 = [=](pages crrnt_page) {
         if(ui->pshBttn_bttns_top->isChecked()) {
             anim_img_nam = "trailToPosition_0";
         } else {
             anim_img_nam = "siderToTrail_0";
         }
         if(((crrnt_page == LIGHTNING) && ui->pshBttn_bttns_top->isChecked()) || ((crrnt_page == BUTTONS) && !ui->pshBttn_bttns_top->isChecked()))  {
-            crrnt_img = 15;
-            img_end_val = -1;
-            img_cnt_dir = -1;
+            anim_1(anim_img_nam, 15, -1, -1);
         } else {
-            crrnt_img = 0;
-            img_end_val = 16;
-            img_cnt_dir = 1;
+            anim_1(anim_img_nam, 0, 16, 1);
         }
-        slot_anim_timeout();
-    };
-    std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_3 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
-        anim_img_nam = img_nam;
-        crrnt_img = crnt_val;
-        img_end_val = end_val;
-        img_cnt_dir = cnt_dir;
-        slot_anim_timeout();
     };
     QVector<QPushButton *>bttns_lst {ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
     for(int i = 0; i < bttns_lst.count(); i++) {
@@ -84,46 +76,46 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             crrnt_page = static_cast<pages>(i);
             if((prev_page == HOME) || (prev_page == SPEED) || (prev_page == UPDATE)) {
                 if(crrnt_page == BUTTONS) {
-                    anim_1(15, -1, -1);
+                    anim_2(15, -1, -1);
                 } else if((crrnt_page == LIGHTNING) && ui->pshBttn_lghtnng_tail->isChecked()) {
-                    anim_3("trailToStrabismus_0", 15, -1, -1);
+                    anim_1("trailToStrabismus_0", 15, -1, -1);
                 }
             } else if(prev_page == BUTTONS) {
                 if((crrnt_page == HOME) || (crrnt_page == SPEED) || (crrnt_page == UPDATE)) {
-                    anim_1(0, 16, 1);
+                    anim_2(0, 16, 1);
                 } else if(crrnt_page == LIGHTNING) {
                     if(ui->pshBttn_lghtnng_head->isChecked()) {
-                        anim_1(0, 16, 1);
+                        anim_2(0, 16, 1);
                     } else {
-                        anim_2(crrnt_page);
+                        anim_3(crrnt_page);
                     }
                 }
             } else if(prev_page == LIGHTNING) {
                 if((crrnt_page == HOME) || (crrnt_page == SPEED) || (crrnt_page == UPDATE)) {
                     if(ui->pshBttn_lghtnng_tail->isChecked()) {
-                        anim_3("trailToStrabismus_0", 0, 16, 1);
+                        anim_1("trailToStrabismus_0", 0, 16, 1);
                     }
                 } else if(crrnt_page == BUTTONS) {
                     if(ui->pshBttn_lghtnng_head->isChecked()) {
-                        anim_1(15, -1, -1);
+                        anim_2(15, -1, -1);
                     } else {
-                        anim_2(crrnt_page);
+                        anim_3(crrnt_page);
                     }
                 }
             }
         });
     }
     connect(ui->pshBttn_bttns_top, &QPushButton::clicked, this, [=]() {
-        anim_3("siderToPosition_0", 0, 16, 1);
+        anim_1("siderToPosition_0", 0, 16, 1);
     });
     connect(ui->pshBttn_bttns_side, &QPushButton::clicked, this, [=]() {
-        anim_3("siderToPosition_0", 15, -1, -1);
+        anim_1("siderToPosition_0", 15, -1, -1);
     });
     connect(ui->pshBttn_lghtnng_head, &QPushButton::clicked, this, [=]() {
-        anim_3("trailToStrabismus_0", 0, 16, 1);
+        anim_1("trailToStrabismus_0", 0, 16, 1);
     });
     connect(ui->pshBttn_lghtnng_tail, &QPushButton::clicked, this, [=]() {
-        anim_3("trailToStrabismus_0", 15, -1, -1);
+        anim_1("trailToStrabismus_0", 15, -1, -1);
     });
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
