@@ -84,7 +84,7 @@
             QPoint clck_pos;
             QString anim_img_nam;
             pages crrnt_page = HOME;
-            pages prev_page = BUTTONS;
+            pages prev_page = HOME;
 
             bool mnl_chng_effcts = false;
             int16_t crrnt_img = -1;
@@ -93,7 +93,6 @@
 
 
         private slots:
-            void on_cmbBx_dev_lst_currentIndexChanged(int index);
             void on_cmbBx_effcts_lst_currentIndexChanged(int index);
             void on_pshBttn_chs_clr_clicked();
             void on_pshBttn_apply_to_mouse_clicked();

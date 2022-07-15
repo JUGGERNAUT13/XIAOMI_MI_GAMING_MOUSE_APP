@@ -10,10 +10,9 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    emit ui->cmbBx_dev_lst->currentIndexChanged(ui->cmbBx_dev_lst->currentIndex());
     emit ui->cmbBx_effcts_lst->currentIndexChanged(ui->cmbBx_effcts_lst->currentIndex());
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
-    connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
+    connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::hide/*close*/);
     connect(ui->pshBttn_mnmz, &QPushButton::clicked, this, &MainWindow::hide);
     minimizeAction = new QAction(tr("Minimize"), this);
     connect(minimizeAction, &QAction::triggered, this, &MainWindow::hide);
@@ -105,6 +104,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             }
         });
     }
+    std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> change_currnt_dev = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
+        if(ui->pshBttn_lghtnng_tail->isChecked() && (ui->cmbBx_effcts_lst->count() < COLORS_CHANGING)) {
+            ui->cmbBx_effcts_lst->addItems(tail_addtnl_effcts);
+        } else if(ui->pshBttn_lghtnng_head->isChecked() && (ui->cmbBx_effcts_lst->count() > TIC_TAC)) {
+            while(ui->cmbBx_effcts_lst->count() > TIC_TAC) {
+                ui->cmbBx_effcts_lst->removeItem(ui->cmbBx_effcts_lst->count() - 1);
+            }
+        }
+        anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
+    };
     connect(ui->pshBttn_bttns_top, &QPushButton::clicked, this, [=]() {
         anim_1("siderToPosition_0", 0, 16, 1);
     });
@@ -112,10 +121,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         anim_1("siderToPosition_0", 15, -1, -1);
     });
     connect(ui->pshBttn_lghtnng_head, &QPushButton::clicked, this, [=]() {
-        anim_1("trailToStrabismus_0", 0, 16, 1);
+        change_currnt_dev(0, 16, 1);
     });
     connect(ui->pshBttn_lghtnng_tail, &QPushButton::clicked, this, [=]() {
-        anim_1("trailToStrabismus_0", 15, -1, -1);
+        change_currnt_dev(15, -1, -1);
     });
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
@@ -142,16 +151,6 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::on_cmbBx_dev_lst_currentIndexChanged(int index) {
-    if((index == TAIL) && (ui->cmbBx_effcts_lst->count() < COLORS_CHANGING)) {
-        ui->cmbBx_effcts_lst->addItems(tail_addtnl_effcts);
-    } else if((index == WHEEL) && (ui->cmbBx_effcts_lst->count() > TIC_TAC)) {
-        while(ui->cmbBx_effcts_lst->count() > TIC_TAC) {
-            ui->cmbBx_effcts_lst->removeItem(ui->cmbBx_effcts_lst->count() - 1);
-        }
-    }
-}
-
 void MainWindow::on_cmbBx_effcts_lst_currentIndexChanged(int index) {
     ui->frm_spd->setEnabled(index > STATIC);
     ui->frm_clr->setEnabled(((index + static_cast<int>(ui->cmbBx_effcts_lst->currentIndex() > TIC_TAC)) < COLORS_CHANGING) && (index > DISABLE));
@@ -174,7 +173,7 @@ void MainWindow::on_pshBttn_chs_clr_clicked() {
 void MainWindow::on_pshBttn_apply_to_mouse_clicked() {
     QColor clr(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last());
     int effct = ui->cmbBx_effcts_lst->currentIndex() + static_cast<int>(ui->cmbBx_effcts_lst->currentIndex() > TIC_TAC);
-    mouse_set_color_for_device(static_cast<devices>(ui->cmbBx_dev_lst->currentIndex()), static_cast<effects>(effct), static_cast<speed>(ui->hrzntlSldr_effct_spd->value()), clr.red(), clr.green(), clr.blue());
+    mouse_set_color_for_device(static_cast<devices>(ui->pshBttn_lghtnng_head->isChecked()), static_cast<effects>(effct), static_cast<speed>(ui->hrzntlSldr_effct_spd->value()), clr.red(), clr.green(), clr.blue());
 }
 
 int MainWindow::write_to_mouse_hid(QByteArray &data) {
@@ -290,7 +289,7 @@ void MainWindow::resizeEvent(QResizeEvent *) {
     this->setPalette(main_palette);
     ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
     QPixmap mouse_img(anim_img_nam);
-    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->frm_main->width(), (ui->frm_main->height() / 2), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->frm_main->width(), ((static_cast<double>(ui->frm_main->height()) / 9.0) * 5.0), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
