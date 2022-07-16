@@ -63,7 +63,7 @@
                 UPDATE          = 4
             } pages;
 
-            int write_to_mouse_hid(QByteArray &data);
+            int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
             int mouse_non_sleep();
@@ -80,11 +80,16 @@
             QAction *quitAction = nullptr;
             QMenu *trayIconMenu = nullptr;
             QSystemTrayIcon *trayIcon = nullptr;
-            QList<QString> tail_addtnl_effcts{tr("Tic tac"), tr("Colors changing"), tr("RGB")};
-            QPoint clck_pos;
             QString anim_img_nam;
+            QString crrnt_tail_clr;
+            QString crrnt_wheel_clr;
             pages crrnt_page = HOME;
             pages prev_page = HOME;
+            effects crrnt_tail_effct;
+            effects crrnt_wheel_effct;
+            speed crrnt_tail_spped;
+            speed crrnt_wheel_speed;
+            QPoint clck_pos;
 
             bool mnl_chng_effcts = false;
             bool is_frst_show = true;
@@ -92,7 +97,6 @@
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
             int8_t img_cnt_dir = -1;
-            uint8_t crrnt_effct = 0;
 
         private slots:
             void on_pshBttn_chs_clr_clicked();

@@ -7,6 +7,8 @@
 #define PACKET_SIZE             32
 #define NO_SLEEP_INTERVAL_MS    290000
 #define ANIM_INTERVAL_MS        32
+#define INPUT_PACKET_SIZE       64
+#define PART_SIZE               12
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -21,6 +23,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(restoreAction, &QAction::triggered, this, &MainWindow::showNormal);
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
+    QVector<devices> devs_lst{TAIL, WHEEL};
+    QVector<effects *> devs_effcts_lst{&crrnt_tail_effct, &crrnt_wheel_effct};
+    QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
+    QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
+    QByteArray tmp_out;
+    QByteArray tmp_in;
+    for(int i = 0; i < devs_lst.count(); i++) {
+        tmp_out.clear();
+        tmp_in = {"\x00", INPUT_PACKET_SIZE};
+        tmp_out.append("\x4d\xa0");
+        tmp_out.append(devs_lst[i]);
+        tmp_out.append("\x59");                                                             //UNKNOW_1 (RANDOM ???)
+        tmp_out.append("\x01\x00\x00\x00\x00\x00\x00\x00\xf4\xfc\x28\x00", PART_SIZE);      //PART_1(THE SAME DATA FOR THIS TYPE OF PACKET)
+        tmp_out.append("\xc8\xdd\xed\x03");                                                 //UNKNOW_2 (RANDOM ???)
+        tmp_out.append("\x30\x00\x00\x00\x04\x00\x00\x00\x9c\xfd\x28\x00", PART_SIZE);      //PART_2(THE SAME DATA FOR THIS TYPE OF PACKET)
+        write_to_mouse_hid(tmp_out, true, &tmp_in);
+        *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt() - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt() > TIC_TAC));
+        *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt());
+        *(devs_clrs_lst[i]) = (QColor("#" + QString(tmp_in.mid(8, 3).toHex())).name(QColor::HexArgb));
+    }
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
@@ -36,18 +58,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     });
     QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
     for(int i = 0; i < effects_lst.count(); i++) {
-        connect(effects_lst[i], &QPushButton::clicked, this, [=]() {
+        connect(effects_lst[i], &QPushButton::toggled, this, [=]() {
             ui->frm_spd->setEnabled(i > STATIC);
             ui->frm_clr->setEnabled(((i + static_cast<int>(i > TIC_TAC)) < COLORS_CHANGING) && (i > DISABLE));
-            crrnt_effct = i + static_cast<int>(i > TIC_TAC);
+            QVector<effects *> devs_effcts_lst{&crrnt_tail_effct, &crrnt_wheel_effct};
+            *(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]) = static_cast<effects>(i);
             mouse_set_color_for_device();
         });
     }
-    emit effects_lst.first()->clicked();
     QIcon ico(":/images/icon.ico");
     trayIcon->setIcon(ico);
     qApp->setWindowIcon(ico);
-    trayIcon->show();
     std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_1 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
         anim_img_nam = img_nam;
         crrnt_img = crnt_val;
@@ -79,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     };
     QVector<QPushButton *>bttns_lst {ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
     for(int i = 0; i < bttns_lst.count(); i++) {
-        connect(bttns_lst[i], &QPushButton::clicked, this, [=]() {
+        connect(bttns_lst[i], &QPushButton::toggled, this, [=]() {
             ui->stckdWdgt_main_pages->setCurrentIndex(i);
             prev_page = crrnt_page;
             crrnt_page = static_cast<pages>(i);
@@ -115,21 +136,33 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         });
     }
     std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> change_currnt_dev = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
+        mnl_chng_effcts = true;
+        QVector<effects> devs_effcts_lst{crrnt_tail_effct, crrnt_wheel_effct};
+        QVector<speed> devs_speed_lst{crrnt_tail_spped, crrnt_wheel_speed};
+        QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
+        QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
+        QColor color(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]);
+        QColor dsbl_color(color.red(), color.green(), color.blue(), 127);
+        ui->pshBttn_chs_clr->setStyleSheet("QPushButton{background-color: " + color.name(QColor::HexArgb) + "; " + "border: 0px;}\n"
+                                           "QPushButton:disabled{background-color: " + dsbl_color.name(QColor::HexArgb) + "; " + "border: 0px;}");
+        ui->hrzntlSldr_effct_spd->setValue(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]);
         ui->pshBttn_lghtnng_tic_tac->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
+        effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
         anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
+        mnl_chng_effcts = false;
     };
-    connect(ui->pshBttn_bttns_top, &QPushButton::clicked, this, [=]() {
+    connect(ui->pshBttn_bttns_top, &QPushButton::toggled, this, [=]() {
         anim_1("siderToPosition_0", 0, 16, 1);
     });
-    connect(ui->pshBttn_bttns_side, &QPushButton::clicked, this, [=]() {
+    connect(ui->pshBttn_bttns_side, &QPushButton::toggled, this, [=]() {
         anim_1("siderToPosition_0", 15, -1, -1);
     });
-    connect(ui->pshBttn_lghtnng_head, &QPushButton::clicked, this, [=]() {
+    connect(ui->pshBttn_lghtnng_head, &QPushButton::toggled, this, [=]() {
         change_currnt_dev(0, 16, 1);
     });
-    connect(ui->pshBttn_lghtnng_tail, &QPushButton::clicked, this, [=]() {
+    connect(ui->pshBttn_lghtnng_tail, &QPushButton::toggled, this, [=]() {
         change_currnt_dev(15, -1, -1);
     });
     connect(ui->hrzntlSldr_effct_spd, &QSlider::valueChanged, this, &MainWindow::mouse_set_color_for_device);
@@ -140,8 +173,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_no_sleep_timeout);
     slot_no_sleep_timeout();
 #endif
-    emit ui->pshBttn_lghtnng_head->clicked();
+    ui->pshBttn_lghtnng_head->setChecked(true);
+    emit ui->pshBttn_lghtnng_head->toggled(true);
     anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
+    trayIcon->show();
 }
 
 MainWindow::~MainWindow() {
@@ -175,7 +210,7 @@ void MainWindow::on_pshBttn_chs_clr_clicked() {
     }
 }
 
-int MainWindow::write_to_mouse_hid(QByteArray &data) {
+int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *output) {
     struct hid_device_info *devs = hid_enumerate(0x0, 0x0);
     struct hid_device_info *cur_dev = nullptr;
     int cnt = 0;
@@ -222,6 +257,9 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
     }
     if((result == 0) || (result == PACKET_SIZE)) {
         result = 0;
+        if(read) {
+            result = hid_read(handle, reinterpret_cast<unsigned char *>(output->data()), INPUT_PACKET_SIZE);
+        }
 //        qDebug() << "Sucess";
     } else {
         const wchar_t *string = hid_error(handle);
@@ -234,22 +272,28 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
 int MainWindow::mouse_set_color_for_device() {
     QColor clr(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last());
     QByteArray clr_mod_spd_arr = "\x4d\xa1";
+    QVector<effects> devs_effcts_lst{crrnt_tail_effct, crrnt_wheel_effct};
+    QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
+    QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
+    *(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) = clr.name(QColor::HexArgb);
+    *(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]) = static_cast<speed>(ui->hrzntlSldr_effct_spd->value() * static_cast<int>(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] > 1));
     clr_mod_spd_arr.append(static_cast<devices>(ui->pshBttn_lghtnng_head->isChecked()));
-    clr_mod_spd_arr.append(static_cast<effects>(crrnt_effct));
-    clr_mod_spd_arr.append(static_cast<speed>(ui->hrzntlSldr_effct_spd->value()) * static_cast<int>(crrnt_effct > 1));
+    clr_mod_spd_arr.append(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] + static_cast<int>(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] > TIC_TAC));
+    clr_mod_spd_arr.append(*(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]));
     clr_mod_spd_arr.append("\x08\x08");
     clr_mod_spd_arr.append(clr.red());
     clr_mod_spd_arr.append(clr.green());
     clr_mod_spd_arr.append(clr.blue());
     clr_mod_spd_arr.append("\x00", (PACKET_SIZE - clr_mod_spd_arr.count()));
+    if(mnl_chng_effcts) {
+        return 0;
+    }
     return write_to_mouse_hid(clr_mod_spd_arr);
 }
 
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
 int MainWindow::mouse_non_sleep() {
-    QByteArray non_sleep_arr = "\x4d\x90\xde\x30\xfe\xff\xff\xff\xda\x98\x20\x76\xd5\xd1\xae\x68\xa0\xe6\xe9\x03\xbc\xd8\x28";
-    non_sleep_arr.append("\x00", 1);
-    non_sleep_arr.append("\xf3\xe0\x81\x77\xb8\xee\x37\x06");
+    QByteArray non_sleep_arr{"\x4d\x90\xde\x30\xfe\xff\xff\xff\xda\x98\x20\x76\xd5\xd1\xae\x68\xa0\xe6\xe9\x03\xbc\xd8\x28\x00\xf3\xe0\x81\x77\xb8\xee\x37\x06", PACKET_SIZE};
     return write_to_mouse_hid(non_sleep_arr);
 }
 
