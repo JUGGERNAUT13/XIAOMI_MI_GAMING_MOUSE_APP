@@ -6,13 +6,12 @@
 //#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
 #define PACKET_SIZE             32
 #define NO_SLEEP_INTERVAL_MS    290000
-#define ANIM_INTERVAL_MS        30
+#define ANIM_INTERVAL_MS        32
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    emit ui->cmbBx_effcts_lst->currentIndexChanged(ui->cmbBx_effcts_lst->currentIndex());
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
-    connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::hide/*close*/);
+    connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->pshBttn_mnmz, &QPushButton::clicked, this, &MainWindow::hide);
     minimizeAction = new QAction(tr("Minimize"), this);
     connect(minimizeAction, &QAction::triggered, this, &MainWindow::hide);
@@ -35,7 +34,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             this->setVisible(!this->isVisible());
         }
     });
-    anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
+    QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
+    for(int i = 0; i < effects_lst.count(); i++) {
+        connect(effects_lst[i], &QPushButton::clicked, this, [=]() {
+            ui->frm_spd->setEnabled(i > STATIC);
+            ui->frm_clr->setEnabled(((i + static_cast<int>(i > TIC_TAC)) < COLORS_CHANGING) && (i > DISABLE));
+            crrnt_effct = i + static_cast<int>(i > TIC_TAC);
+            mouse_set_color_for_device();
+        });
+    }
+    emit effects_lst.first()->clicked();
     QIcon ico(":/images/icon.ico");
     trayIcon->setIcon(ico);
     qApp->setWindowIcon(ico);
@@ -45,7 +53,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         crrnt_img = crnt_val;
         img_end_val = end_val;
         img_cnt_dir = cnt_dir;
-        slot_anim_timeout();
+        if(!is_frst_show) {
+            slot_anim_timeout();
+        }
     };
     std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_2 = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
         if(ui->pshBttn_bttns_top->isChecked()) {
@@ -105,13 +115,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         });
     }
     std::function<void(int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> change_currnt_dev = [=](int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
-        if(ui->pshBttn_lghtnng_tail->isChecked() && (ui->cmbBx_effcts_lst->count() < COLORS_CHANGING)) {
-            ui->cmbBx_effcts_lst->addItems(tail_addtnl_effcts);
-        } else if(ui->pshBttn_lghtnng_head->isChecked() && (ui->cmbBx_effcts_lst->count() > TIC_TAC)) {
-            while(ui->cmbBx_effcts_lst->count() > TIC_TAC) {
-                ui->cmbBx_effcts_lst->removeItem(ui->cmbBx_effcts_lst->count() - 1);
-            }
-        }
+        ui->pshBttn_lghtnng_tic_tac->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
+        ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
+        ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
     };
     connect(ui->pshBttn_bttns_top, &QPushButton::clicked, this, [=]() {
@@ -126,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->pshBttn_lghtnng_tail, &QPushButton::clicked, this, [=]() {
         change_currnt_dev(15, -1, -1);
     });
+    connect(ui->hrzntlSldr_effct_spd, &QSlider::valueChanged, this, &MainWindow::mouse_set_color_for_device);
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
@@ -133,6 +140,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_no_sleep_timeout);
     slot_no_sleep_timeout();
 #endif
+    emit ui->pshBttn_lghtnng_head->clicked();
+    anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
 }
 
 MainWindow::~MainWindow() {
@@ -151,11 +160,6 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::on_cmbBx_effcts_lst_currentIndexChanged(int index) {
-    ui->frm_spd->setEnabled(index > STATIC);
-    ui->frm_clr->setEnabled(((index + static_cast<int>(ui->cmbBx_effcts_lst->currentIndex() > TIC_TAC)) < COLORS_CHANGING) && (index > DISABLE));
-}
-
 void MainWindow::on_pshBttn_chs_clr_clicked() {
     QColorDialog dlg(this);
     dlg.setOption(QColorDialog::DontUseNativeDialog, true);
@@ -166,14 +170,9 @@ void MainWindow::on_pshBttn_chs_clr_clicked() {
             QColor dsbl_color(color.red(), color.green(), color.blue(), 127);
             ui->pshBttn_chs_clr->setStyleSheet("QPushButton{background-color: " + color.name(QColor::HexArgb) + "; " + "border: 0px;}\n"
                                                "QPushButton:disabled{background-color: " + dsbl_color.name(QColor::HexArgb) + "; " + "border: 0px;}");
+            mouse_set_color_for_device();
         }
     }
-}
-
-void MainWindow::on_pshBttn_apply_to_mouse_clicked() {
-    QColor clr(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last());
-    int effct = ui->cmbBx_effcts_lst->currentIndex() + static_cast<int>(ui->cmbBx_effcts_lst->currentIndex() > TIC_TAC);
-    mouse_set_color_for_device(static_cast<devices>(ui->pshBttn_lghtnng_head->isChecked()), static_cast<effects>(effct), static_cast<speed>(ui->hrzntlSldr_effct_spd->value()), clr.red(), clr.green(), clr.blue());
 }
 
 int MainWindow::write_to_mouse_hid(QByteArray &data) {
@@ -223,7 +222,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
     }
     if((result == 0) || (result == PACKET_SIZE)) {
         result = 0;
-        qDebug() << "Sucess";
+//        qDebug() << "Sucess";
     } else {
         const wchar_t *string = hid_error(handle);
         qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof (string) / sizeof(const wchar_t *))) << ";  code:" << result;
@@ -232,15 +231,16 @@ int MainWindow::write_to_mouse_hid(QByteArray &data) {
     return result;
 }
 
-int MainWindow::mouse_set_color_for_device(devices dev, effects effct, speed spd, uint8_t r, uint8_t g, uint8_t b) {
+int MainWindow::mouse_set_color_for_device() {
+    QColor clr(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last());
     QByteArray clr_mod_spd_arr = "\x4d\xa1";
-    clr_mod_spd_arr.append(dev);
-    clr_mod_spd_arr.append(effct);
-    clr_mod_spd_arr.append(spd * static_cast<int>(effct > 1));
+    clr_mod_spd_arr.append(static_cast<devices>(ui->pshBttn_lghtnng_head->isChecked()));
+    clr_mod_spd_arr.append(static_cast<effects>(crrnt_effct));
+    clr_mod_spd_arr.append(static_cast<speed>(ui->hrzntlSldr_effct_spd->value()) * static_cast<int>(crrnt_effct > 1));
     clr_mod_spd_arr.append("\x08\x08");
-    clr_mod_spd_arr.append(r);
-    clr_mod_spd_arr.append(g);
-    clr_mod_spd_arr.append(b);
+    clr_mod_spd_arr.append(clr.red());
+    clr_mod_spd_arr.append(clr.green());
+    clr_mod_spd_arr.append(clr.blue());
     clr_mod_spd_arr.append("\x00", (PACKET_SIZE - clr_mod_spd_arr.count()));
     return write_to_mouse_hid(clr_mod_spd_arr);
 }
@@ -279,6 +279,9 @@ void MainWindow::slot_anim_timeout() {
 }
 
 void MainWindow::showEvent(QShowEvent *) {
+    if(is_frst_show) {
+        is_frst_show = false;
+    }
     resizeEvent(nullptr);
 }
 
@@ -289,13 +292,24 @@ void MainWindow::resizeEvent(QResizeEvent *) {
     this->setPalette(main_palette);
     ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
     QPixmap mouse_img(anim_img_nam);
-    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->frm_main->width(), ((static_cast<double>(ui->frm_main->height()) / 9.0) * 5.0), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->frm_main->width(), ((static_cast<double>(ui->frm_main->height()) / 29.0) * 15.0), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
-    clck_pos = event->pos();
+    if(event->button() == Qt::LeftButton) {
+        clck_pos = event->pos();
+        is_drag = true;
+    }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event) {
-    move((event->globalX() - clck_pos.x()), (event->globalY() - clck_pos.y()));
+    if(is_drag) {
+        move((event->globalX() - clck_pos.x()), (event->globalY() - clck_pos.y()));
+    }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
+    if(event->button() == Qt::LeftButton) {
+        is_drag = false;
+    }
 }

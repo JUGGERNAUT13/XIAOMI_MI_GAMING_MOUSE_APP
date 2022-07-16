@@ -64,7 +64,7 @@
             } pages;
 
             int write_to_mouse_hid(QByteArray &data);
-            int mouse_set_color_for_device(devices dev, effects effct, speed spd, uint8_t r, uint8_t g, uint8_t b);
+            int mouse_set_color_for_device();
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
             int mouse_non_sleep();
 #endif
@@ -87,15 +87,15 @@
             pages prev_page = HOME;
 
             bool mnl_chng_effcts = false;
+            bool is_frst_show = true;
+            bool is_drag = false;
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
             int8_t img_cnt_dir = -1;
-
+            uint8_t crrnt_effct = 0;
 
         private slots:
-            void on_cmbBx_effcts_lst_currentIndexChanged(int index);
             void on_pshBttn_chs_clr_clicked();
-            void on_pshBttn_apply_to_mouse_clicked();
 #ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
             void slot_no_sleep_timeout();
 #endif
@@ -104,6 +104,7 @@
             void resizeEvent(QResizeEvent *) override;
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;
+            void mouseReleaseEvent(QMouseEvent *event) override;
     };
 
 #endif // MAINWINDOW_H
