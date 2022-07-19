@@ -1122,12 +1122,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1196,12 +1192,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1270,12 +1262,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1337,12 +1325,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1411,12 +1395,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1485,12 +1465,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1550,6 +1526,13 @@ QPushButton:pressed:hover {
                  <height>30</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <family>Tahoma</family>
+                 <pointsize>11</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="frameShape">
                 <enum>QFrame::NoFrame</enum>
                </property>
@@ -1605,25 +1588,13 @@ QPushButton:pressed:hover {
                   </layout>
                  </widget>
                 </item>
-                <item row="0" column="5" rowspan="2">
-                 <spacer name="horizontalSpacer_10">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="lbl_clr_txt">
                   <property name="font">
                    <font>
                     <family>Tahoma</family>
                     <pointsize>8</pointsize>
+                    <bold>false</bold>
                     <kerning>false</kerning>
                    </font>
                   </property>
@@ -1635,7 +1606,23 @@ QPushButton:pressed:hover {
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="4">
+                <item row="0" column="1" rowspan="2">
+                 <spacer name="horizontalSpacer_11">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>28</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="5">
                  <widget class="QPushButton" name="pshBttn_edt_clrs">
                   <property name="minimumSize">
                    <size>
@@ -1653,6 +1640,7 @@ QPushButton:pressed:hover {
                    <font>
                     <family>Tahoma</family>
                     <pointsize>9</pointsize>
+                    <bold>false</bold>
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
@@ -1677,12 +1665,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1742,6 +1726,19 @@ QPushButton:pressed:hover {
                   </layout>
                  </widget>
                 </item>
+                <item row="0" column="6" rowspan="2">
+                 <spacer name="horizontalSpacer_10">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                 <item row="0" column="3">
                  <widget class="QPushButton" name="pshBttn_add_clr">
                   <property name="minimumSize">
@@ -1760,15 +1757,32 @@ QPushButton:pressed:hover {
                    <font>
                     <family>Tahoma</family>
                     <pointsize>9</pointsize>
+                    <bold>true</bold>
+                    <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border-style: solid;
+border-color: transparent;
+border-width: 1px;
+border-radius: 10px;
+color: white;
+text-align: top;
+background-color: qradialgradient(cx: 0.5, cy: 0.5, radius:0.5, fx: 0.5, fy: 0.5, stop: 0.8 transparent, stop: 0.90 #474a51, stop: 0.98 transparent);</string>
                   </property>
                   <property name="text">
                    <string notr="true">+</string>
                   </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                  </widget>
                 </item>
-                <item row="0" column="1" rowspan="2">
-                 <spacer name="horizontalSpacer_11">
+                <item row="0" column="4" rowspan="2">
+                 <spacer name="horizontalSpacer_12">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -1777,7 +1791,7 @@ QPushButton:pressed:hover {
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>28</width>
+                    <width>30</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -2156,6 +2170,9 @@ QPushButton:hover {
            </item>
            <item row="2" column="0">
             <widget class="QStackedWidget" name="stckdWdgt_rfrsh_rate_n_dpi">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
              <widget class="QWidget" name="page_4_1">
               <layout class="QGridLayout" name="gridLayout_10">
                <property name="leftMargin">
@@ -2218,12 +2235,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2292,12 +2305,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2369,12 +2378,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2456,12 +2461,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;

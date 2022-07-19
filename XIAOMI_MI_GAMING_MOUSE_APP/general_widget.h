@@ -17,7 +17,8 @@
             ~general_widget() override;
 
             QString get_app_path();
-            QString get_color_button_stylesheet(QString color);
+            QString get_color_button_stylesheet(QString color, QString disable_color);
+            QString get_color_button_delete_stylesheet();
             QVariant get_setting(QSettings *settings, QString type);
             void save_setting(QSettings *settings, QString type, QVariant val);
             bool check_setting_exist(QSettings *settings, QString type, QVariant val, bool create);
