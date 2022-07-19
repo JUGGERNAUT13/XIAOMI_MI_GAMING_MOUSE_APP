@@ -24,6 +24,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         QList<QString> bttn_txt{tr("Edit color"), tr("Done")};
         ui->pshBttn_edt_clrs->setText(bttn_txt.at(static_cast<int>(tggld)));
         ui->frm_dlt_clr_bttns->setVisible(tggld);
+        ui->pshBttn_add_clr->setVisible(!tggld);
+        for(int i = 0; i < clrs_bttns_lst.count(); i++) {
+            clrs_bttns_lst[i]->setCheckable(!tggld);
+        }
+        if(!tggld && (crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] != -1)) {
+            mnl_chng_effcts = true;
+            clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
+            mnl_chng_effcts = false;
+        }
     });
     crrnt_devs_clr_indxs = {-1, -1};
     connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
@@ -277,10 +286,35 @@ void MainWindow::create_color_buttons() {
         tmp_clr_dsbld.setRgb(tmp_clr.rgb());
         tmp_clr_dsbld.setAlpha(128);
         clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(tmp_clr.name(QColor::HexRgb), tmp_clr_dsbld.name(QColor::HexArgb)));
+        clrs_dlt_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_delete_stylesheet());
+        clrs_dlt_bttns_lst[i]->setFont(QFont("Tahoma", 11, QFont::Normal));
         if(QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) == tmp_clr) {
-            clrs_bttns_lst[i]->setChecked(true);
+            if(ui->pshBttn_edt_clrs->isChecked()) {
+                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = i;
+            } else {
+                clrs_bttns_lst[i]->setChecked(true);
+            }
         }
         ui->frm_clr_bttns->layout()->addWidget(clrs_bttns_lst[i]);
+        connect(clrs_bttns_lst[i], &QRadioButton::clicked, this, [=]() {
+            if(ui->pshBttn_edt_clrs->isChecked()) {
+                QColorDialog dlg(this);
+                dlg.setOption(QColorDialog::DontUseNativeDialog, true);
+                QColor tmp_clr("#" + clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
+                dlg.setCurrentColor(tmp_clr);
+                if(dlg.exec() == QDialog::Accepted) {
+                    QColor color = dlg.selectedColor();
+                    if(color.isValid()) {
+                        tmp_clr.setRgb(color.rgb());
+                        tmp_clr.setAlpha(128);
+                        clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(color.name(QColor::HexRgb), tmp_clr.name(QColor::HexArgb)));
+                        gen_widg->save_setting(settings, "COLOR" + QString::number(i + 1) + "/Red", color.red());
+                        gen_widg->save_setting(settings, "COLOR" + QString::number(i + 1) + "/Green", color.green());
+                        gen_widg->save_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue", color.blue());
+                    }
+                }
+            }
+        });
         connect(clrs_bttns_lst[i], &QRadioButton::toggled, this, [=](bool tggld) {
             if(tggld) {
                 crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = i;

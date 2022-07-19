@@ -37,6 +37,12 @@ QString general_widget::get_color_button_stylesheet(QString color, QString disab
     return str.replace("pattern_2", color).replace("pattern_1", disable_color);
 }
 
+QString general_widget::get_color_button_delete_stylesheet() {
+    QString str = "border-style: solid; border-color: transparent; border-width: 1px; border-radius: 10px; color: white; text-align: top;"
+                  "background-color: qradialgradient(cx: 0.5, cy: 0.5, radius:0.5, fx: 0.5, fy: 0.5, stop: 0.8 transparent, stop: 0.90 #474a51, stop: 0.98 transparent);";
+    return str;
+}
+
 //-------------------------------------------------------------------------
 // LOAD VALUE OF SEETING
 //-------------------------------------------------------------------------
