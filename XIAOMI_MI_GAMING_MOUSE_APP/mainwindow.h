@@ -81,6 +81,7 @@
             QSettings *settings = nullptr;
             QVector<QRadioButton *> clrs_bttns_lst;
             QVector<QPushButton *> clrs_dlt_bttns_lst;
+            QVector<int> crrnt_devs_clr_indxs;
             QString anim_img_nam;
             QString crrnt_tail_clr;
             QString crrnt_wheel_clr;
@@ -96,7 +97,6 @@
             bool mnl_chng_effcts = false;
             bool is_frst_show = true;
             bool is_drag = false;
-            int crrnt_clr_indx = -1;
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
             int8_t img_cnt_dir = -1;

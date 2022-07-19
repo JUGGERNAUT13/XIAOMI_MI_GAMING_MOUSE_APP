@@ -18,15 +18,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 //    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
     settings = new QSettings("./user_color.ini", QSettings::IniFormat);
     create_base_settings();
-
     create_color_buttons();
-
     ui->frm_dlt_clr_bttns->setVisible(false);
     connect(ui->pshBttn_edt_clrs, &QPushButton::toggled, this, [=](bool tggld) {
         QList<QString> bttn_txt{tr("Edit color"), tr("Done")};
         ui->pshBttn_edt_clrs->setText(bttn_txt.at(static_cast<int>(tggld)));
         ui->frm_dlt_clr_bttns->setVisible(tggld);
     });
+    crrnt_devs_clr_indxs = {-1, -1};
     connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->pshBttn_mnmz, &QPushButton::clicked, this, &MainWindow::hide);
     minimizeAction = new QAction(tr("Minimize"), this);
@@ -55,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         write_to_mouse_hid(tmp_out, true, &tmp_in);
         *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt() - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt() > TIC_TAC));
         *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt());
-        *(devs_clrs_lst[i]) = (QColor("#" + QString(tmp_in.mid(8, 3).toHex())).name(QColor::HexArgb));
+        *(devs_clrs_lst[i]) = (QColor("#" + QString(tmp_in.mid(8, 3).toHex())).name(QColor::HexRgb));
     }
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
@@ -153,11 +152,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         mnl_chng_effcts = true;
         QVector<effects> devs_effcts_lst{crrnt_tail_effct, crrnt_wheel_effct};
         QVector<speed> devs_speed_lst{crrnt_tail_spped, crrnt_wheel_speed};
+        QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
         QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
         ui->hrzntlSldr_effct_spd->setValue(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]);
         ui->pshBttn_lghtnng_tic_tac->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
+        QString avlbl_clr;
+        for(int i = 0; i < clrs_bttns_lst.count(); i++) {
+            avlbl_clr = "#" + clrs_bttns_lst[i]->styleSheet().split("#").last().split(",").first();
+            if(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()].compare(avlbl_clr, Qt::CaseInsensitive) == 0) {
+                clrs_bttns_lst[i]->setChecked(true);
+                break;
+            } else if((crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] == -1) && clrs_bttns_lst[i]->isChecked()) {
+                clrs_bttns_lst[i]->setAutoExclusive(false);
+                clrs_bttns_lst[i]->setChecked(false);
+                clrs_bttns_lst[i]->setAutoExclusive(true);
+                break;
+            }
+        }
         effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
         emit effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->toggled(true);
         anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
@@ -252,6 +265,7 @@ void MainWindow::create_color_buttons() {
     }
     ui->pshBttn_edt_clrs->setEnabled(clrs_cnt != 0);
     QColor tmp_clr;
+    QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
     for(int i = 0; i < clrs_cnt; i++) {
         clrs_bttns_lst.push_back(new QRadioButton(ui->frm_clr_bttns));
         clrs_dlt_bttns_lst.push_back(new QPushButton("-", ui->frm_dlt_clr_bttns));
@@ -260,19 +274,24 @@ void MainWindow::create_color_buttons() {
         clrs_bttns_lst[i]->setMinimumSize(20, 20);
         clrs_bttns_lst[i]->setMaximumSize(20, 20);
         clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(tmp_clr.name(QColor::HexRgb)));
+        if(QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) == tmp_clr) {
+            clrs_bttns_lst[i]->setChecked(true);
+        }
         ui->frm_clr_bttns->layout()->addWidget(clrs_bttns_lst[i]);
-        connect(clrs_bttns_lst[i], &QRadioButton::toggled, this, [=]() {
-            crrnt_clr_indx = i;
-            mouse_set_color_for_device();
+        connect(clrs_bttns_lst[i], &QRadioButton::toggled, this, [=](bool tggld) {
+            if(tggld) {
+                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = i;
+                mouse_set_color_for_device();
+            }
         });
         clrs_dlt_bttns_lst[i]->setMinimumSize(20, 20);
         clrs_dlt_bttns_lst[i]->setMaximumSize(20, 20);
         ui->frm_dlt_clr_bttns->layout()->addWidget(clrs_dlt_bttns_lst[i]);
         connect(clrs_dlt_bttns_lst[i], &QPushButton::clicked, this, [=]() {
-            if(crrnt_clr_indx > i) {
-                crrnt_clr_indx--;
-            } else if(crrnt_clr_indx == i) {
-                crrnt_clr_indx = -1;
+            if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] > i) {
+                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]--;
+            } else if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] == i) {
+                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = -1;
             }
             int clrs_cnt_tmp = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt();
             settings->beginGroup("COLOR" + QString::number(i + 1));
@@ -375,12 +394,12 @@ int MainWindow::mouse_set_color_for_device() {
     QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
     QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
     QColor clr;
-    if(crrnt_clr_indx != -1) {
-        clr.setNamedColor("#" + clrs_bttns_lst[crrnt_clr_indx]->styleSheet().split("#").last().split(",").first());
+    if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] != -1) {
+        clr.setNamedColor("#" + clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
     } else {
         clr.setNamedColor(*(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]));
     }
-    *(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) = clr.name(QColor::HexArgb);
+    *(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) = clr.name(QColor::HexRgb);
     *(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]) = static_cast<speed>(ui->hrzntlSldr_effct_spd->value());
     clr_mod_spd_arr.append(static_cast<devices>(ui->pshBttn_lghtnng_head->isChecked()));
     clr_mod_spd_arr.append(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] + static_cast<int>(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] > TIC_TAC));
