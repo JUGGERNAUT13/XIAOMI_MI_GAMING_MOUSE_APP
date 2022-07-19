@@ -1122,12 +1122,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1196,12 +1192,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1270,12 +1262,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1337,12 +1325,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1411,12 +1395,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1485,12 +1465,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -1677,12 +1653,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2156,6 +2128,9 @@ QPushButton:hover {
            </item>
            <item row="2" column="0">
             <widget class="QStackedWidget" name="stckdWdgt_rfrsh_rate_n_dpi">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
              <widget class="QWidget" name="page_4_1">
               <layout class="QGridLayout" name="gridLayout_10">
                <property name="leftMargin">
@@ -2218,12 +2193,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2292,12 +2263,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2369,12 +2336,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;
@@ -2456,12 +2419,8 @@ QPushButton:pressed {
 	border-color: #00E39B;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
 QPushButton:hover {
 	border-color: #494d55;

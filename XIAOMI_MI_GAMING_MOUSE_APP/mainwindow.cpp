@@ -265,6 +265,7 @@ void MainWindow::create_color_buttons() {
     }
     ui->pshBttn_edt_clrs->setEnabled(clrs_cnt != 0);
     QColor tmp_clr;
+    QColor tmp_clr_dsbld;
     QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
     for(int i = 0; i < clrs_cnt; i++) {
         clrs_bttns_lst.push_back(new QRadioButton(ui->frm_clr_bttns));
@@ -273,7 +274,9 @@ void MainWindow::create_color_buttons() {
                        gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue").toUInt());
         clrs_bttns_lst[i]->setMinimumSize(20, 20);
         clrs_bttns_lst[i]->setMaximumSize(20, 20);
-        clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(tmp_clr.name(QColor::HexRgb)));
+        tmp_clr_dsbld.setRgb(tmp_clr.rgb());
+        tmp_clr_dsbld.setAlpha(128);
+        clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(tmp_clr.name(QColor::HexRgb), tmp_clr_dsbld.name(QColor::HexArgb)));
         if(QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) == tmp_clr) {
             clrs_bttns_lst[i]->setChecked(true);
         }
