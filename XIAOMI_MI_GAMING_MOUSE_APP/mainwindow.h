@@ -3,15 +3,12 @@
 
     #include <QMenu>
     #include <QTimer>
-    #include <QDebug>
-    #include <QMouseEvent>
     #include <QMainWindow>
-    #include <QApplication>
     #include <QColorDialog>
+    #include <QRadioButton>
     #include <QSystemTrayIcon>
     #include "hidapi.h"
-
-    #define USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+    #include "general_widget.h"
 
     namespace Ui {
         class MainWindow;
@@ -55,38 +52,64 @@
                 SPEED_8         = 8
             } speed;
 
-            int write_to_mouse_hid(QByteArray &data);
-            int mouse_set_color_for_device(devices dev, effects effct, speed spd, uint8_t r, uint8_t g, uint8_t b);
-#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+            typedef enum pages {
+                HOME            = 0,
+                BUTTONS         = 1,
+                LIGHTNING       = 2,
+                SPEED           = 3,
+                UPDATE          = 4
+            } pages;
+
+            void create_base_settings();
+            void create_color_buttons();
+            void remove_color_buttons(int new_clrs_cnt);
+            void remove_color_buttons_from_ui();
+            int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
+            int mouse_set_color_for_device();
             int mouse_non_sleep();
-#endif
 
             Ui::MainWindow *ui;
-#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
+            general_widget *gen_widg = nullptr;
             QTimer *no_sleep_timer = nullptr;
-#endif
+            QTimer *anim_timer = nullptr;
             QAction *minimizeAction = nullptr;
             QAction *maximizeAction = nullptr;
             QAction *restoreAction = nullptr;
             QAction *quitAction = nullptr;
             QMenu *trayIconMenu = nullptr;
             QSystemTrayIcon *trayIcon = nullptr;
-            QList<QString> tail_addtnl_effcts{tr("Tic tac"), tr("Colors changing"), tr("RGB")};
+            QSettings *settings = nullptr;
+            QVector<QRadioButton *> clrs_bttns_lst;
+            QVector<QPushButton *> clrs_dlt_bttns_lst;
+            QString anim_img_nam;
+            QString crrnt_tail_clr;
+            QString crrnt_wheel_clr;
+            QString app_path = "";
+            pages crrnt_page = HOME;
+            pages prev_page = HOME;
+            effects crrnt_tail_effct;
+            effects crrnt_wheel_effct;
+            speed crrnt_tail_spped;
+            speed crrnt_wheel_speed;
             QPoint clck_pos;
 
             bool mnl_chng_effcts = false;
+            bool is_frst_show = true;
+            bool is_drag = false;
+            int crrnt_clr_indx = -1;
+            int16_t crrnt_img = -1;
+            int16_t img_end_val = -1;
+            int8_t img_cnt_dir = -1;
 
         private slots:
-            void on_cmbBx_dev_lst_currentIndexChanged(int index);
-            void on_cmbBx_effcts_lst_currentIndexChanged(int index);
-            void on_pshBttn_chs_clr_clicked();
-            void on_pshBttn_apply_to_mouse_clicked();
-#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
-            void slot_timeout();
-#endif
+            void slot_no_sleep_timeout();
+            void slot_anim_timeout();
+            void showEvent(QShowEvent *) override;
             void resizeEvent(QResizeEvent *) override;
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;
+            void mouseReleaseEvent(QMouseEvent *event) override;
+            void on_pshBttn_add_clr_clicked();
     };
 
 #endif // MAINWINDOW_H
