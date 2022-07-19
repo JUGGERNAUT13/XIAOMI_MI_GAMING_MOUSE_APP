@@ -20,10 +20,12 @@ win32 {
 INCLUDEPATH += $$PWD
 
 HEADERS += \
+    $$PWD/general_widget.h \
     $$PWD/hidapi.h \
     $$PWD/mainwindow.h
 
 SOURCES += \
+    $$PWD/general_widget.cpp \
     $$PWD/main.cpp \
     $$PWD/mainwindow.cpp
 
@@ -34,6 +36,8 @@ RESOURCES += \
     images.qrc
 
 CODECFORSRC = UTF-8
+
+win32:RC_ICONS += images/icon.ico
 
 system(lrelease \"$$_PRO_FILE_\")
 tr.commands = lupdate \"$$_PRO_FILE_\" && lrelease \"$$_PRO_FILE_\"

@@ -1,18 +1,32 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#define PART_SIZE               12
+#define ANIM_INTERVAL_MS        32
+#define PACKET_SIZE             32
+#define INPUT_PACKET_SIZE       64
+#define NO_SLEEP_INTERVAL_MS    290000
 #define VENDOR_ID               0x2717
 #define PRODUCT_ID_WIRE         0x5009
 //#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
-#define PACKET_SIZE             32
-#define NO_SLEEP_INTERVAL_MS    290000
-#define ANIM_INTERVAL_MS        32
-#define INPUT_PACKET_SIZE       64
-#define PART_SIZE               12
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
+    gen_widg = new general_widget(this);
+    QDir::setCurrent(gen_widg->get_app_path());
+//    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
+    settings = new QSettings("./user_color.ini", QSettings::IniFormat);
+    create_base_settings();
+
+    create_color_buttons();
+
+    ui->frm_dlt_clr_bttns->setVisible(false);
+    connect(ui->pshBttn_edt_clrs, &QPushButton::toggled, this, [=](bool tggld) {
+        QList<QString> bttn_txt{tr("Edit color"), tr("Done")};
+        ui->pshBttn_edt_clrs->setText(bttn_txt.at(static_cast<int>(tggld)));
+        ui->frm_dlt_clr_bttns->setVisible(tggld);
+    });
     connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->pshBttn_mnmz, &QPushButton::clicked, this, &MainWindow::hide);
     minimizeAction = new QAction(tr("Minimize"), this);
@@ -98,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             anim_1(anim_img_nam, 0, 16, 1);
         }
     };
-    QVector<QPushButton *>bttns_lst {ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
+    QVector<QPushButton *>bttns_lst{ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
     for(int i = 0; i < bttns_lst.count(); i++) {
         connect(bttns_lst[i], &QPushButton::toggled, this, [=]() {
             ui->stckdWdgt_main_pages->setCurrentIndex(i);
@@ -139,17 +153,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         mnl_chng_effcts = true;
         QVector<effects> devs_effcts_lst{crrnt_tail_effct, crrnt_wheel_effct};
         QVector<speed> devs_speed_lst{crrnt_tail_spped, crrnt_wheel_speed};
-        QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
         QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
-        QColor color(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]);
-        QColor dsbl_color(color.red(), color.green(), color.blue(), 127);
-        ui->pshBttn_chs_clr->setStyleSheet("QPushButton{background-color: " + color.name(QColor::HexArgb) + "; " + "border: 0px;}\n"
-                                           "QPushButton:disabled{background-color: " + dsbl_color.name(QColor::HexArgb) + "; " + "border: 0px;}");
         ui->hrzntlSldr_effct_spd->setValue(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]);
         ui->pshBttn_lghtnng_tic_tac->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
+        emit effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->toggled(true);
         anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
         mnl_chng_effcts = false;
     };
@@ -166,13 +176,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         change_currnt_dev(15, -1, -1);
     });
     connect(ui->hrzntlSldr_effct_spd, &QSlider::valueChanged, this, &MainWindow::mouse_set_color_for_device);
+    QVector<QPushButton *> speed_bttns_lst{ui->pshBttn_speed_rfrsh_rate, ui->pshBttn_speed_dpi};
+    for(int i = 0; i < speed_bttns_lst.count(); i++) {
+        connect(speed_bttns_lst[i], &QPushButton::toggled, this, [=]() {
+            ui->stckdWdgt_rfrsh_rate_n_dpi->setCurrentIndex(i);
+        });
+    }
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
-#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
     no_sleep_timer = new QTimer();
     connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_no_sleep_timeout);
+    mouse_non_sleep();
     slot_no_sleep_timeout();
-#endif
     ui->pshBttn_lghtnng_head->setChecked(true);
     emit ui->pshBttn_lghtnng_head->toggled(true);
     anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
@@ -180,10 +195,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow() {
-#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
     no_sleep_timer->stop();
     delete no_sleep_timer;
-#endif
+    remove_color_buttons_from_ui();
     anim_timer->stop();
     delete anim_timer;
     delete minimizeAction;
@@ -192,21 +206,107 @@ MainWindow::~MainWindow() {
     delete quitAction;
     delete trayIconMenu;
     delete trayIcon;
+    delete settings;
+    delete gen_widg;
     delete ui;
 }
 
-void MainWindow::on_pshBttn_chs_clr_clicked() {
+void MainWindow::on_pshBttn_add_clr_clicked() {
     QColorDialog dlg(this);
+    QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
     dlg.setOption(QColorDialog::DontUseNativeDialog, true);
-    dlg.setCurrentColor(QColor(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last()));
+    dlg.setCurrentColor(QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]));
     if(dlg.exec() == QDialog::Accepted) {
         QColor color = dlg.selectedColor();
         if(color.isValid()) {
-            QColor dsbl_color(color.red(), color.green(), color.blue(), 127);
-            ui->pshBttn_chs_clr->setStyleSheet("QPushButton{background-color: " + color.name(QColor::HexArgb) + "; " + "border: 0px;}\n"
-                                               "QPushButton:disabled{background-color: " + dsbl_color.name(QColor::HexArgb) + "; " + "border: 0px;}");
-            mouse_set_color_for_device();
+            int clrs_cnt = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt() + 1;
+            gen_widg->check_setting_exist(settings, "COLOR" + QString::number(clrs_cnt) + "/Red", color.red(), true);
+            gen_widg->check_setting_exist(settings, "COLOR" + QString::number(clrs_cnt) + "/Green", color.green(), true);
+            gen_widg->check_setting_exist(settings, "COLOR" + QString::number(clrs_cnt) + "/Blue", color.blue(), true);
+            remove_color_buttons(clrs_cnt);
         }
+    }
+}
+
+void MainWindow::create_base_settings() {
+//    gen_widg->check_setting_exist(settings, "COLOR1/Red", 255, true);
+//    gen_widg->check_setting_exist(settings, "COLOR1/Green", 0, true);
+//    gen_widg->check_setting_exist(settings, "COLOR1/Blue", 0, true);
+//    gen_widg->check_setting_exist(settings, "COLOR2/Red", 0, true);
+//    gen_widg->check_setting_exist(settings, "COLOR2/Green", 135, true);
+//    gen_widg->check_setting_exist(settings, "COLOR2/Blue", 255, true);
+//    gen_widg->check_setting_exist(settings, "COLOR3/Red", 0, true);
+//    gen_widg->check_setting_exist(settings, "COLOR3/Green", 255, true);
+//    gen_widg->check_setting_exist(settings, "COLOR3/Blue", 20, true);
+//    gen_widg->check_setting_exist(settings, "COLOR4/Red", 255, true);
+//    gen_widg->check_setting_exist(settings, "COLOR4/Green", 170, true);
+//    gen_widg->check_setting_exist(settings, "COLOR4/Blue", 0, true);
+//    gen_widg->save_setting(settings, "USER_COLOR/Num", 4);
+    gen_widg->check_setting_exist(settings, "USER_COLOR/Num", 0, true);
+}
+
+void MainWindow::create_color_buttons() {
+    int clrs_cnt = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt();
+    if(clrs_cnt == 0) {
+        ui->pshBttn_edt_clrs->setChecked(false);
+    }
+    ui->pshBttn_edt_clrs->setEnabled(clrs_cnt != 0);
+    QColor tmp_clr;
+    for(int i = 0; i < clrs_cnt; i++) {
+        clrs_bttns_lst.push_back(new QRadioButton(ui->frm_clr_bttns));
+        clrs_dlt_bttns_lst.push_back(new QPushButton("-", ui->frm_dlt_clr_bttns));
+        tmp_clr.setRgb(gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Red").toUInt(), gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Green").toUInt(),
+                       gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue").toUInt());
+        clrs_bttns_lst[i]->setMinimumSize(20, 20);
+        clrs_bttns_lst[i]->setMaximumSize(20, 20);
+        clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(tmp_clr.name(QColor::HexRgb)));
+        ui->frm_clr_bttns->layout()->addWidget(clrs_bttns_lst[i]);
+        connect(clrs_bttns_lst[i], &QRadioButton::toggled, this, [=]() {
+            crrnt_clr_indx = i;
+            mouse_set_color_for_device();
+        });
+        clrs_dlt_bttns_lst[i]->setMinimumSize(20, 20);
+        clrs_dlt_bttns_lst[i]->setMaximumSize(20, 20);
+        ui->frm_dlt_clr_bttns->layout()->addWidget(clrs_dlt_bttns_lst[i]);
+        connect(clrs_dlt_bttns_lst[i], &QPushButton::clicked, this, [=]() {
+            if(crrnt_clr_indx > i) {
+                crrnt_clr_indx--;
+            } else if(crrnt_clr_indx == i) {
+                crrnt_clr_indx = -1;
+            }
+            int clrs_cnt_tmp = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt();
+            settings->beginGroup("COLOR" + QString::number(i + 1));
+            settings->remove("");
+            settings->endGroup();
+            for(int k = (i + 1); k < clrs_cnt_tmp; k++) {
+                gen_widg->check_setting_exist(settings, "COLOR" + QString::number(k) + "/Red", gen_widg->get_setting(settings, "COLOR" + QString::number(k + 1) + "/Red"), true);
+                gen_widg->check_setting_exist(settings, "COLOR" + QString::number(k) + "/Green", gen_widg->get_setting(settings, "COLOR" + QString::number(k + 1) + "/Green"), true);
+                gen_widg->check_setting_exist(settings, "COLOR" + QString::number(k) + "/Blue", gen_widg->get_setting(settings, "COLOR" + QString::number(k + 1) + "/Blue"), true);
+                settings->beginGroup("COLOR" + QString::number(k + 1));
+                settings->remove("");
+                settings->endGroup();
+            }
+            remove_color_buttons(clrs_cnt_tmp - 1);
+        });
+    }
+}
+
+void MainWindow::remove_color_buttons(int new_clrs_cnt) {
+    remove_color_buttons_from_ui();
+    gen_widg->save_setting(settings, "USER_COLOR/Num", new_clrs_cnt);
+    create_color_buttons();
+}
+
+void MainWindow::remove_color_buttons_from_ui() {
+    while(clrs_dlt_bttns_lst.count() != 0) {
+        clrs_bttns_lst[0]->disconnect();
+        clrs_dlt_bttns_lst[0]->disconnect();
+        ui->frm_clr_bttns->layout()->removeWidget(clrs_bttns_lst[0]);
+        ui->frm_dlt_clr_bttns->layout()->removeWidget(clrs_dlt_bttns_lst[0]);
+        delete clrs_bttns_lst[0];
+        clrs_bttns_lst.removeAt(0);
+        delete clrs_dlt_bttns_lst[0];
+        clrs_dlt_bttns_lst.removeAt(0);
     }
 }
 
@@ -270,13 +370,18 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
 }
 
 int MainWindow::mouse_set_color_for_device() {
-    QColor clr(ui->pshBttn_chs_clr->styleSheet().split(";").first().split(" ").last());
     QByteArray clr_mod_spd_arr = "\x4d\xa1";
     QVector<effects> devs_effcts_lst{crrnt_tail_effct, crrnt_wheel_effct};
     QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
     QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
+    QColor clr;
+    if(crrnt_clr_indx != -1) {
+        clr.setNamedColor("#" + clrs_bttns_lst[crrnt_clr_indx]->styleSheet().split("#").last().split(",").first());
+    } else {
+        clr.setNamedColor(*(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]));
+    }
     *(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) = clr.name(QColor::HexArgb);
-    *(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]) = static_cast<speed>(ui->hrzntlSldr_effct_spd->value() * static_cast<int>(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] > 1));
+    *(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]) = static_cast<speed>(ui->hrzntlSldr_effct_spd->value());
     clr_mod_spd_arr.append(static_cast<devices>(ui->pshBttn_lghtnng_head->isChecked()));
     clr_mod_spd_arr.append(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] + static_cast<int>(devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()] > TIC_TAC));
     clr_mod_spd_arr.append(*(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]));
@@ -291,7 +396,6 @@ int MainWindow::mouse_set_color_for_device() {
     return write_to_mouse_hid(clr_mod_spd_arr);
 }
 
-#ifdef USE_XIAOMI_MOUSE_NO_SLEEP_TIMER
 int MainWindow::mouse_non_sleep() {
     QByteArray non_sleep_arr{"\x4d\x90\xde\x30\xfe\xff\xff\xff\xda\x98\x20\x76\xd5\xd1\xae\x68\xa0\xe6\xe9\x03\xbc\xd8\x28\x00\xf3\xe0\x81\x77\xb8\xee\x37\x06", PACKET_SIZE};
     return write_to_mouse_hid(non_sleep_arr);
@@ -303,7 +407,6 @@ void MainWindow::slot_no_sleep_timeout() {
     no_sleep_timer->setInterval(NO_SLEEP_INTERVAL_MS);
     no_sleep_timer->start();
 }
-#endif
 
 void MainWindow::slot_anim_timeout() {
     anim_timer->stop();
