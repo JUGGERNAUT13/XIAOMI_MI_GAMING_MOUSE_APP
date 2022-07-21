@@ -60,10 +60,12 @@
                 UPDATE          = 4
             } pages;
 
+            void finish_init();
             void create_base_settings();
             void create_color_buttons();
             void remove_color_buttons(int new_clrs_cnt);
             void remove_color_buttons_from_ui();
+            void change_state_of_ui(bool flg);
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
             int mouse_non_sleep();
@@ -85,7 +87,6 @@
             QString anim_img_nam;
             QString crrnt_tail_clr;
             QString crrnt_wheel_clr;
-            QString app_path = "";
             pages crrnt_page = HOME;
             pages prev_page = HOME;
             effects crrnt_tail_effct;
@@ -100,16 +101,17 @@
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
             int8_t img_cnt_dir = -1;
+            uint8_t init_flg = 0;
 
         private slots:
-            void slot_no_sleep_timeout();
-            void slot_anim_timeout();
             void showEvent(QShowEvent *) override;
             void resizeEvent(QResizeEvent *) override;
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;
             void mouseReleaseEvent(QMouseEvent *event) override;
             void on_pshBttn_add_clr_clicked();
+            void slot_no_sleep_timeout();
+            void slot_anim_timeout();
     };
 
 #endif // MAINWINDOW_H

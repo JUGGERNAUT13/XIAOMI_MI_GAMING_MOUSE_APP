@@ -99,5 +99,6 @@
         <file>images/anim/trailToStrabismus_013.png</file>
         <file>images/anim/trailToStrabismus_014.png</file>
         <file>images/anim/trailToStrabismus_015.png</file>
+        <file>images/background_speed_slider.png</file>
     </qresource>
 </RCC>

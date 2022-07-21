@@ -11,6 +11,5 @@ int main(int argc, char *argv[]) {
     a.setStyle("windowsvista");
 //    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
     MainWindow Mw;
-    Mw.show();
     return a.exec();
 }

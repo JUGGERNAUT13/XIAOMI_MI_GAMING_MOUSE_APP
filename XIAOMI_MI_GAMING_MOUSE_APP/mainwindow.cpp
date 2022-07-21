@@ -5,6 +5,7 @@
 #define ANIM_INTERVAL_MS        32
 #define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
+#define INIT_INTERVAL_MS        1000
 #define NO_SLEEP_INTERVAL_MS    290000
 #define VENDOR_ID               0x2717
 #define PRODUCT_ID_WIRE         0x5009
@@ -45,26 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(restoreAction, &QAction::triggered, this, &MainWindow::showNormal);
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
-    QVector<devices> devs_lst{TAIL, WHEEL};
-    QVector<effects *> devs_effcts_lst{&crrnt_tail_effct, &crrnt_wheel_effct};
-    QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
-    QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
-    QByteArray tmp_out;
-    QByteArray tmp_in;
-    for(int i = 0; i < devs_lst.count(); i++) {
-        tmp_out.clear();
-        tmp_in = {"\x00", INPUT_PACKET_SIZE};
-        tmp_out.append("\x4d\xa0");
-        tmp_out.append(devs_lst[i]);
-        tmp_out.append("\x59");                                                             //UNKNOW_1 (RANDOM ???)
-        tmp_out.append("\x01\x00\x00\x00\x00\x00\x00\x00\xf4\xfc\x28\x00", PART_SIZE);      //PART_1(THE SAME DATA FOR THIS TYPE OF PACKET)
-        tmp_out.append("\xc8\xdd\xed\x03");                                                 //UNKNOW_2 (RANDOM ???)
-        tmp_out.append("\x30\x00\x00\x00\x04\x00\x00\x00\x9c\xfd\x28\x00", PART_SIZE);      //PART_2(THE SAME DATA FOR THIS TYPE OF PACKET)
-        write_to_mouse_hid(tmp_out, true, &tmp_in);
-        *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt() - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt() > TIC_TAC));
-        *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt());
-        *(devs_clrs_lst[i]) = (QColor("#" + QString(tmp_in.mid(8, 3).toHex())).name(QColor::HexRgb));
-    }
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
@@ -208,12 +189,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
     no_sleep_timer = new QTimer();
     connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_no_sleep_timeout);
-    mouse_non_sleep();
     slot_no_sleep_timeout();
-    ui->pshBttn_lghtnng_head->setChecked(true);
-    emit ui->pshBttn_lghtnng_head->toggled(true);
-    anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
-    trayIcon->show();
+    if(init_flg != 2) {
+        init_flg = 1;
+    }
 }
 
 MainWindow::~MainWindow() {
@@ -233,6 +212,42 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
+void MainWindow::showEvent(QShowEvent *) {
+    if(is_frst_show) {
+        is_frst_show = false;
+    }
+    resizeEvent(nullptr);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *) {
+    QPixmap bkgnd(":/images/background.png");
+    QPalette main_palette;
+    main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    this->setPalette(main_palette);
+    ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
+    QPixmap mouse_img(anim_img_nam);
+    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->width(), ui->lbl_mouse_img_anim->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event) {
+    if(event->button() == Qt::LeftButton) {
+        clck_pos = event->pos();
+        is_drag = true;
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event) {
+    if(is_drag) {
+        move((event->globalX() - clck_pos.x()), (event->globalY() - clck_pos.y()));
+    }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
+    if(event->button() == Qt::LeftButton) {
+        is_drag = false;
+    }
+}
+
 void MainWindow::on_pshBttn_add_clr_clicked() {
     QColorDialog dlg(this);
     QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
@@ -248,6 +263,34 @@ void MainWindow::on_pshBttn_add_clr_clicked() {
             remove_color_buttons(clrs_cnt);
         }
     }
+}
+
+void MainWindow::finish_init() {
+    QVector<devices> devs_lst{TAIL, WHEEL};
+    QVector<effects *> devs_effcts_lst{&crrnt_tail_effct, &crrnt_wheel_effct};
+    QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
+    QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
+    QByteArray tmp_out;
+    QByteArray tmp_in;
+    for(int i = 0; i < devs_lst.count(); i++) {
+        tmp_out.clear();
+        tmp_in = {"\x00", INPUT_PACKET_SIZE};
+        tmp_out.append("\x4d\xa0");
+        tmp_out.append(devs_lst[i]);
+        tmp_out.append("\x59");                                                             //UNKNOW_1 (RANDOM ???)
+        tmp_out.append("\x01\x00\x00\x00\x00\x00\x00\x00\xf4\xfc\x28\x00", PART_SIZE);      //PART_1(THE SAME DATA FOR THIS TYPE OF PACKET)
+        tmp_out.append("\xc8\xdd\xed\x03");                                                 //UNKNOW_2 (RANDOM ???)
+        tmp_out.append("\x30\x00\x00\x00\x04\x00\x00\x00\x9c\xfd\x28\x00", PART_SIZE);      //PART_2(THE SAME DATA FOR THIS TYPE OF PACKET)
+        write_to_mouse_hid(tmp_out, true, &tmp_in);
+        *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt() - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt() > TIC_TAC));
+        *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt());
+        *(devs_clrs_lst[i]) = (QColor("#" + QString(tmp_in.mid(8, 3).toHex())).name(QColor::HexRgb));
+    }
+    ui->pshBttn_lghtnng_head->setChecked(true);
+    emit ui->pshBttn_lghtnng_head->toggled(true);
+    anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
+    trayIcon->show();
+    this->show();
 }
 
 void MainWindow::create_base_settings() {
@@ -366,6 +409,12 @@ void MainWindow::remove_color_buttons_from_ui() {
     }
 }
 
+void MainWindow::change_state_of_ui(bool flg) {
+    ui->stckdWdgt_main_pages->setEnabled(flg);
+    ui->lbl_mouse_img_anim->setEnabled(flg);
+    ui->frm_slider->setEnabled(flg);
+}
+
 int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *output) {
     struct hid_device_info *devs = hid_enumerate(0x0, 0x0);
     struct hid_device_info *cur_dev = nullptr;
@@ -386,8 +435,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
     }
     hid_free_enumeration(devs);
     if(!cur_dev) {
-        ui->frm_main->setEnabled(false);
-        ui->frm_slider->setEnabled(false);
+        change_state_of_ui(false);
         return -1;
     }
     hid_free_enumeration(cur_dev);
@@ -405,8 +453,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
 //        handle = hid_open(VENDOR_ID, PRODUCT_ID_WIRELESS, NULL);
 //    }
     hid_device *handle = hid_open_path(path.toLatin1().data());
-    ui->frm_main->setEnabled(crrnt_prdct_id == PRODUCT_ID_WIRE);
-    ui->frm_slider->setEnabled(crrnt_prdct_id == PRODUCT_ID_WIRE);
+    change_state_of_ui(crrnt_prdct_id == PRODUCT_ID_WIRE);
     int result = -1;
     if(handle) {
         result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
@@ -459,9 +506,17 @@ int MainWindow::mouse_non_sleep() {
 
 void MainWindow::slot_no_sleep_timeout() {
     no_sleep_timer->stop();
-    mouse_non_sleep();
-    no_sleep_timer->setInterval(NO_SLEEP_INTERVAL_MS);
+    int res = mouse_non_sleep();
+    int interval_ms = NO_SLEEP_INTERVAL_MS;
+    if((init_flg == 0) && (res == -1)) {
+        interval_ms = INIT_INTERVAL_MS;
+    }
+    no_sleep_timer->setInterval(interval_ms);
     no_sleep_timer->start();
+    if((init_flg == 1) || ((res != -1) && (init_flg == 0))) {
+        init_flg = 2;
+        finish_init();
+    }
 }
 
 void MainWindow::slot_anim_timeout() {
@@ -478,41 +533,5 @@ void MainWindow::slot_anim_timeout() {
         anim_timer->start();
     } else {
         anim_img_nam = ":/images/anim/" + anim_img_nam + tmp + ".png";
-    }
-}
-
-void MainWindow::showEvent(QShowEvent *) {
-    if(is_frst_show) {
-        is_frst_show = false;
-    }
-    resizeEvent(nullptr);
-}
-
-void MainWindow::resizeEvent(QResizeEvent *) {
-    QPixmap bkgnd(":/images/background.png");
-    QPalette main_palette;
-    main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    this->setPalette(main_palette);
-    ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
-    QPixmap mouse_img(anim_img_nam);
-    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->frm_main->width(), ((static_cast<double>(ui->frm_main->height()) / 29.0) * 15.0), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *event) {
-    if(event->button() == Qt::LeftButton) {
-        clck_pos = event->pos();
-        is_drag = true;
-    }
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event) {
-    if(is_drag) {
-        move((event->globalX() - clck_pos.x()), (event->globalY() - clck_pos.y()));
-    }
-}
-
-void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
-    if(event->button() == Qt::LeftButton) {
-        is_drag = false;
     }
 }
