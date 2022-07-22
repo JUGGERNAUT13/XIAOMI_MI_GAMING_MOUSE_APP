@@ -100,5 +100,17 @@
         <file>images/anim/trailToStrabismus_014.png</file>
         <file>images/anim/trailToStrabismus_015.png</file>
         <file>images/background_speed_slider.png</file>
+        <file>images/icons/lightning/icon_add_color.png</file>
+        <file>images/icons/lightning/icon_delete_color.png</file>
+        <file>images/icons/lightning/icon_breath_checked.png</file>
+        <file>images/icons/lightning/icon_breath_unchecked.png</file>
+        <file>images/icons/lightning/icon_colorfull_checked.png</file>
+        <file>images/icons/lightning/icon_colorfull_unchecked.png</file>
+        <file>images/icons/lightning/icon_disable_checked.png</file>
+        <file>images/icons/lightning/icon_disable_unchecked.png</file>
+        <file>images/icons/lightning/icon_enable_checked.png</file>
+        <file>images/icons/lightning/icon_enable_unchecked.png</file>
+        <file>images/icons/lightning/icon_tic_tac_checked.png</file>
+        <file>images/icons/lightning/icon_tic_tac_unchecked.png</file>
     </qresource>
 </RCC>

@@ -72,72 +72,6 @@
        <property name="verticalSpacing">
         <number>25</number>
        </property>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pshBttn_1_home">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton {
-	border: 0px;
-	background-color: lightGray;
-	color: black;
-	padding: 5px 5px;
-}
-QPushButton:checked {
-	border: 0px;
-	background-color: lightgreen;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
-}
-QPushButton:pressed {
-	border: 0px;
-	background-color: lightgreen;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
-}
-QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
-}
-QPushButton:hover {
-	border: 0px;
-}</string>
-         </property>
-         <property name="text">
-          <string>HOME</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-         <property name="autoExclusive">
-          <bool>true</bool>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-         <property name="default">
-          <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="0">
         <widget class="QPushButton" name="pshBttn_3_lightning">
          <property name="minimumSize">
@@ -264,6 +198,19 @@ QPushButton:hover {
          </property>
         </widget>
        </item>
+       <item row="6" column="0">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="2" column="0">
         <widget class="QPushButton" name="pshBttn_2_buttons">
          <property name="minimumSize">
@@ -327,34 +274,71 @@ QPushButton:hover {
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="pshBttn_1_home">
+         <property name="minimumSize">
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>0</width>
+           <height>25</height>
           </size>
          </property>
-        </spacer>
-       </item>
-       <item row="0" column="0">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	border: 0px;
+	background-color: lightGray;
+	color: black;
+	padding: 5px 5px;
+}
+QPushButton:checked {
+	border: 0px;
+	background-color: lightgreen;
+	border-style: outset;
+	color: black;
+	font: bold 10p;
+	padding: 5px 5px;
+}
+QPushButton:pressed {
+	border: 0px;
+	background-color: lightgreen;
+	border-style: outset;
+	color: black;
+	font: bold 10p;
+	padding: 5px 5px;
+}
+QPushButton:disabled {
+	border: 0px;
+	background-color: lightblue;
+	border-style: outset;
+	color: black;
+	font: bold 10p;
+	padding: 5px 5px;
+}
+QPushButton:hover {
+	border: 0px;
+}</string>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
+         <property name="text">
+          <string>HOME</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>100</height>
-          </size>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
-        </spacer>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0">
         <widget class="QPushButton" name="pshBttn_5_update">
@@ -416,6 +400,74 @@ QPushButton:hover {
          </property>
          <property name="flat">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>100</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="7" column="0">
+        <widget class="QPushButton" name="pshBttn_rst_sttngs">
+         <property name="font">
+          <font>
+           <family>Tahoma</family>
+           <pointsize>10</pointsize>
+           <stylestrategy>PreferAntialias</stylestrategy>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}</string>
+         </property>
+         <property name="text">
+          <string>Reset settings</string>
          </property>
         </widget>
        </item>
@@ -802,7 +854,7 @@ QPushButton:hover {
             <number>0</number>
            </property>
            <property name="rightMargin">
-            <number>110</number>
+            <number>109</number>
            </property>
            <property name="bottomMargin">
             <number>50</number>
@@ -873,7 +925,7 @@ QPushButton:hover {
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout">
               <property name="spacing">
-               <number>0</number>
+               <number>1</number>
               </property>
               <property name="leftMargin">
                <number>0</number>
@@ -882,7 +934,7 @@ QPushButton:hover {
                <number>0</number>
               </property>
               <property name="rightMargin">
-               <number>0</number>
+               <number>2</number>
               </property>
               <property name="bottomMargin">
                <number>0</number>
@@ -1044,10 +1096,10 @@ QPushButton:hover {
            <item row="3" column="0">
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="spacing">
-              <number>27</number>
+              <number>0</number>
              </property>
              <property name="leftMargin">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="topMargin">
               <number>0</number>
@@ -1093,11 +1145,24 @@ QPushButton:hover {
                 </property>
                 <item>
                  <widget class="QLabel" name="lbl_effct_txt">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
                     <family>Tahoma</family>
                     <pointsize>8</pointsize>
-                    <kerning>false</kerning>
+                    <stylestrategy>PreferAntialias</stylestrategy>
+                    <kerning>true</kerning>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1186,6 +1251,13 @@ QPushButton:pressed:hover {
                   <property name="text">
                    <string>Enable</string>
                   </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/images/icons/lightning/icon_enable_unchecked.png</normaloff>
+                    <activeon>:/images/icons/lightning/icon_enable_checked.png</activeon>
+                    <selectedoff>:/images/icons/lightning/icon_enable_unchecked.png</selectedoff>
+                    <selectedon>:/images/icons/lightning/icon_enable_checked.png</selectedon>:/images/icons/lightning/icon_enable_unchecked.png</iconset>
+                  </property>
                   <property name="checkable">
                    <bool>true</bool>
                   </property>
@@ -1256,6 +1328,13 @@ QPushButton:pressed:hover {
                   <property name="text">
                    <string>Breath</string>
                   </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/images/icons/lightning/icon_breath_unchecked.png</normaloff>
+                    <activeon>:/images/icons/lightning/icon_breath_checked.png</activeon>
+                    <selectedoff>:/images/icons/lightning/icon_breath_unchecked.png</selectedoff>
+                    <selectedon>:/images/icons/lightning/icon_breath_checked.png</selectedon>:/images/icons/lightning/icon_breath_unchecked.png</iconset>
+                  </property>
                   <property name="checkable">
                    <bool>true</bool>
                   </property>
@@ -1325,6 +1404,13 @@ QPushButton:pressed:hover {
                   </property>
                   <property name="text">
                    <string>Tic-Tac</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/images/icons/lightning/icon_tic_tac_unchecked.png</normaloff>
+                    <activeon>:/images/icons/lightning/icon_tic_tac_checked.png</activeon>
+                    <selectedoff>:/images/icons/lightning/icon_tic_tac_unchecked.png</selectedoff>
+                    <selectedon>:/images/icons/lightning/icon_tic_tac_checked.png</selectedon>:/images/icons/lightning/icon_tic_tac_unchecked.png</iconset>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -1459,6 +1545,13 @@ QPushButton:pressed:hover {
                   <property name="text">
                    <string>Colorfull</string>
                   </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/images/icons/lightning/icon_colorfull_unchecked.png</normaloff>
+                    <activeon>:/images/icons/lightning/icon_colorfull_checked.png</activeon>
+                    <selectedoff>:/images/icons/lightning/icon_colorfull_unchecked.png</selectedoff>
+                    <selectedon>:/images/icons/lightning/icon_colorfull_checked.png</selectedon>:/images/icons/lightning/icon_colorfull_unchecked.png</iconset>
+                  </property>
                   <property name="checkable">
                    <bool>true</bool>
                   </property>
@@ -1529,6 +1622,13 @@ QPushButton:pressed:hover {
                   <property name="text">
                    <string>Disable</string>
                   </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/images/icons/lightning/icon_disable_unchecked.png</normaloff>
+                    <activeon>:/images/icons/lightning/icon_disable_checked.png</activeon>
+                    <selectedoff>:/images/icons/lightning/icon_disable_unchecked.png</selectedoff>
+                    <selectedon>:/images/icons/lightning/icon_disable_checked.png</selectedon>:/images/icons/lightning/icon_disable_unchecked.png</iconset>
+                  </property>
                   <property name="checkable">
                    <bool>true</bool>
                   </property>
@@ -1555,6 +1655,22 @@ QPushButton:pressed:hover {
                 </item>
                </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_9">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>10</width>
+                 <height>24</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QFrame" name="frm_clr">
@@ -1599,9 +1715,28 @@ QPushButton:pressed:hover {
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <property name="spacing">
+                <property name="horizontalSpacing">
                  <number>10</number>
                 </property>
+                <property name="verticalSpacing">
+                 <number>2</number>
+                </property>
+                <item row="1" column="3">
+                 <spacer name="verticalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>10</width>
+                    <height>14</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                 <item row="0" column="2">
                  <widget class="QFrame" name="frm_clr_bttns">
                   <property name="frameShape">
@@ -1632,26 +1767,8 @@ QPushButton:pressed:hover {
                   </layout>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="lbl_clr_txt">
-                  <property name="font">
-                   <font>
-                    <family>Tahoma</family>
-                    <pointsize>8</pointsize>
-                    <bold>false</bold>
-                    <kerning>false</kerning>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: silver;</string>
-                  </property>
-                  <property name="text">
-                   <string>Presets</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1" rowspan="2">
-                 <spacer name="horizontalSpacer_11">
+                <item row="0" column="5" rowspan="2">
+                 <spacer name="horizontalSpacer_12">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -1660,13 +1777,49 @@ QPushButton:pressed:hover {
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>28</width>
+                    <width>30</width>
                     <height>0</height>
                    </size>
                   </property>
                  </spacer>
                 </item>
-                <item row="0" column="5">
+                <item row="1" column="2">
+                 <widget class="QFrame" name="frm_dlt_clr_bttns">
+                  <property name="minimumSize">
+                   <size>
+                    <width>14</width>
+                    <height>14</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::NoFrame</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Plain</enum>
+                  </property>
+                  <property name="lineWidth">
+                   <number>0</number>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_4">
+                   <property name="spacing">
+                    <number>15</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>2</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="6">
                  <widget class="QPushButton" name="pshBttn_edt_clrs">
                   <property name="minimumSize">
                    <size>
@@ -1734,9 +1887,78 @@ QPushButton:pressed:hover {
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QFrame" name="frm_dlt_clr_bttns">
+                <item row="0" column="7" rowspan="2">
+                 <spacer name="horizontalSpacer_10">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="lbl_clr_txt">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Tahoma</family>
+                    <pointsize>8</pointsize>
+                    <bold>false</bold>
+                    <stylestrategy>PreferAntialias</stylestrategy>
+                    <kerning>true</kerning>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: silver;</string>
+                  </property>
+                  <property name="text">
+                   <string>Presets</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" rowspan="2">
+                 <spacer name="horizontalSpacer_11">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>28</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QFrame" name="frm_bttn_add_clr">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
                    <size>
                     <width>20</width>
                     <height>20</height>
@@ -1751,9 +1973,9 @@ QPushButton:pressed:hover {
                   <property name="lineWidth">
                    <number>0</number>
                   </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <layout class="QHBoxLayout" name="horizontalLayout_7">
                    <property name="spacing">
-                    <number>10</number>
+                    <number>1</number>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
@@ -1767,82 +1989,71 @@ QPushButton:pressed:hover {
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
+                   <item>
+                    <widget class="QPushButton" name="pshBttn_add_clr">
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Tahoma</family>
+                       <pointsize>9</pointsize>
+                       <bold>true</bold>
+                       <stylestrategy>PreferAntialias</stylestrategy>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">border-style: solid;
+border-color: #474a51;
+border-width: 1px;
+border-radius: 10px;
+</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="images.qrc">
+                       <normaloff>:/images/icons/lightning/icon_add_color.png</normaloff>:/images/icons/lightning/icon_add_color.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </widget>
                 </item>
-                <item row="0" column="6" rowspan="2">
-                 <spacer name="horizontalSpacer_10">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QPushButton" name="pshBttn_add_clr">
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Tahoma</family>
-                    <pointsize>9</pointsize>
-                    <bold>true</bold>
-                    <stylestrategy>PreferAntialias</stylestrategy>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">border-style: solid;
-border-color: transparent;
-border-width: 1px;
-border-radius: 10px;
-color: white;
-text-align: top;
-background-color: qradialgradient(cx: 0.5, cy: 0.5, radius:0.5, fx: 0.5, fy: 0.5, stop: 0.8 transparent, stop: 0.90 #474a51, stop: 0.98 transparent);</string>
-                  </property>
-                  <property name="text">
-                   <string notr="true">+</string>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="4" rowspan="2">
-                 <spacer name="horizontalSpacer_12">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>30</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_10">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>10</width>
+                 <height>14</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QFrame" name="frm_spd">
@@ -1888,11 +2099,18 @@ background-color: qradialgradient(cx: 0.5, cy: 0.5, radius:0.5, fx: 0.5, fy: 0.5
                 </property>
                 <item>
                  <widget class="QLabel" name="lbl_effct_spd_txt">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
                     <family>Tahoma</family>
                     <pointsize>8</pointsize>
-                    <kerning>false</kerning>
+                    <stylestrategy>PreferAntialias</stylestrategy>
+                    <kerning>true</kerning>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1939,19 +2157,19 @@ background-color: qradialgradient(cx: 0.5, cy: 0.5, radius:0.5, fx: 0.5, fy: 0.5
                   <property name="styleSheet">
                    <string notr="true">QSlider::groove:horizontal {
 	width: 350px;
-	height: 8px;
+	height: 9px;
 	background-image: url(:/images/background_speed_slider.png) ;
 }
 
 QSlider::handle:horizontal {
 	width:  24px;
 	height: 24px;
-    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.45 #FF0000, stop: 0.55 transparent);
-	margin: -8px -11px;
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.45 #afafaf, stop: 0.54 transparent);
+	margin: -8px -11px -7px -11px;
 }
 
 QSlider::handle:horizontal:disabled {
-    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.45 #2f333c, stop: 0.55 transparent);
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.45 #2f333c, stop: 0.54 transparent);
 }</string>
                   </property>
                   <property name="minimum">
@@ -2028,13 +2246,13 @@ QSlider::handle:horizontal:disabled {
           </property>
           <layout class="QGridLayout" name="gridLayout_7">
            <property name="leftMargin">
-            <number>100</number>
+            <number>110</number>
            </property>
            <property name="topMargin">
             <number>0</number>
            </property>
            <property name="rightMargin">
-            <number>100</number>
+            <number>109</number>
            </property>
            <property name="bottomMargin">
             <number>50</number>
@@ -2064,7 +2282,7 @@ QSlider::handle:horizontal:disabled {
                <number>0</number>
               </property>
               <property name="rightMargin">
-               <number>0</number>
+               <number>2</number>
               </property>
               <property name="bottomMargin">
                <number>0</number>
@@ -2256,19 +2474,6 @@ QPushButton:hover {
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
-           </item>
-           <item row="3" column="0">
-            <spacer name="verticalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item row="2" column="0">
             <widget class="QStackedWidget" name="stckdWdgt_rfrsh_rate_n_dpi">
@@ -2642,7 +2847,7 @@ QPushButton:pressed:hover {
                 <number>0</number>
                </property>
                <property name="topMargin">
-                <number>0</number>
+                <number>22</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
@@ -2650,77 +2855,260 @@ QPushButton:pressed:hover {
                <property name="bottomMargin">
                 <number>0</number>
                </property>
-               <item row="1" column="1">
-                <widget class="QSlider" name="horizontalSlider_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QSlider" name="horizontalSlider_3">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="3">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QSlider" name="horizontalSlider">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="3">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="4">
-                <widget class="QSlider" name="horizontalSlider_5">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="4">
-                <widget class="QSlider" name="horizontalSlider_4">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
+               <property name="horizontalSpacing">
+                <number>0</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>11</number>
+               </property>
                <item row="0" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>TextLabel</string>
+                <widget class="QFrame" name="frm_rfrsh_rate_lvl_1">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_13">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="horizontalSpacing">
+                   <number>0</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>9</number>
+                  </property>
+                  <item row="0" column="1">
+                   <widget class="QFrame" name="frm_sldr_rfrsh_rate_lvl_1">
+                    <property name="minimumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_9">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSlider" name="hrzntlSldr_rfrsh_rate_lvl_1">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QSlider::groove:horizontal {
+	width: 252;
+    border-radius: 0px;
+    height: 4px;
+}
+
+QSlider::add-page:qlineargradient {
+	background: #232631;
+	border-top-right-radius: 1px;
+	border-bottom-right-radius: 1px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+QSlider::sub-page:qlineargradient {
+	background: #00e39b;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 1px;
+	border-bottom-left-radius: 1px;
+}
+
+QSlider::handle:horizontal {
+	width: 12px;
+	height: 12px;
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.75 #afafaf, stop: 0.90 transparent);
+	margin: -4px -1px -4px -1px;
+}</string>
+                       </property>
+                       <property name="minimum">
+                        <number>50</number>
+                       </property>
+                       <property name="maximum">
+                        <number>7200</number>
+                       </property>
+                       <property name="singleStep">
+                        <number>50</number>
+                       </property>
+                       <property name="pageStep">
+                        <number>50</number>
+                       </property>
+                       <property name="value">
+                        <number>50</number>
+                       </property>
+                       <property name="sliderPosition">
+                        <number>50</number>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QFrame" name="frm_lbl_rfrsh_rate_lvl_1">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <widget class="QLabel" name="lbl_crrnt_rfrsh_rate_lvl_1">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>44</width>
+                       <height>20</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding: 0 7px 0 7px;
+color: white;</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true">0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_txt_rfrsh_rate_lvl_1">
+                    <property name="minimumSize">
+                     <size>
+                      <width>45</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>45</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>9</pointsize>
+                      <stylestrategy>PreferDefault</stylestrategy>
+                      <kerning>false</kerning>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: white;</string>
+                    </property>
+                    <property name="text">
+                     <string>Lvl I</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
-               <item row="0" column="2" rowspan="3">
+               <item row="0" column="1" rowspan="3">
                 <spacer name="horizontalSpacer_9">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -2730,15 +3118,1016 @@ QPushButton:pressed:hover {
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
-                   <width>40</width>
+                   <width>50</width>
                    <height>20</height>
                   </size>
                  </property>
                 </spacer>
                </item>
+               <item row="0" column="2">
+                <widget class="QFrame" name="frm_rfrsh_rate_lvl_4">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_17">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="horizontalSpacing">
+                   <number>0</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>9</number>
+                  </property>
+                  <item row="0" column="1">
+                   <widget class="QFrame" name="frm_sldr_rfrsh_rate_lvl_4">
+                    <property name="minimumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_13">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSlider" name="hrzntlSldr_rfrsh_rate_lvl_4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QSlider::groove:horizontal {
+	width: 252;
+    border-radius: 0px;
+    height: 4px;
+}
+
+QSlider::add-page:qlineargradient {
+	background: #232631;
+	border-top-right-radius: 1px;
+	border-bottom-right-radius: 1px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+QSlider::sub-page:qlineargradient {
+	background: #00e39b;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 1px;
+	border-bottom-left-radius: 1px;
+}
+
+QSlider::handle:horizontal {
+	width: 12px;
+	height: 12px;
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.75 #afafaf, stop: 0.90 transparent);
+	margin: -4px -1px -4px -1px;
+}</string>
+                       </property>
+                       <property name="minimum">
+                        <number>50</number>
+                       </property>
+                       <property name="maximum">
+                        <number>7200</number>
+                       </property>
+                       <property name="singleStep">
+                        <number>50</number>
+                       </property>
+                       <property name="pageStep">
+                        <number>50</number>
+                       </property>
+                       <property name="value">
+                        <number>50</number>
+                       </property>
+                       <property name="sliderPosition">
+                        <number>50</number>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QFrame" name="frm_lbl_rfrsh_rate_lvl_4">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <widget class="QLabel" name="lbl_crrnt_rfrsh_rate_lvl_4">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>44</width>
+                       <height>20</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding: 0 7px 0 7px;
+color: white;</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true">0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_txt_rfrsh_rate_lvl_4">
+                    <property name="minimumSize">
+                     <size>
+                      <width>45</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>45</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>9</pointsize>
+                      <stylestrategy>PreferDefault</stylestrategy>
+                      <kerning>false</kerning>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: white;</string>
+                    </property>
+                    <property name="text">
+                     <string>Lvl IV</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QFrame" name="frm_rfrsh_rate_lvl_2">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_14">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="horizontalSpacing">
+                   <number>0</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>9</number>
+                  </property>
+                  <item row="0" column="1">
+                   <widget class="QFrame" name="frm_sldr_rfrsh_rate_lvl_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_10">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSlider" name="hrzntlSldr_rfrsh_rate_lvl_2">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QSlider::groove:horizontal {
+	width: 252;
+    border-radius: 0px;
+    height: 4px;
+}
+
+QSlider::add-page:qlineargradient {
+	background: #232631;
+	border-top-right-radius: 1px;
+	border-bottom-right-radius: 1px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+QSlider::sub-page:qlineargradient {
+	background: #00e39b;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 1px;
+	border-bottom-left-radius: 1px;
+}
+
+QSlider::handle:horizontal {
+	width: 12px;
+	height: 12px;
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.75 #afafaf, stop: 0.90 transparent);
+	margin: -4px -1px -4px -1px;
+}</string>
+                       </property>
+                       <property name="minimum">
+                        <number>50</number>
+                       </property>
+                       <property name="maximum">
+                        <number>7200</number>
+                       </property>
+                       <property name="singleStep">
+                        <number>50</number>
+                       </property>
+                       <property name="pageStep">
+                        <number>50</number>
+                       </property>
+                       <property name="value">
+                        <number>50</number>
+                       </property>
+                       <property name="sliderPosition">
+                        <number>50</number>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QFrame" name="frm_lbl_rfrsh_rate_lvl_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <widget class="QLabel" name="lbl_crrnt_rfrsh_rate_lvl_2">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>44</width>
+                       <height>20</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding: 0 7px 0 7px;
+color: white;</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true">0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_txt_rfrsh_rate_lvl_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>45</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>45</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>9</pointsize>
+                      <stylestrategy>PreferDefault</stylestrategy>
+                      <kerning>false</kerning>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: white;</string>
+                    </property>
+                    <property name="text">
+                     <string>Lvl II</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QFrame" name="frm_rfrsh_rate_lvl_5">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_16">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="horizontalSpacing">
+                   <number>0</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>9</number>
+                  </property>
+                  <item row="0" column="1">
+                   <widget class="QFrame" name="frm_sldr_rfrsh_rate_lvl_5">
+                    <property name="minimumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_12">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSlider" name="hrzntlSldr_rfrsh_rate_lvl_5">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QSlider::groove:horizontal {
+	width: 252;
+    border-radius: 0px;
+    height: 4px;
+}
+
+QSlider::add-page:qlineargradient {
+	background: #232631;
+	border-top-right-radius: 1px;
+	border-bottom-right-radius: 1px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+QSlider::sub-page:qlineargradient {
+	background: #00e39b;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 1px;
+	border-bottom-left-radius: 1px;
+}
+
+QSlider::handle:horizontal {
+	width: 12px;
+	height: 12px;
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.75 #afafaf, stop: 0.90 transparent);
+	margin: -4px -1px -4px -1px;
+}</string>
+                       </property>
+                       <property name="minimum">
+                        <number>50</number>
+                       </property>
+                       <property name="maximum">
+                        <number>7200</number>
+                       </property>
+                       <property name="singleStep">
+                        <number>50</number>
+                       </property>
+                       <property name="pageStep">
+                        <number>50</number>
+                       </property>
+                       <property name="value">
+                        <number>50</number>
+                       </property>
+                       <property name="sliderPosition">
+                        <number>50</number>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QFrame" name="frm_lbl_rfrsh_rate_lvl_5">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <widget class="QLabel" name="lbl_crrnt_rfrsh_rate_lvl_5">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>44</width>
+                       <height>20</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding: 0 7px 0 7px;
+color: white;</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true">0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_txt_rfrsh_rate_lvl_5">
+                    <property name="minimumSize">
+                     <size>
+                      <width>45</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>45</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>9</pointsize>
+                      <stylestrategy>PreferDefault</stylestrategy>
+                      <kerning>false</kerning>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: white;</string>
+                    </property>
+                    <property name="text">
+                     <string>Lvl V</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QFrame" name="frm_rfrsh_rate_lvl_3">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_15">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="horizontalSpacing">
+                   <number>0</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>9</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_txt_rfrsh_rate_lvl_3">
+                    <property name="minimumSize">
+                     <size>
+                      <width>45</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>45</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>9</pointsize>
+                      <stylestrategy>PreferDefault</stylestrategy>
+                      <kerning>false</kerning>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: white;</string>
+                    </property>
+                    <property name="text">
+                     <string>Lvl III</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QFrame" name="frm_sldr_rfrsh_rate_lvl_3">
+                    <property name="minimumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>290</width>
+                      <height>16</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_11">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>5</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSlider" name="hrzntlSldr_rfrsh_rate_lvl_3">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QSlider::groove:horizontal {
+	width: 252;
+    border-radius: 0px;
+    height: 4px;
+}
+
+QSlider::add-page:qlineargradient {
+	background: #232631;
+	border-top-right-radius: 1px;
+	border-bottom-right-radius: 1px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+QSlider::sub-page:qlineargradient {
+	background: #00e39b;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 1px;
+	border-bottom-left-radius: 1px;
+}
+
+QSlider::handle:horizontal {
+	width: 12px;
+	height: 12px;
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.75 #afafaf, stop: 0.90 transparent);
+	margin: -4px -1px -4px -1px;
+}</string>
+                       </property>
+                       <property name="minimum">
+                        <number>50</number>
+                       </property>
+                       <property name="maximum">
+                        <number>7200</number>
+                       </property>
+                       <property name="singleStep">
+                        <number>50</number>
+                       </property>
+                       <property name="pageStep">
+                        <number>50</number>
+                       </property>
+                       <property name="value">
+                        <number>50</number>
+                       </property>
+                       <property name="sliderPosition">
+                        <number>50</number>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QFrame" name="frm_lbl_rfrsh_rate_lvl_3">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Plain</enum>
+                    </property>
+                    <property name="lineWidth">
+                     <number>0</number>
+                    </property>
+                    <widget class="QLabel" name="lbl_crrnt_rfrsh_rate_lvl_3">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>44</width>
+                       <height>20</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>44</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding: 0 7px 0 7px;
+color: white;</string>
+                     </property>
+                     <property name="text">
+                      <string notr="true">0</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
               </layout>
              </widget>
             </widget>
+           </item>
+           <item row="3" column="0">
+            <spacer name="verticalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -2776,6 +4165,8 @@ QPushButton:pressed:hover {
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>

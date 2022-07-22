@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
             mnl_chng_effcts = false;
         }
+        ui->frm_clr_bttns->update();
     });
     crrnt_devs_clr_indxs = {-1, -1};
     connect(ui->pshBttn_close, &QPushButton::clicked, this, &MainWindow::close);
@@ -185,6 +186,35 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             ui->stckdWdgt_rfrsh_rate_n_dpi->setCurrentIndex(i);
         });
     }
+    QVector<QSlider *> sldrs_lst{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
+    QVector<QLabel *> lbls_vals_lst{ui->lbl_crrnt_rfrsh_rate_lvl_1, ui->lbl_crrnt_rfrsh_rate_lvl_2, ui->lbl_crrnt_rfrsh_rate_lvl_3, ui->lbl_crrnt_rfrsh_rate_lvl_4, ui->lbl_crrnt_rfrsh_rate_lvl_5};
+    QVector<QLabel *> lbls_txt_lst{ui->lbl_txt_rfrsh_rate_lvl_1, ui->lbl_txt_rfrsh_rate_lvl_2, ui->lbl_txt_rfrsh_rate_lvl_3, ui->lbl_txt_rfrsh_rate_lvl_4, ui->lbl_txt_rfrsh_rate_lvl_5};
+    std::function<void(uint8_t slctd_lbl)> select_rfrsh_rate_label = [=](uint8_t slctd_lbl) {
+        for(uint8_t k = 0; k < lbls_txt_lst.count(); k++) {
+            if(k == slctd_lbl) {
+                lbls_txt_lst[k]->setStyleSheet("color: mediumspringgreen;");
+            } else {
+                lbls_txt_lst[k]->setStyleSheet("color: white;");
+            }
+        }
+    };
+    for(uint8_t i = 0; i < sldrs_lst.count(); i++) {
+        connect(sldrs_lst[i], &QSlider::valueChanged, this, [=](int val) {
+            lbls_vals_lst[i]->setNum(val);
+            int lbl_pos = round((static_cast<double>(sldrs_lst[i]->width()) / static_cast<double>(sldrs_lst[i]->maximum())) * val) -
+                          (static_cast<double>(round((static_cast<double>(lbls_vals_lst[i]->width()) / static_cast<double>(sldrs_lst[i]->maximum())) * val)) / 1.3);
+            lbls_vals_lst[i]->move(lbl_pos, lbls_vals_lst[i]->pos().y());
+            select_rfrsh_rate_label(i);
+        });
+        connect(sldrs_lst[i], &QSlider::sliderMoved, this, [=](int val) {
+            int mod = val % sldrs_lst[i]->singleStep();
+            sldrs_lst[i]->setValue(val - mod + ((round(static_cast<double>(mod * 2) / 100.0) * 100) / 2));
+        });
+        connect(sldrs_lst[i], &QSlider::sliderReleased, this, [=]() {
+            select_rfrsh_rate_label(i);
+        });
+        emit sldrs_lst[i]->valueChanged(sldrs_lst[i]->value());
+    }
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
     no_sleep_timer = new QTimer();
@@ -321,7 +351,7 @@ void MainWindow::create_color_buttons() {
     QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
     for(int i = 0; i < clrs_cnt; i++) {
         clrs_bttns_lst.push_back(new QRadioButton(ui->frm_clr_bttns));
-        clrs_dlt_bttns_lst.push_back(new QPushButton("-", ui->frm_dlt_clr_bttns));
+        clrs_dlt_bttns_lst.push_back(new QPushButton(ui->frm_dlt_clr_bttns));
         tmp_clr.setRgb(gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Red").toUInt(), gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Green").toUInt(),
                        gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue").toUInt());
         clrs_bttns_lst[i]->setMinimumSize(20, 20);
@@ -364,8 +394,9 @@ void MainWindow::create_color_buttons() {
                 mouse_set_color_for_device();
             }
         });
-        clrs_dlt_bttns_lst[i]->setMinimumSize(20, 20);
-        clrs_dlt_bttns_lst[i]->setMaximumSize(20, 20);
+        clrs_dlt_bttns_lst[i]->setMinimumSize(14, 14);
+        clrs_dlt_bttns_lst[i]->setMaximumSize(14, 14);
+        clrs_dlt_bttns_lst[i]->setIcon(QIcon(":/images/icons/lightning/icon_delete_color.png"));
         ui->frm_dlt_clr_bttns->layout()->addWidget(clrs_dlt_bttns_lst[i]);
         connect(clrs_dlt_bttns_lst[i], &QPushButton::clicked, this, [=]() {
             if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] > i) {

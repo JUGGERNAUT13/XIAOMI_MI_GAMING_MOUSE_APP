@@ -7,6 +7,7 @@
     #include <QColorDialog>
     #include <QRadioButton>
     #include <QSystemTrayIcon>
+    #include <math.h>
     #include "hidapi.h"
     #include "general_widget.h"
 
