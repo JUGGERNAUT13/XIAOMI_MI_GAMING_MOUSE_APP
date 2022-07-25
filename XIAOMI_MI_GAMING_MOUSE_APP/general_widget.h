@@ -6,6 +6,7 @@
     #include <QWidget>
     #include <QSettings>
     #include <QMouseEvent>
+    #include <QPushButton>
     #include <QApplication>
     #include <QFontDatabase>
     #include <QProcessEnvironment>
@@ -26,6 +27,17 @@
         private:
             QWidget *parent = nullptr;
             QString app_path = "";
+    };
+
+    class ButtonHoverWatcher : public QObject {
+        Q_OBJECT
+        public:
+            explicit ButtonHoverWatcher(QString _icon_name, QObject *parent = nullptr);
+            virtual bool eventFilter(QObject *watched, QEvent *event) override;
+            void uncheck_button(QPushButton *button);
+
+        private:
+            QString icon_name;
     };
 
 #endif // GENERAL_WIDGET_H

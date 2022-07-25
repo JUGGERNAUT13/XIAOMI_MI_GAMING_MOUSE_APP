@@ -88,3 +88,27 @@ bool general_widget::check_setting_exist(QSettings *settings, QString type, QVar
         return true;
     }
 }
+
+ButtonHoverWatcher::ButtonHoverWatcher(QString _icon_name, QObject *parent) : QObject(parent) {
+    icon_name = _icon_name;
+}
+
+bool ButtonHoverWatcher::eventFilter(QObject *watched, QEvent *event) {
+    QPushButton *button = qobject_cast<QPushButton*>(watched);
+    if(!button || button->isChecked()) {
+        return false;
+    }
+    if(event->type() == QEvent::Enter) {
+        button->setIcon(QIcon(":/images/icons/icon_" + icon_name + "_checked.png"));
+        return true;
+    }
+    if(event->type() == QEvent::Leave) {
+        uncheck_button(button);
+        return true;
+    }
+    return false;
+}
+
+void ButtonHoverWatcher::uncheck_button(QPushButton *button) {
+    button->setIcon(QIcon(":/images/icons/icon_" + icon_name + "_unchecked.png"));
+}

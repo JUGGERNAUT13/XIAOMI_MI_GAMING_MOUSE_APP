@@ -113,5 +113,20 @@
         <file>images/icons/lightning/icon_tic_tac_unchecked.png</file>
         <file>images/background_effects_speed_slider.png</file>
         <file>images/background_refresh_rate_slider.png</file>
+        <file>images/icons/icon_page_buttons_checked.png</file>
+        <file>images/icons/icon_page_buttons_unchecked.png</file>
+        <file>images/icons/icon_page_home_checked.png</file>
+        <file>images/icons/icon_page_home_unchecked.png</file>
+        <file>images/icons/icon_page_lightning_checked.png</file>
+        <file>images/icons/icon_page_lightning_unchecked.png</file>
+        <file>images/icons/icon_page_speed_checked.png</file>
+        <file>images/icons/icon_page_speed_unchecked.png</file>
+        <file>images/icons/icon_page_update_checked.png</file>
+        <file>images/icons/icon_page_update_unchecked.png</file>
+        <file>images/logo.png</file>
+        <file>images/icons/icon_close_checked.png</file>
+        <file>images/icons/icon_close_unchecked.png</file>
+        <file>images/icons/icon_minimize_checked.png</file>
+        <file>images/icons/icon_minimize_unchecked.png</file>
     </qresource>
 </RCC>
