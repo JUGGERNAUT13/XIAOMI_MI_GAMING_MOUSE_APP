@@ -1171,23 +1171,1507 @@ QPushButton:hover {
            </sizepolicy>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
+           <property name="leftMargin">
+            <number>110</number>
+           </property>
+           <property name="rightMargin">
+            <number>109</number>
+           </property>
+           <property name="bottomMargin">
+            <number>9</number>
+           </property>
            <property name="horizontalSpacing">
             <number>5</number>
            </property>
-           <item row="1" column="0" colspan="2">
-            <widget class="QLabel" name="lbl_buttons_txt">
-             <property name="font">
-              <font>
-               <family>Tahoma</family>
-               <pointsize>40</pointsize>
-              </font>
+           <item row="0" column="0">
+            <widget class="QFrame" name="frm_bttns_swtch">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <property name="text">
-              <string>BUTTONS</string>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
              </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
+             <property name="lineWidth">
+              <number>0</number>
              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <property name="spacing">
+               <number>1</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>2</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_16">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pshBttn_bttns_key_fnctns">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>10</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>10</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Tahoma</family>
+                  <pointsize>9</pointsize>
+                  <italic>false</italic>
+                  <underline>false</underline>
+                  <strikeout>false</strikeout>
+                  <stylestrategy>PreferAntialias</stylestrategy>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	border: 0px;
+	background-color: transparent;
+	color: silver;
+}
+QPushButton:checked {
+	color: mediumspringgreen;
+}
+QPushButton:pressed {
+	color: mediumspringgreen;
+}
+QPushButton:disabled {
+	color: dimgrey;
+}
+QPushButton:hover {
+	color: mediumspringgreen;
+}</string>
+                </property>
+                <property name="text">
+                 <string>KEY FUNS</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pshBttn_bttns_key_cmbntns">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>10</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>10</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Tahoma</family>
+                  <pointsize>9</pointsize>
+                  <stylestrategy>PreferAntialias</stylestrategy>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	border: 0px;
+	background-color: transparent;
+	color: silver;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: dimgrey;
+}
+QPushButton:checked {
+	color: mediumspringgreen;
+}
+QPushButton:pressed {
+	color: mediumspringgreen;
+}
+QPushButton:disabled {
+	color: dimgrey;
+}
+QPushButton:hover {
+	color: mediumspringgreen;
+}</string>
+                </property>
+                <property name="text">
+                 <string>KEY COMBO</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pshBttn_bttns_key_macros">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>10</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>10</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Tahoma</family>
+                  <pointsize>9</pointsize>
+                  <stylestrategy>PreferAntialias</stylestrategy>
+                  <kerning>true</kerning>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	border: 0px;
+	background-color: transparent;
+	color: silver;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: dimgrey;
+}
+QPushButton:checked {
+	color: mediumspringgreen;
+}
+QPushButton:pressed {
+	color: mediumspringgreen;
+}
+QPushButton:disabled {
+	color: dimgrey;
+}
+QPushButton:hover {
+	color: mediumspringgreen;
+}</string>
+                </property>
+                <property name="text">
+                 <string>KEY MACRO</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_17">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="Line" name="hrzntl_line_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>1</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>1</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #2B2F39;</string>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QStackedWidget" name="stckdWdgt_key_fnctns_cmbntns_macros">
+             <widget class="QWidget" name="page_2_1">
+              <layout class="QGridLayout" name="gridLayout_20">
+               <property name="leftMargin">
+                <number>40</number>
+               </property>
+               <property name="topMargin">
+                <number>15</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>15</number>
+               </property>
+               <item row="0" column="1">
+                <widget class="QRadioButton" name="rdBttn_key_func_rght_clck">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Right-click</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_func_rise_dpi">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Rise DPI</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_func_vlm_dwn">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Volume down</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QRadioButton" name="rdBttn_key_func_lwr_dpi">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Lower DPI</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_func_mddl_clck">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Middle-click</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_func_trn_dpi">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Turn DPI</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_func_mv_frwrd">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Move forward</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QRadioButton" name="rdBttn_key_func_mv_bck">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Move back</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_func_lft_clck">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Left-click</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QRadioButton" name="rdBttn_key_func_vlm_up">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Volume up</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="5">
+                <widget class="QRadioButton" name="rdBttn_key_func_slnt_mod">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Silent mode</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="5">
+                <spacer name="verticalSpacer_19">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="page_2_2">
+              <layout class="QGridLayout" name="gridLayout_19">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>15</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="horizontalSpacing">
+                <number>0</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>15</number>
+               </property>
+               <item row="1" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_shw_dsktp">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Show desktop(WIN+D)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_prev_tab_in_brwsr">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Prev tab in browser(Ctrl+Shift+Tab)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_copy">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Copy(Ctrl+C)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0" colspan="5">
+                <widget class="QFrame" name="frm_cstm_key_cmb">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_21">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="horizontalSpacing">
+                   <number>0</number>
+                  </property>
+                  <property name="verticalSpacing">
+                   <number>5</number>
+                  </property>
+                  <item row="1" column="0">
+                   <widget class="QLineEdit" name="lnEdt_cstm_key_cmb">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLineEdit {
+	background-color: #1e232f;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QPushButton" name="pshBttn_clr_cstm_key_cmb">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Clear</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="4">
+                   <widget class="QPushButton" name="pshBttn_sav_cstm_key_cmb">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Save</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0" colspan="6">
+                   <widget class="QLabel" name="lbl_cstm_key_cmb_txt">
+                    <property name="styleSheet">
+                     <string notr="true">color: silver;</string>
+                    </property>
+                    <property name="text">
+                     <string>Custom key combo</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <spacer name="horizontalSpacer_19">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="5">
+                   <spacer name="horizontalSpacer_18">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="3">
+                   <spacer name="horizontalSpacer_20">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>10</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_redo">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Redo(Ctrl+Y)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_cut">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Cut(Ctrl+X)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_cls_wndw">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Close window(ALT-F4)</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_paste">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Paste(Ctrl+V)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0" colspan="5">
+                <spacer name="verticalSpacer_18">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_nxt_tab_in_brwsr">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Next tab in browser(Ctrl+Tab)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_undo">
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Undo(Ctrl+Z)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" rowspan="3">
+                <spacer name="horizontalSpacer_22">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>60</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="3" rowspan="3">
+                <spacer name="horizontalSpacer_21">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>54</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="page_2_3">
+              <layout class="QGridLayout" name="gridLayout_22">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>15</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>15</number>
+               </property>
+               <property name="horizontalSpacing">
+                <number>0</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>10</number>
+               </property>
+               <item row="0" column="0" rowspan="5">
+                <widget class="QListWidget" name="lstWdgt_mcrs_evnts_lst">
+                 <property name="font">
+                  <font>
+                   <family>Tahoma</family>
+                   <pointsize>10</pointsize>
+                   <stylestrategy>PreferAntialias</stylestrategy>
+                   <kerning>true</kerning>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QListWidget {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <property name="horizontalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAlwaysOff</enum>
+                 </property>
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <spacer name="verticalSpacer_21">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="2">
+                <widget class="QPushButton" name="pshBttn_strt_stp_rcrd_mcrs">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Start record</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QPushButton" name="pshBttn_save_mcrs">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Save</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QRadioButton" name="rdBttn_dly_btwn_evnts">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Delay between events</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <spacer name="verticalSpacer_20">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="1" rowspan="5">
+                <spacer name="horizontalSpacer_23">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>65</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="3" rowspan="5">
+                <spacer name="horizontalSpacer_24">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>65</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>

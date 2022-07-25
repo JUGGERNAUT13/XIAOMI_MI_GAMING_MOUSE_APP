@@ -76,6 +76,7 @@
             general_widget *gen_widg = nullptr;
             QTimer *no_sleep_timer = nullptr;
             QTimer *anim_timer = nullptr;
+            QTimer *key_hold_timer = nullptr;
             QAction *minimizeAction = nullptr;
             QAction *maximizeAction = nullptr;
             QAction *restoreAction = nullptr;
@@ -103,6 +104,7 @@
             bool is_drag = false;
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
+            int16_t pressed_key = -32768;
             int8_t img_cnt_dir = -1;
             uint8_t init_flg = 0;
 
@@ -112,6 +114,8 @@
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;
             void mouseReleaseEvent(QMouseEvent *event) override;
+            void keyPressEvent(QKeyEvent *event) override;
+            void keyReleaseEvent(QKeyEvent *event) override;
             void on_pshBttn_add_clr_clicked();
             void slot_no_sleep_timeout();
             void slot_anim_timeout();

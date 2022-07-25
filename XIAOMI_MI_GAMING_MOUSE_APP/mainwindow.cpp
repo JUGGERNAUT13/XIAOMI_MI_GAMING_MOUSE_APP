@@ -6,6 +6,7 @@
 #define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
 #define INIT_INTERVAL_MS        1000
+#define KEY_HOLD_INTERVAL_MS    1000
 #define NO_SLEEP_INTERVAL_MS    290000
 #define VENDOR_ID               0x2717
 #define PRODUCT_ID_WIRE         0x5009
@@ -37,8 +38,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->frm_clr_bttns->update();
     });
     crrnt_devs_clr_indxs = {-1, -1};
-    connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::hide);
-    connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::showMinimized);
+    connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::/*hide*/close);
+    connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::/*showMinimized*/hide);
     minimizeAction = new QAction(tr("Minimize"), this);
     connect(minimizeAction, &QAction::triggered, this, &MainWindow::hide);
     maximizeAction = new QAction(tr("Maximize"), this);
@@ -243,10 +244,28 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             write_to_mouse_hid(rfrsh_rate);
         });
     }
+    QVector<QPushButton *> key_bttns_lst{ui->pshBttn_bttns_key_fnctns, ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_macros};
+    for(int i = 0; i < key_bttns_lst.count(); i++) {
+        connect(key_bttns_lst[i], &QPushButton::clicked, this, [=]() {
+            ui->stckdWdgt_key_fnctns_cmbntns_macros->setCurrentIndex(i);
+        });
+    }
+    emit ui->pshBttn_bttns_key_cmbntns->clicked();
+    connect(ui->pshBttn_strt_stp_rcrd_mcrs, &QPushButton::toggled, this, [=](bool tggld) {
+        QVector<QString> strt_stp_rcrd_names{tr("Start record"), tr("Stop record")};
+        ui->pshBttn_strt_stp_rcrd_mcrs->setText(strt_stp_rcrd_names[static_cast<int>(tggld)]);
+        while(tggld && (ui->lstWdgt_mcrs_evnts_lst->count() > 0)) {
+            delete ui->lstWdgt_mcrs_evnts_lst->takeItem(0);
+        }
+        ui->pshBttn_save_mcrs->setEnabled(!tggld);
+        ui->rdBttn_dly_btwn_evnts->setEnabled(!tggld);
+    });
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
     no_sleep_timer = new QTimer();
     connect(no_sleep_timer, &QTimer::timeout, this, &MainWindow::slot_no_sleep_timeout);
+    key_hold_timer = new QTimer();
+    key_hold_timer->stop();
     slot_no_sleep_timeout();
     if(init_flg != 2) {
         init_flg = 1;
@@ -259,6 +278,11 @@ MainWindow::~MainWindow() {
     remove_color_buttons_from_ui();
     anim_timer->stop();
     delete anim_timer;
+    key_hold_timer->stop();
+    while(ui->lstWdgt_mcrs_evnts_lst->count() > 0) {
+        delete ui->lstWdgt_mcrs_evnts_lst->takeItem(0);
+    }
+    delete key_hold_timer;
     delete minimizeAction;
     delete maximizeAction;
     delete restoreAction;
@@ -307,6 +331,30 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
     if(event->button() == Qt::LeftButton) {
         is_drag = false;
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && (pressed_key == -32768)) {
+        pressed_key = static_cast<int16_t>(event->key());
+        ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_pressed.png"), QKeySequence(pressed_key).toString()));
+        if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
+            key_hold_timer->setInterval(KEY_HOLD_INTERVAL_MS);
+            key_hold_timer->start();
+        }
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+    if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && (pressed_key == event->key())) {
+        if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
+            ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"),
+                                                                    (QString::number(abs(KEY_HOLD_INTERVAL_MS - key_hold_timer->remainingTime())) + " Milliseconds delay")));
+            key_hold_timer->stop();
+        }
+        ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_released.png"), QKeySequence(pressed_key).toString()));
+        ui->lstWdgt_mcrs_evnts_lst->setCurrentRow(ui->lstWdgt_mcrs_evnts_lst->count() - 1);
+        pressed_key = -32768;
     }
 }
 
