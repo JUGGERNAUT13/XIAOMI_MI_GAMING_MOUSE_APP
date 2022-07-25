@@ -58,7 +58,8 @@
                 BUTTONS         = 1,
                 LIGHTNING       = 2,
                 SPEED           = 3,
-                UPDATE          = 4
+                UPDATE          = 4,
+                PAGES_COUNT     = 5
             } pages;
 
             void finish_init();
@@ -84,6 +85,7 @@
             QSettings *settings = nullptr;
             QVector<QRadioButton *> clrs_bttns_lst;
             QVector<QPushButton *> clrs_dlt_bttns_lst;
+            QVector<ButtonHoverWatcher *> bttns_wtchrs_lst;
             QVector<int> crrnt_devs_clr_indxs;
             QString anim_img_nam;
             QString crrnt_tail_clr;
@@ -96,7 +98,7 @@
             speed crrnt_wheel_speed;
             QPoint clck_pos;
 
-            bool mnl_chng_effcts = false;
+            bool mnl_chng = false;
             bool is_frst_show = true;
             bool is_drag = false;
             int16_t crrnt_img = -1;
