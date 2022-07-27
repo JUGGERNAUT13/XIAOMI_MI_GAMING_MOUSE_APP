@@ -56,6 +56,9 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -112,6 +115,9 @@
            <stylestrategy>PreferAntialias</stylestrategy>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
 	background-image: url();
@@ -132,6 +138,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
          </property>
          <property name="text">
@@ -238,6 +247,9 @@ QPushButton:hover {
               <stylestrategy>PreferAntialias</stylestrategy>
              </font>
             </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
 	background-image: url();
@@ -275,6 +287,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
             </property>
             <property name="text">
@@ -306,6 +321,9 @@ QPushButton:pressed:hover {
            <stylestrategy>PreferAntialias</stylestrategy>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
 	background-image: url();
@@ -326,6 +344,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
          </property>
          <property name="text">
@@ -392,6 +413,9 @@ QPushButton:hover {
            <stylestrategy>PreferAntialias</stylestrategy>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
 	background-image: url();
@@ -412,6 +436,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
          </property>
          <property name="text">
@@ -462,6 +489,9 @@ QPushButton:hover {
            <stylestrategy>PreferAntialias</stylestrategy>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
 	background-image: url();
@@ -482,6 +512,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
          </property>
          <property name="text">
@@ -513,6 +546,18 @@ QPushButton:hover {
        </item>
        <item row="0" column="0">
         <widget class="QFrame" name="frm_logo">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>28</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>28</height>
+          </size>
+         </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
@@ -538,43 +583,9 @@ QPushButton:hover {
           <property name="horizontalSpacing">
            <number>9</number>
           </property>
-          <item row="0" column="1">
-           <widget class="QLabel" name="lbl_logo_txt_chns">
-            <property name="font">
-             <font>
-              <family>Tahoma</family>
-              <pointsize>5</pointsize>
-              <stylestrategy>PreferAntialias</stylestrategy>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: silver;</string>
-            </property>
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="lbl_logo_txt_englsh">
-            <property name="font">
-             <font>
-              <family>Tahoma</family>
-              <pointsize>5</pointsize>
-              <stylestrategy>PreferAntialias</stylestrategy>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: silver;</string>
-            </property>
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
-            <property name="text">
-             <string notr="true">MI GAMING MOUSE</string>
-            </property>
-           </widget>
-          </item>
+          <property name="verticalSpacing">
+           <number>0</number>
+          </property>
           <item row="0" column="0" rowspan="2">
            <widget class="QLabel" name="lbl_logo">
             <property name="minimumSize">
@@ -595,6 +606,88 @@ QPushButton:hover {
             <property name="text">
              <string notr="true"/>
             </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QFrame" name="frm_logo_txt">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lbl_logo_txt_chns">
+               <property name="font">
+                <font>
+                 <family>Tahoma</family>
+                 <pointsize>8</pointsize>
+                 <stylestrategy>PreferAntialias</stylestrategy>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: silver;</string>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="text">
+                <string>小米游戏鼠标</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lbl_logo_txt_englsh">
+               <property name="font">
+                <font>
+                 <family>Tahoma</family>
+                 <pointsize>5</pointsize>
+                 <stylestrategy>PreferAntialias</stylestrategy>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: silver;</string>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="text">
+                <string notr="true">MI GAMING MOUSE</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -621,6 +714,9 @@ QPushButton:hover {
            <stylestrategy>PreferAntialias</stylestrategy>
           </font>
          </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
 	background-image: url();
@@ -641,6 +737,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
          </property>
          <property name="text">
@@ -735,7 +834,7 @@ QPushButton:hover {
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>42</width>
+           <width>72</width>
            <height>15</height>
           </size>
          </property>
@@ -767,13 +866,13 @@ QPushButton:hover {
         <widget class="QFrame" name="frm_bttns_top_side_swtch_wrppr">
          <property name="minimumSize">
           <size>
-           <width>42</width>
+           <width>72</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>42</width>
+           <width>72</width>
            <height>16777215</height>
           </size>
          </property>
@@ -797,13 +896,19 @@ QPushButton:hover {
            <number>0</number>
           </property>
           <property name="rightMargin">
-           <number>0</number>
+           <number>30</number>
           </property>
           <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
            <widget class="QFrame" name="frm_bttns_top_side_swtch">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
             </property>
@@ -815,7 +920,7 @@ QPushButton:hover {
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <property name="spacing">
-              <number>10</number>
+              <number>20</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -829,6 +934,22 @@ QPushButton:hover {
              <property name="bottomMargin">
               <number>0</number>
              </property>
+             <item>
+              <spacer name="verticalSpacer_22">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>60</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
              <item>
               <spacer name="verticalSpacer_11">
                <property name="orientation">
@@ -844,45 +965,50 @@ QPushButton:hover {
              </item>
              <item>
               <widget class="QPushButton" name="pshBttn_bttns_top">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>40</height>
+                 <height>42</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Tahoma</family>
+                 <pointsize>10</pointsize>
+                 <stylestrategy>PreferAntialias</stylestrategy>
+                 <kerning>true</kerning>
+                </font>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
                </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
-	border: 0px;
-	background-color: lightGray;
-	color: black;
+	background-color: transparent;
+	color: silver;
 	padding: 5px 5px;
+	border-color: #20282f;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 21px;
 }
 QPushButton:checked {
-	border: 0px;
-	background-color: lightgreen;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	background-color: #20282f;
+	color: white;
 }
 QPushButton:pressed {
-	border: 0px;
-	background-color: lightgreen;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	background-color: #20282f;
+	color: white;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
-QPushButton:hover {
-	border: 0px;
+QPushButton:focus {
+   outline: none;
 }</string>
                </property>
                <property name="text">
@@ -901,45 +1027,50 @@ QPushButton:hover {
              </item>
              <item>
               <widget class="QPushButton" name="pshBttn_bttns_side">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>40</height>
+                 <height>42</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Tahoma</family>
+                 <pointsize>10</pointsize>
+                 <stylestrategy>PreferAntialias</stylestrategy>
+                 <kerning>true</kerning>
+                </font>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
                </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
-	border: 0px;
-	background-color: lightGray;
-	color: black;
+	background-color: transparent;
+	color: silver;
 	padding: 5px 5px;
+	border-color: #20282f;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 21px;
 }
 QPushButton:checked {
-	border: 0px;
-	background-color: lightgreen;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	background-color: #20282f;
+	color: white;
 }
 QPushButton:pressed {
-	border: 0px;
-	background-color: lightgreen;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	background-color: #20282f;
+	color: white;
 }
 QPushButton:disabled {
-	border: 0px;
-	background-color: lightblue;
-	border-style: outset;
-	color: black;
-	font: bold 10p;
-	padding: 5px 5px;
+	color: #454950;
+	border-color: #2b3139;
 }
-QPushButton:hover {
-	border: 0px;
+QPushButton:focus {
+   outline: none;
 }</string>
                </property>
                <property name="text">
@@ -1034,6 +1165,9 @@ QPushButton:hover {
               <height>25</height>
              </size>
             </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
             <property name="toolTip">
              <string>Close</string>
             </property>
@@ -1042,6 +1176,10 @@ QPushButton:hover {
 	background-image: url();
 	border: 0px;
 	background-color: transparent;
+}
+
+QPushButton:focus {
+   outline: none;
 }</string>
             </property>
             <property name="text">
@@ -1073,6 +1211,9 @@ QPushButton:hover {
               <height>25</height>
              </size>
             </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
             <property name="toolTip">
              <string>Minimize</string>
             </property>
@@ -1081,6 +1222,10 @@ QPushButton:hover {
 	background-image: url();
 	border: 0px;
 	background-color: transparent;
+}
+
+QPushButton:focus {
+   outline: none;
 }</string>
             </property>
             <property name="text">
@@ -1254,6 +1399,9 @@ QPushButton:hover {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -1271,6 +1419,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -1315,6 +1466,9 @@ QPushButton:hover {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -1335,6 +1489,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -1379,6 +1536,9 @@ QPushButton:hover {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -1399,6 +1559,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -1477,27 +1640,29 @@ QPushButton:hover {
                </property>
                <item row="0" column="1">
                 <widget class="QRadioButton" name="rdBttn_key_func_rght_clck">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1507,27 +1672,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="0">
                 <widget class="QRadioButton" name="rdBttn_key_func_rise_dpi">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1537,27 +1704,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="4">
                 <widget class="QRadioButton" name="rdBttn_key_func_vlm_dwn">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1567,27 +1736,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="1">
                 <widget class="QRadioButton" name="rdBttn_key_func_lwr_dpi">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1597,27 +1768,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="2">
                 <widget class="QRadioButton" name="rdBttn_key_func_mddl_clck">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1627,27 +1800,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="2">
                 <widget class="QRadioButton" name="rdBttn_key_func_trn_dpi">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1657,27 +1832,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="4">
                 <widget class="QRadioButton" name="rdBttn_key_func_mv_frwrd">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1687,27 +1864,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="3">
                 <widget class="QRadioButton" name="rdBttn_key_func_mv_bck">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1717,27 +1896,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="0">
                 <widget class="QRadioButton" name="rdBttn_key_func_lft_clck">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1750,27 +1931,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="3">
                 <widget class="QRadioButton" name="rdBttn_key_func_vlm_up">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1780,27 +1963,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="2" column="0" colspan="5">
                 <widget class="QRadioButton" name="rdBttn_key_func_slnt_mod">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1842,27 +2027,29 @@ QRadioButton::indicator::checked {
                </property>
                <item row="1" column="0">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_shw_dsktp">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1872,27 +2059,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="2">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_prev_tab_in_brwsr">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1902,27 +2091,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="4">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_copy">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -1983,7 +2174,16 @@ QRadioButton::indicator::checked {
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 2px;
+}
+QLineEdit::hover {
+	border-color: mediumspringgreen;
+}
+QLineEdit:focus {
+    border-color: mediumspringgreen;
 }</string>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
@@ -2000,6 +2200,9 @@ QRadioButton::indicator::checked {
                       <width>60</width>
                       <height>30</height>
                      </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
@@ -2037,6 +2240,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                     </property>
                     <property name="text">
@@ -2058,6 +2264,9 @@ QPushButton:pressed:hover {
                       <height>30</height>
                      </size>
                     </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
 	background-color: transparent;
@@ -2094,6 +2303,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                     </property>
                     <property name="text">
@@ -2161,27 +2373,29 @@ QPushButton:pressed:hover {
                </item>
                <item row="2" column="2">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_redo">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2191,27 +2405,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="4">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_cut">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2221,27 +2437,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="0" column="0">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_cls_wndw">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2254,27 +2472,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="2" column="4">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_paste">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2297,27 +2517,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="1" column="2">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_nxt_tab_in_brwsr">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2327,27 +2549,29 @@ QRadioButton::indicator::checked {
                </item>
                <item row="2" column="0">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_undo">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
 	color: silver;
 }
-
 QRadioButton:disabled {
 	color: #454950;
 }
-
 QRadioButton::indicator {
 	height: 16px;
 	width: 16px;
 	border: 0px;
  }
-
 QRadioButton::indicator::unchecked {
 	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
 }
-
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2419,6 +2643,9 @@ QRadioButton::indicator::checked {
                    <kerning>true</kerning>
                   </font>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QListWidget {
 	background-color: transparent;
@@ -2428,6 +2655,22 @@ QRadioButton::indicator::checked {
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 2px;
+}
+
+QScrollBar:vertical {
+	border: 0px;
+	background: transparent;
+	width: 3px;
+}
+
+QScrollBar::handle:vertical {
+	background: #2c3038;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+	border: 0px;
+	background: transparent;
+	height: 0px;
 }</string>
                  </property>
                  <property name="frameShape">
@@ -2438,6 +2681,9 @@ QRadioButton::indicator::checked {
                  </property>
                  <property name="lineWidth">
                   <number>0</number>
+                 </property>
+                 <property name="verticalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAsNeeded</enum>
                  </property>
                  <property name="horizontalScrollBarPolicy">
                   <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -2480,6 +2726,9 @@ QRadioButton::indicator::checked {
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
 	background-color: transparent;
@@ -2516,6 +2765,10 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+
+QPushButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2540,6 +2793,9 @@ QPushButton:pressed:hover {
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
 	background-color: transparent;
@@ -2576,6 +2832,10 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+
+QPushButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2596,6 +2856,9 @@ QPushButton:pressed:hover {
                    <width>150</width>
                    <height>16777215</height>
                   </size>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QRadioButton {
@@ -2618,6 +2881,10 @@ QRadioButton::indicator::unchecked {
 
 QRadioButton::indicator::checked {
 	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+
+QRadioButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -2820,6 +3087,9 @@ QRadioButton::indicator::checked {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -2837,6 +3107,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -2881,6 +3154,9 @@ QPushButton:hover {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -2901,6 +3177,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -3047,6 +3326,9 @@ QPushButton:hover {
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3083,6 +3365,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3124,6 +3409,9 @@ QPushButton:pressed:hover {
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3160,6 +3448,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3201,6 +3492,9 @@ QPushButton:pressed:hover {
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3237,6 +3531,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3271,6 +3568,9 @@ QPushButton:pressed:hover {
                     <height>26</height>
                    </size>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3307,6 +3607,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3341,6 +3644,9 @@ QPushButton:pressed:hover {
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3377,6 +3683,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3418,6 +3727,9 @@ QPushButton:pressed:hover {
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3454,6 +3766,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3678,6 +3993,9 @@ QPushButton:pressed:hover {
                     <stylestrategy>PreferAntialias</stylestrategy>
                    </font>
                   </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QPushButton {
 	background-color: transparent;
@@ -3714,6 +4032,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                   </property>
                   <property name="text">
@@ -3848,11 +4169,15 @@ QPushButton:pressed:hover {
                        <stylestrategy>PreferAntialias</stylestrategy>
                       </font>
                      </property>
+                     <property name="focusPolicy">
+                      <enum>Qt::NoFocus</enum>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">border-style: solid;
 border-color: #474a51;
 border-width: 1px;
 border-radius: 10px;
+outline: none;
 </string>
                      </property>
                      <property name="text">
@@ -3997,14 +4322,12 @@ border-radius: 10px;
 	height: 9px;
 	background-image: url(:/images/background_effects_speed_slider.png) ;
 }
-
 QSlider::handle:horizontal {
 	width:  24px;
 	height: 24px;
     background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.45 #afafaf, stop: 0.54 transparent);
 	margin: -8px -11px -7px -11px;
 }
-
 QSlider::handle:horizontal:disabled {
     background: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.45 #2f333c, stop: 0.54 transparent);
 }</string>
@@ -4180,6 +4503,9 @@ QSlider::handle:horizontal:disabled {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -4197,6 +4523,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -4241,6 +4570,9 @@ QPushButton:hover {
                   <kerning>true</kerning>
                  </font>
                 </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton {
 	border: 0px;
@@ -4261,6 +4593,9 @@ QPushButton:disabled {
 }
 QPushButton:hover {
 	color: mediumspringgreen;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                 </property>
                 <property name="text">
@@ -4382,6 +4717,9 @@ QPushButton:hover {
                    <stylestrategy>PreferAntialias</stylestrategy>
                   </font>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
 	background-color: transparent;
@@ -4418,6 +4756,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -4452,6 +4793,9 @@ QPushButton:pressed:hover {
                    <stylestrategy>PreferAntialias</stylestrategy>
                   </font>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
 	background-color: transparent;
@@ -4488,6 +4832,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -4525,6 +4872,9 @@ QPushButton:pressed:hover {
                    <stylestrategy>PreferAntialias</stylestrategy>
                   </font>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
 	background-color: transparent;
@@ -4561,6 +4911,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -4608,6 +4961,9 @@ QPushButton:pressed:hover {
                    <stylestrategy>PreferAntialias</stylestrategy>
                   </font>
                  </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
 	background-color: transparent;
@@ -4644,6 +5000,9 @@ QPushButton:pressed:hover {
 	background-color: #00E39B;
 	color: white;
 	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
 }</string>
                  </property>
                  <property name="text">
@@ -4938,7 +5297,6 @@ color: white;</string>
     border-radius: 0px;
     height: 4px;
 }
-
 QSlider::add-page:qlineargradient {
 	background: #232631;
 	border-top-right-radius: 1px;
@@ -4946,7 +5304,6 @@ QSlider::add-page:qlineargradient {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
-
 QSlider::sub-page:qlineargradient {
 	background: #00e39b;
 	border-top-right-radius: 0px;
@@ -4954,7 +5311,6 @@ QSlider::sub-page:qlineargradient {
 	border-top-left-radius: 1px;
 	border-bottom-left-radius: 1px;
 }
-
 QSlider::handle:horizontal {
 	width: 12px;
 	height: 12px;
@@ -5195,7 +5551,6 @@ QSlider::handle:horizontal {
     border-radius: 0px;
     height: 4px;
 }
-
 QSlider::add-page:qlineargradient {
 	background: #232631;
 	border-top-right-radius: 1px;
@@ -5203,7 +5558,6 @@ QSlider::add-page:qlineargradient {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
-
 QSlider::sub-page:qlineargradient {
 	background: #00e39b;
 	border-top-right-radius: 0px;
@@ -5211,7 +5565,6 @@ QSlider::sub-page:qlineargradient {
 	border-top-left-radius: 1px;
 	border-bottom-left-radius: 1px;
 }
-
 QSlider::handle:horizontal {
 	width: 12px;
 	height: 12px;
@@ -5669,7 +6022,6 @@ color: white;</string>
     border-radius: 0px;
     height: 4px;
 }
-
 QSlider::add-page:qlineargradient {
 	background: #232631;
 	border-top-right-radius: 1px;
@@ -5677,7 +6029,6 @@ QSlider::add-page:qlineargradient {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
-
 QSlider::sub-page:qlineargradient {
 	background: #00e39b;
 	border-top-right-radius: 0px;
@@ -5685,7 +6036,6 @@ QSlider::sub-page:qlineargradient {
 	border-top-left-radius: 1px;
 	border-bottom-left-radius: 1px;
 }
-
 QSlider::handle:horizontal {
 	width: 12px;
 	height: 12px;
@@ -5891,7 +6241,6 @@ QSlider::handle:horizontal {
     border-radius: 0px;
     height: 4px;
 }
-
 QSlider::add-page:qlineargradient {
 	background: #232631;
 	border-top-right-radius: 1px;
@@ -5899,7 +6248,6 @@ QSlider::add-page:qlineargradient {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
-
 QSlider::sub-page:qlineargradient {
 	background: #00e39b;
 	border-top-right-radius: 0px;
@@ -5907,7 +6255,6 @@ QSlider::sub-page:qlineargradient {
 	border-top-left-radius: 1px;
 	border-bottom-left-radius: 1px;
 }
-
 QSlider::handle:horizontal {
 	width: 12px;
 	height: 12px;
@@ -6290,7 +6637,6 @@ color: white;</string>
     border-radius: 0px;
     height: 4px;
 }
-
 QSlider::add-page:qlineargradient {
 	background: #232631;
 	border-top-right-radius: 1px;
@@ -6298,7 +6644,6 @@ QSlider::add-page:qlineargradient {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
-
 QSlider::sub-page:qlineargradient {
 	background: #00e39b;
 	border-top-right-radius: 0px;
@@ -6306,7 +6651,6 @@ QSlider::sub-page:qlineargradient {
 	border-top-left-radius: 1px;
 	border-bottom-left-radius: 1px;
 }
-
 QSlider::handle:horizontal {
 	width: 12px;
 	height: 12px;
