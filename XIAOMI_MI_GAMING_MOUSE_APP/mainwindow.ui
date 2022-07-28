@@ -1319,14 +1319,20 @@ QPushButton:focus {
            <property name="leftMargin">
             <number>110</number>
            </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
            <property name="rightMargin">
             <number>109</number>
            </property>
            <property name="bottomMargin">
-            <number>9</number>
+            <number>0</number>
            </property>
            <property name="horizontalSpacing">
-            <number>5</number>
+            <number>0</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>13</number>
            </property>
            <item row="0" column="0">
             <widget class="QFrame" name="frm_bttns_swtch">
@@ -1341,7 +1347,7 @@ QPushButton:focus {
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_17">
               <property name="spacing">
-               <number>1</number>
+               <number>0</number>
               </property>
               <property name="leftMargin">
                <number>0</number>
@@ -1350,7 +1356,7 @@ QPushButton:focus {
                <number>0</number>
               </property>
               <property name="rightMargin">
-               <number>2</number>
+               <number>0</number>
               </property>
               <property name="bottomMargin">
                <number>0</number>
@@ -1448,7 +1454,7 @@ QPushButton:focus {
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>101</width>
                   <height>10</height>
                  </size>
                 </property>
@@ -1477,6 +1483,9 @@ QPushButton:focus {
 	border-left-width: 1px;
 	border-left-style: solid;
 	border-left-color: dimgrey;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: dimgrey;
 }
 QPushButton:checked {
 	color: mediumspringgreen;
@@ -1544,9 +1553,6 @@ QPushButton:focus {
 	border: 0px;
 	background-color: transparent;
 	color: silver;
-	border-left-width: 1px;
-	border-left-style: solid;
-	border-left-color: dimgrey;
 }
 QPushButton:checked {
 	color: mediumspringgreen;
@@ -1601,7 +1607,7 @@ QPushButton:focus {
              </property>
              <property name="minimumSize">
               <size>
-               <width>0</width>
+               <width>701</width>
                <height>1</height>
               </size>
              </property>
@@ -1630,13 +1636,16 @@ QPushButton:focus {
              <widget class="QWidget" name="page_2_1">
               <layout class="QGridLayout" name="gridLayout_20">
                <property name="leftMargin">
-                <number>40</number>
+                <number>41</number>
                </property>
                <property name="topMargin">
                 <number>15</number>
                </property>
+               <property name="horizontalSpacing">
+                <number>9</number>
+               </property>
                <property name="verticalSpacing">
-                <number>15</number>
+                <number>18</number>
                </property>
                <item row="0" column="1">
                 <widget class="QRadioButton" name="rdBttn_key_func_rght_clck">
@@ -2023,10 +2032,10 @@ QRadioButton:focus {
                 <number>0</number>
                </property>
                <property name="verticalSpacing">
-                <number>15</number>
+                <number>17</number>
                </property>
-               <item row="1" column="0">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_shw_dsktp">
+               <item row="0" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_cls_wndw">
                  <property name="focusPolicy">
                   <enum>Qt::NoFocus</enum>
                  </property>
@@ -2053,7 +2062,55 @@ QRadioButton:focus {
 }</string>
                  </property>
                  <property name="text">
-                  <string>Show desktop(WIN+D)</string>
+                  <string>Close window(ALT-F4)</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0" colspan="5">
+                <spacer name="verticalSpacer_18">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_undo">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+QRadioButton:disabled {
+	color: #454950;
+}
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Undo(Ctrl+Z)</string>
                  </property>
                 </widget>
                </item>
@@ -2089,6 +2146,38 @@ QRadioButton:focus {
                  </property>
                 </widget>
                </item>
+               <item row="2" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_paste">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+QRadioButton:disabled {
+	color: #454950;
+}
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Paste(Ctrl+V)</string>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="4">
                 <widget class="QRadioButton" name="rdBttn_key_cmb_copy">
                  <property name="focusPolicy">
@@ -2121,7 +2210,186 @@ QRadioButton:focus {
                  </property>
                 </widget>
                </item>
-               <item row="4" column="0" colspan="5">
+               <item row="0" column="3" rowspan="3">
+                <spacer name="horizontalSpacer_21">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>122</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_nxt_tab_in_brwsr">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+QRadioButton:disabled {
+	color: #454950;
+}
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Next tab in browser(Ctrl+Tab)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" rowspan="3">
+                <spacer name="horizontalSpacer_22">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>70</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="2">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_redo">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+QRadioButton:disabled {
+	color: #454950;
+}
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Redo(Ctrl+Y)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_shw_dsktp">
+                 <property name="minimumSize">
+                  <size>
+                   <width>180</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+QRadioButton:disabled {
+	color: #454950;
+}
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Show desktop(WIN+D)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QRadioButton" name="rdBttn_key_cmb_cut">
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+QRadioButton:disabled {
+	color: #454950;
+}
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Cut(Ctrl+X)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <spacer name="horizontalSpacer_25">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="4" column="0" colspan="6">
                 <widget class="QFrame" name="frm_cstm_key_cmb">
                  <property name="frameShape">
                   <enum>QFrame::NoFrame</enum>
@@ -2137,7 +2405,7 @@ QRadioButton:focus {
                    <number>0</number>
                   </property>
                   <property name="topMargin">
-                   <number>0</number>
+                   <number>6</number>
                   </property>
                   <property name="rightMargin">
                    <number>0</number>
@@ -2149,123 +2417,8 @@ QRadioButton:focus {
                    <number>0</number>
                   </property>
                   <property name="verticalSpacing">
-                   <number>5</number>
+                   <number>11</number>
                   </property>
-                  <item row="1" column="4">
-                   <widget class="QPushButton" name="pshBttn_sav_cstm_key_cmb">
-                    <property name="minimumSize">
-                     <size>
-                      <width>60</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="focusPolicy">
-                     <enum>Qt::NoFocus</enum>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QPushButton {
-	background-color: transparent;
-	color: silver;
-	padding: 5px 5px;
-	border-color: #333742;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 2px;
-}
-QPushButton:checked {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:pressed {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:disabled {
-	color: #454950;
-	border-color: #2b3139;
-}
-QPushButton:hover {
-	border-color: #494d55;
-}
-QPushButton:checked:hover {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:pressed:hover {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:focus {
-   outline: none;
-}</string>
-                    </property>
-                    <property name="text">
-                     <string>Save</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="lbl_cstm_key_cmb">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>320</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>Tahoma</family>
-                      <pointsize>10</pointsize>
-                      <stylestrategy>PreferAntialias</stylestrategy>
-                     </font>
-                    </property>
-                    <property name="focusPolicy">
-                     <enum>Qt::StrongFocus</enum>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QLabel {
-	background-color: #1e232f;
-	color: silver;
-	padding: 5px 5px;
-	border-color: #333742;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 2px;
-}
-QLabel::hover {
-	border-color: mediumspringgreen;
-}
-QLabel:focus {
-    border-color: mediumspringgreen;
-}</string>
-                    </property>
-                    <property name="text">
-                     <string notr="true"/>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="2">
                    <widget class="QPushButton" name="pshBttn_clr_cstm_key_cmb">
                     <property name="minimumSize">
@@ -2329,22 +2482,6 @@ QPushButton:focus {
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="3">
-                   <spacer name="horizontalSpacer_20">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Fixed</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>10</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
                   <item row="1" column="1">
                    <spacer name="horizontalSpacer_19">
                     <property name="orientation">
@@ -2371,6 +2508,74 @@ QPushButton:focus {
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="3">
+                   <spacer name="horizontalSpacer_20">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>10</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lbl_cstm_key_cmb">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>320</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>10</pointsize>
+                      <stylestrategy>PreferAntialias</stylestrategy>
+                     </font>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::ClickFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QLabel {
+	background-color: #1e232f;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QLabel::hover {
+	border-color: mediumspringgreen;
+}
+QLabel:focus {
+    border-color: mediumspringgreen;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="1" column="5">
                    <spacer name="horizontalSpacer_18">
                     <property name="orientation">
@@ -2384,248 +2589,71 @@ QPushButton:focus {
                     </property>
                    </spacer>
                   </item>
+                  <item row="1" column="4">
+                   <widget class="QPushButton" name="pshBttn_sav_cstm_key_cmb">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Save</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_redo">
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-QRadioButton:disabled {
-	color: #454950;
-}
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Redo(Ctrl+Y)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="4">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_cut">
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-QRadioButton:disabled {
-	color: #454950;
-}
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Cut(Ctrl+X)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_cls_wndw">
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-QRadioButton:disabled {
-	color: #454950;
-}
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Close window(ALT-F4)</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="4">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_paste">
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-QRadioButton:disabled {
-	color: #454950;
-}
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Paste(Ctrl+V)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0" colspan="5">
-                <spacer name="verticalSpacer_18">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="1" column="2">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_nxt_tab_in_brwsr">
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-QRadioButton:disabled {
-	color: #454950;
-}
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Next tab in browser(Ctrl+Tab)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QRadioButton" name="rdBttn_key_cmb_undo">
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-QRadioButton:disabled {
-	color: #454950;
-}
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Undo(Ctrl+Z)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1" rowspan="3">
-                <spacer name="horizontalSpacer_22">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>60</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="3" rowspan="3">
-                <spacer name="horizontalSpacer_21">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>54</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
               </layout>
              </widget>
@@ -2635,13 +2663,13 @@ QRadioButton:focus {
                 <number>0</number>
                </property>
                <property name="topMargin">
-                <number>15</number>
+                <number>16</number>
                </property>
                <property name="rightMargin">
                 <number>0</number>
                </property>
                <property name="bottomMargin">
-                <number>15</number>
+                <number>30</number>
                </property>
                <property name="horizontalSpacing">
                 <number>0</number>
@@ -2651,6 +2679,18 @@ QRadioButton:focus {
                </property>
                <item row="0" column="0" rowspan="5">
                 <widget class="QListWidget" name="lstWdgt_mcrs_evnts_lst">
+                 <property name="minimumSize">
+                  <size>
+                   <width>420</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>420</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <family>Tahoma</family>
@@ -2666,23 +2706,28 @@ QRadioButton:focus {
                   <string notr="true">QListWidget {
 	background-color: transparent;
 	color: silver;
-	padding: 5px 5px;
+	padding: 5px 5px 5px 5px;
 	border-color: #333742;
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 2px;
 }
-
+QListView::item {
+	height: 26px;
+}
+QListView::item:selected {
+	background-color: #50308cc6;
+}
 QScrollBar:vertical {
 	border: 0px;
 	background: transparent;
-	width: 3px;
+	width: 10px;
+	padding: 0 0 0 5px;
 }
-
 QScrollBar::handle:vertical {
 	background: #2c3038;
+	min-height: 26px;
 }
-
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 	border: 0px;
 	background: transparent;
@@ -2713,6 +2758,9 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                  <property name="selectionBehavior">
                   <enum>QAbstractItemView::SelectRows</enum>
                  </property>
+                 <property name="verticalScrollMode">
+                  <enum>QAbstractItemView::ScrollPerPixel</enum>
+                 </property>
                 </widget>
                </item>
                <item row="0" column="2">
@@ -2723,7 +2771,101 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
-                   <height>40</height>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="3" column="2">
+                <widget class="QRadioButton" name="rdBttn_dly_btwn_evnts">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="focusPolicy">
+                  <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QRadioButton {
+	color: silver;
+}
+
+QRadioButton:disabled {
+	color: #454950;
+}
+
+QRadioButton::indicator {
+	height: 16px;
+	width: 16px;
+	border: 0px;
+ }
+
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
+}
+
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_option_checked.png);
+}
+
+QRadioButton:focus {
+   outline: none;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Delay between events</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <spacer name="verticalSpacer_20">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="3" rowspan="5">
+                <spacer name="horizontalSpacer_24">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>65</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="1" rowspan="5">
+                <spacer name="horizontalSpacer_23">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>65</width>
+                   <height>20</height>
                   </size>
                  </property>
                 </spacer>
@@ -2858,100 +3000,6 @@ QPushButton:focus {
                   <string>Save</string>
                  </property>
                 </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QRadioButton" name="rdBttn_dly_btwn_evnts">
-                 <property name="minimumSize">
-                  <size>
-                   <width>150</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>150</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="focusPolicy">
-                  <enum>Qt::NoFocus</enum>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QRadioButton {
-	color: silver;
-}
-
-QRadioButton:disabled {
-	color: #454950;
-}
-
-QRadioButton::indicator {
-	height: 16px;
-	width: 16px;
-	border: 0px;
- }
-
-QRadioButton::indicator::unchecked {
-	background-image: url(:/images/icons/buttons/icon_option_unchecked.png);
-}
-
-QRadioButton::indicator::checked {
-	background-image: url(:/images/icons/buttons/icon_option_checked.png);
-}
-
-QRadioButton:focus {
-   outline: none;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Delay between events</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <spacer name="verticalSpacer_20">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="1" rowspan="5">
-                <spacer name="horizontalSpacer_23">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>65</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="3" rowspan="5">
-                <spacer name="horizontalSpacer_24">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeType">
-                  <enum>QSizePolicy::Fixed</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>65</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
               </layout>
              </widget>
