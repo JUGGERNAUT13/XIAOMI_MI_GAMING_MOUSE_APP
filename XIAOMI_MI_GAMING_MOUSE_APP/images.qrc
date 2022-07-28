@@ -128,5 +128,10 @@
         <file>images/icons/icon_close_unchecked.png</file>
         <file>images/icons/icon_minimize_checked.png</file>
         <file>images/icons/icon_minimize_unchecked.png</file>
+        <file>images/icons/buttons/icon_option_checked.png</file>
+        <file>images/icons/buttons/icon_option_unchecked.png</file>
+        <file>images/icons/buttons/icon_key_released.png</file>
+        <file>images/icons/buttons/icon_key_pressed.png</file>
+        <file>images/icons/buttons/icon_key_hold_delay.png</file>
     </qresource>
 </RCC>

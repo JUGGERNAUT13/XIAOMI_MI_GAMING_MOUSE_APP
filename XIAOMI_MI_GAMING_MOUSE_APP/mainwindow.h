@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
     #define MAINWINDOW_H
 
+    #include <QTime>
     #include <QMenu>
     #include <QTimer>
     #include <QMainWindow>
@@ -62,12 +63,25 @@
                 PAGES_COUNT     = 5
             } pages;
 
+            typedef enum linux_key_modifiers {
+                LEFT_SHIFT      = 50,
+                RIGHT_SHIFT     = 62,
+                LEFT_CTRL       = 37,
+                RIGHT_CTRL      = 105,
+                LEFT_ALT        = 64,
+                RIGHT_ALT       = 108,
+                LEFT_WIN        = 133,
+                RIGHT_WIN       = 134
+            } linux_key_modifiers;
+
             void finish_init();
             void create_base_settings();
             void create_color_buttons();
             void remove_color_buttons(int new_clrs_cnt);
             void remove_color_buttons_from_ui();
             void change_state_of_ui(bool flg);
+            QString get_key_name(QKeyEvent *event, bool *is_modifier_flg = nullptr);
+            void form_keys_combination();
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
             int mouse_non_sleep();
@@ -87,9 +101,13 @@
             QVector<QPushButton *> clrs_dlt_bttns_lst;
             QVector<ButtonHoverWatcher *> bttns_wtchrs_lst;
             QVector<int> crrnt_devs_clr_indxs;
+            QList<QTime> pressed_keys_tmr_lst;
+            QList<int> pressed_keys_lst;
+            QList<QString> cmb_mdfrs_lst;
             QString anim_img_nam;
             QString crrnt_tail_clr;
             QString crrnt_wheel_clr;
+            QString cmb_key = "";
             pages crrnt_page = HOME;
             pages prev_page = HOME;
             effects crrnt_tail_effct;
@@ -97,6 +115,7 @@
             speed crrnt_tail_spped;
             speed crrnt_wheel_speed;
             QPoint clck_pos;
+            QTime key_hold_timer;
 
             bool mnl_chng = false;
             bool is_frst_show = true;
@@ -105,6 +124,7 @@
             int16_t img_end_val = -1;
             int8_t img_cnt_dir = -1;
             uint8_t init_flg = 0;
+            uint8_t mcrs_prssd_cnt = 0;
 
         private slots:
             void showEvent(QShowEvent *) override;
@@ -112,9 +132,12 @@
             void mousePressEvent(QMouseEvent *event) override;
             void mouseMoveEvent(QMouseEvent *event) override;
             void mouseReleaseEvent(QMouseEvent *event) override;
+            void keyPressEvent(QKeyEvent *event) override;
+            void keyReleaseEvent(QKeyEvent *event) override;
             void on_pshBttn_add_clr_clicked();
             void slot_no_sleep_timeout();
             void slot_anim_timeout();
+            void on_pshBttn_clr_cstm_key_cmb_clicked();
     };
 
 #endif // MAINWINDOW_H

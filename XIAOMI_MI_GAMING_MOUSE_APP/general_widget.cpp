@@ -33,12 +33,13 @@ QString general_widget::get_color_button_stylesheet(QString color, QString disab
                                                      "stop: 0.8 transparent, stop: 0.90 pattern_1, stop: 0.98 transparent); }\n"
                   "QRadioButton::indicator::unchecked { background-color: qradialgradient(cx: 0.5, cy: 0.5, radius: 0.5, fx: 0.5, fy: 0.5, stop: 0.69 pattern_2, stop: 0.79 transparent); }\n"
                   "QRadioButton::indicator::checked { background-color: qradialgradient(cx: 0.5, cy: 0.5, radius:0.5, fx: 0.5, fy: 0.5, stop: 0.45 pattern_2, stop: 0.55 transparent, "
-                                                     "stop: 0.8 transparent, stop: 0.90 pattern_2, stop: 0.98 transparent); }";
+                                                     "stop: 0.8 transparent, stop: 0.90 pattern_2, stop: 0.98 transparent); }\n"
+                  "QRadioButton:focus { outline: none; }";
     return str.replace("pattern_2", color).replace("pattern_1", disable_color);
 }
 
 QString general_widget::get_color_button_delete_stylesheet() {
-    return "border-style: solid; border-color: #474a51; border-width: 1px; border-radius: 7px;";
+    return "border-style: solid; border-color: #474a51; border-width: 1px; border-radius: 7px; outline: none;";
 }
 
 //-------------------------------------------------------------------------

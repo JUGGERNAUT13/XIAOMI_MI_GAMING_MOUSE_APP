@@ -37,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->frm_clr_bttns->update();
     });
     crrnt_devs_clr_indxs = {-1, -1};
-    connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::hide);
-    connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::showMinimized);
+    connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::/*hide*/close);
+    connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::/*showMinimized*/hide);
     minimizeAction = new QAction(tr("Minimize"), this);
     connect(minimizeAction, &QAction::triggered, this, &MainWindow::hide);
     maximizeAction = new QAction(tr("Maximize"), this);
@@ -116,6 +116,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         if(i < PAGES_COUNT) {
             bttns_lst[i]->setText("    " + bttns_lst[i]->text());
             connect(bttns_lst[i], &QPushButton::toggled, this, [=]() {
+                ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
+                ui->lbl_cstm_key_cmb->clearFocus();
                 ui->stckdWdgt_main_pages->setCurrentIndex(i);
                 ui->frm_bttns_top_side_swtch->setVisible(i == BUTTONS);
                 prev_page = crrnt_page;
@@ -182,9 +184,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         mnl_chng = false;
     };
     connect(ui->pshBttn_bttns_top, &QPushButton::toggled, this, [=]() {
+        ui->pshBttn_bttns_key_cmbntns->click();
         anim_1("siderToPosition_0", 0, 16, 1);
     });
     connect(ui->pshBttn_bttns_side, &QPushButton::toggled, this, [=]() {
+        ui->pshBttn_bttns_key_fnctns->click();
         anim_1("siderToPosition_0", 15, -1, -1);
     });
     connect(ui->pshBttn_lghtnng_head, &QPushButton::toggled, this, [=]() {
@@ -243,6 +247,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             write_to_mouse_hid(rfrsh_rate);
         });
     }
+    QVector<QPushButton *> key_bttns_lst{ui->pshBttn_bttns_key_fnctns, ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_macros};
+    for(int i = 0; i < key_bttns_lst.count(); i++) {
+        connect(key_bttns_lst[i], &QPushButton::clicked, this, [=]() {
+            ui->stckdWdgt_key_fnctns_cmbntns_macros->setCurrentIndex(i);
+            ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
+            ui->lbl_cstm_key_cmb->clearFocus();
+        });
+    }
+    ui->pshBttn_bttns_key_cmbntns->click();
+    connect(ui->pshBttn_strt_stp_rcrd_mcrs, &QPushButton::toggled, this, [=](bool tggld) {
+        QVector<QString> strt_stp_rcrd_names{tr("Start record"), tr("Stop record")};
+        ui->pshBttn_strt_stp_rcrd_mcrs->setText(strt_stp_rcrd_names[static_cast<int>(tggld)]);
+        while(tggld && (ui->lstWdgt_mcrs_evnts_lst->count() > 0)) {
+            delete ui->lstWdgt_mcrs_evnts_lst->takeItem(0);
+        }
+        pressed_keys_lst.clear();
+        pressed_keys_tmr_lst.clear();
+        ui->pshBttn_save_mcrs->setEnabled(!tggld);
+        ui->rdBttn_dly_btwn_evnts->setEnabled(!tggld);
+    });
     anim_timer = new QTimer();
     connect(anim_timer, &QTimer::timeout, this, &MainWindow::slot_anim_timeout);
     no_sleep_timer = new QTimer();
@@ -259,6 +283,9 @@ MainWindow::~MainWindow() {
     remove_color_buttons_from_ui();
     anim_timer->stop();
     delete anim_timer;
+    while(ui->lstWdgt_mcrs_evnts_lst->count() > 0) {
+        delete ui->lstWdgt_mcrs_evnts_lst->takeItem(0);
+    }
     delete minimizeAction;
     delete maximizeAction;
     delete restoreAction;
@@ -310,6 +337,63 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
     }
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    bool is_modifier_flg = true;
+    QString key = get_key_name(event, &is_modifier_flg);
+    if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && !event->isAutoRepeat() && key.count()) {
+        pressed_keys_lst.append(event->key());
+        if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
+            pressed_keys_tmr_lst.append(QTime());
+            pressed_keys_tmr_lst.last().restart();
+            if(pressed_keys_lst.count() > 1) {
+                ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"), (QString::number(key_hold_timer.elapsed()) + " Milliseconds delay")));
+            }
+            key_hold_timer.restart();
+        }
+        ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_pressed.png"), key));
+        ui->lstWdgt_mcrs_evnts_lst->setCurrentRow(ui->lstWdgt_mcrs_evnts_lst->count() - 1);
+    } else if(ui->lbl_cstm_key_cmb->hasFocus() && !event->isAutoRepeat() && key.count()) {
+        if(is_modifier_flg) {
+            bool append_key = true;
+            for(uint8_t i = 0; i < cmb_mdfrs_lst.count(); i++) {
+                if(cmb_mdfrs_lst[i].compare(key, Qt::CaseInsensitive) == 0) {
+                    append_key = false;
+                    break;
+                }
+            }
+            if(append_key) {
+                cmb_mdfrs_lst.append(key);
+            }
+        } else {
+            cmb_key = key;
+        }
+        form_keys_combination();
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+    QString key = get_key_name(event);
+    if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && !event->isAutoRepeat() && key.count()) {
+        for(int i = 0; i < pressed_keys_lst.count(); i++) {
+            if(event->key() == pressed_keys_lst[i]) {
+                if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
+                    ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"), (QString::number(pressed_keys_tmr_lst[i].elapsed()) + " Milliseconds delay")));
+                }
+                ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_released.png"), key));
+                ui->lstWdgt_mcrs_evnts_lst->setCurrentRow(ui->lstWdgt_mcrs_evnts_lst->count() - 1);
+                pressed_keys_lst.removeAt(i);
+                pressed_keys_tmr_lst.removeAt(i);
+                mcrs_prssd_cnt++;
+                if(mcrs_prssd_cnt == 64) {
+                    mcrs_prssd_cnt = 0;
+                    ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
+                }
+                break;
+            }
+        }
+    }
+}
+
 void MainWindow::on_pshBttn_add_clr_clicked() {
     QColorDialog dlg(this);
     QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
@@ -325,6 +409,12 @@ void MainWindow::on_pshBttn_add_clr_clicked() {
             remove_color_buttons(clrs_cnt);
         }
     }
+}
+
+void MainWindow::on_pshBttn_clr_cstm_key_cmb_clicked() {
+    cmb_key.clear();
+    cmb_mdfrs_lst.clear();
+    form_keys_combination();
 }
 
 void MainWindow::finish_init() {
@@ -390,6 +480,7 @@ void MainWindow::create_color_buttons() {
                        gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue").toUInt());
         clrs_bttns_lst[i]->setMinimumSize(20, 20);
         clrs_bttns_lst[i]->setMaximumSize(20, 20);
+        clrs_bttns_lst[i]->setFocusPolicy(Qt::NoFocus);
         tmp_clr_dsbld.setRgb(tmp_clr.rgb());
         tmp_clr_dsbld.setAlpha(128);
         clrs_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_stylesheet(tmp_clr.name(QColor::HexRgb), tmp_clr_dsbld.name(QColor::HexArgb)));
@@ -429,6 +520,7 @@ void MainWindow::create_color_buttons() {
         });
         clrs_dlt_bttns_lst[i]->setMinimumSize(14, 14);
         clrs_dlt_bttns_lst[i]->setMaximumSize(14, 14);
+        clrs_dlt_bttns_lst[i]->setFocusPolicy(Qt::NoFocus);
         clrs_dlt_bttns_lst[i]->setIcon(QIcon(":/images/icons/lightning/icon_delete_color.png"));
         ui->frm_dlt_clr_bttns->layout()->addWidget(clrs_dlt_bttns_lst[i]);
         connect(clrs_dlt_bttns_lst[i], &QPushButton::clicked, this, [=]() {
@@ -477,6 +569,53 @@ void MainWindow::change_state_of_ui(bool flg) {
     ui->stckdWdgt_main_pages->setEnabled(flg);
     ui->lbl_mouse_img_anim->setEnabled(flg);
     ui->frm_slider->setEnabled(flg);
+}
+
+QString MainWindow::get_key_name(QKeyEvent *event, bool *is_modifier_flg) {
+    QString key = QKeySequence(event->key()).toString();
+    if((event->key() == Qt::Key_Shift) && (event->nativeScanCode() == LEFT_SHIFT)) {
+        return "L SHIFT";
+    } else if((event->key() == Qt::Key_Shift) && (event->nativeScanCode() == RIGHT_SHIFT)) {
+        return "R SHIFT";
+    } else if((event->key() == Qt::Key_Control) && (event->nativeScanCode() == LEFT_CTRL)) {
+        return "L CTRL";
+    } else if((event->key() == Qt::Key_Control) && (event->nativeScanCode() == RIGHT_CTRL)) {
+        return "R CTRL";
+    } else if((event->key() == Qt::Key_Alt) && (event->nativeScanCode() == LEFT_ALT)) {
+        return "L ALT";
+    } else if((event->key() == Qt::Key_Alt) && (event->nativeScanCode() == RIGHT_ALT)) {
+        return "R ALT";
+    } else if((event->key() == Qt::Key_Meta) && (event->nativeScanCode() == LEFT_WIN)) {
+        return "L WIN";
+    } else if((event->key() == Qt::Key_Meta) && (event->nativeScanCode() == RIGHT_WIN)) {
+        return "R WIN";
+    } else if((event->key() == 0) || ((key.count() != 0) && !key.at(0).isLetterOrNumber() && !key.at(0).isPunct() && !key.at(0).isSymbol())) {
+        return "";
+    } else {
+        if(is_modifier_flg) {
+            *is_modifier_flg = false;
+        }
+        return QKeySequence(event->key()).toString();
+    }
+}
+
+void MainWindow::form_keys_combination() {
+    QVector<QString> cmb_names{"L CTRL", "L ALT", "L SHIFT", "L WIN", "R CTRL", "R ALT", "R SHIFT", "R WIN"};
+    QString cmb_str = "";
+    for(uint8_t i = 0; i < cmb_names.count(); i++) {
+        for(uint8_t j = 0; j < cmb_mdfrs_lst.count(); j++) {
+            if(cmb_names[i].compare(cmb_mdfrs_lst[j], Qt::CaseInsensitive) == 0) {
+                cmb_str.append(cmb_mdfrs_lst[j] + "+");
+                break;
+            }
+        }
+    }
+    if(cmb_key.count() != 0) {
+        cmb_str.append(cmb_key);
+    } else {
+        cmb_str.remove((cmb_str.count() - 1), 1);
+    }
+    ui->lbl_cstm_key_cmb->setText(cmb_str);
 }
 
 int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *output) {
