@@ -1431,7 +1431,7 @@ QPushButton:focus {
                  <bool>true</bool>
                 </property>
                 <property name="checked">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="autoExclusive">
                  <bool>true</bool>
@@ -1501,7 +1501,7 @@ QPushButton:focus {
                  <bool>true</bool>
                 </property>
                 <property name="checked">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="autoExclusive">
                  <bool>true</bool>
@@ -2151,11 +2151,80 @@ QRadioButton:focus {
                   <property name="verticalSpacing">
                    <number>5</number>
                   </property>
-                  <item row="1" column="0">
-                   <widget class="QLineEdit" name="lnEdt_cstm_key_cmb">
+                  <item row="1" column="4">
+                   <widget class="QPushButton" name="pshBttn_sav_cstm_key_cmb">
                     <property name="minimumSize">
                      <size>
-                      <width>0</width>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>60</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+	background-color: transparent;
+	color: silver;
+	padding: 5px 5px;
+	border-color: #333742;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+}
+QPushButton:checked {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:disabled {
+	color: #454950;
+	border-color: #2b3139;
+}
+QPushButton:hover {
+	border-color: #494d55;
+}
+QPushButton:checked:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:pressed:hover {
+	background-color: #00E39B;
+	color: white;
+	border-color: #00E39B;
+}
+QPushButton:focus {
+   outline: none;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Save</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lbl_cstm_key_cmb">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>320</width>
                       <height>30</height>
                      </size>
                     </property>
@@ -2165,8 +2234,18 @@ QRadioButton:focus {
                       <height>30</height>
                      </size>
                     </property>
+                    <property name="font">
+                     <font>
+                      <family>Tahoma</family>
+                      <pointsize>10</pointsize>
+                      <stylestrategy>PreferAntialias</stylestrategy>
+                     </font>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::StrongFocus</enum>
+                    </property>
                     <property name="styleSheet">
-                     <string notr="true">QLineEdit {
+                     <string notr="true">QLabel {
 	background-color: #1e232f;
 	color: silver;
 	padding: 5px 5px;
@@ -2175,15 +2254,15 @@ QRadioButton:focus {
 	border-width: 1px;
 	border-radius: 2px;
 }
-QLineEdit::hover {
+QLabel::hover {
 	border-color: mediumspringgreen;
 }
-QLineEdit:focus {
+QLabel:focus {
     border-color: mediumspringgreen;
 }</string>
                     </property>
-                    <property name="readOnly">
-                     <bool>true</bool>
+                    <property name="text">
+                     <string notr="true"/>
                     </property>
                    </widget>
                   </item>
@@ -2250,78 +2329,21 @@ QPushButton:focus {
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="4">
-                   <widget class="QPushButton" name="pshBttn_sav_cstm_key_cmb">
-                    <property name="minimumSize">
+                  <item row="1" column="3">
+                   <spacer name="horizontalSpacer_20">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
                      <size>
-                      <width>60</width>
-                      <height>30</height>
+                      <width>10</width>
+                      <height>20</height>
                      </size>
                     </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>60</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="focusPolicy">
-                     <enum>Qt::NoFocus</enum>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QPushButton {
-	background-color: transparent;
-	color: silver;
-	padding: 5px 5px;
-	border-color: #333742;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 2px;
-}
-QPushButton:checked {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:pressed {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:disabled {
-	color: #454950;
-	border-color: #2b3139;
-}
-QPushButton:hover {
-	border-color: #494d55;
-}
-QPushButton:checked:hover {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:pressed:hover {
-	background-color: #00E39B;
-	color: white;
-	border-color: #00E39B;
-}
-QPushButton:focus {
-   outline: none;
-}</string>
-                    </property>
-                    <property name="text">
-                     <string>Save</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0" colspan="6">
-                   <widget class="QLabel" name="lbl_cstm_key_cmb_txt">
-                    <property name="styleSheet">
-                     <string notr="true">color: silver;</string>
-                    </property>
-                    <property name="text">
-                     <string>Custom key combo</string>
-                    </property>
-                   </widget>
+                   </spacer>
                   </item>
                   <item row="1" column="1">
                    <spacer name="horizontalSpacer_19">
@@ -2339,6 +2361,16 @@ QPushButton:focus {
                     </property>
                    </spacer>
                   </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_cstm_key_cmb_txt">
+                    <property name="styleSheet">
+                     <string notr="true">color: silver;</string>
+                    </property>
+                    <property name="text">
+                     <string>Custom key combo</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="1" column="5">
                    <spacer name="horizontalSpacer_18">
                     <property name="orientation">
@@ -2346,23 +2378,7 @@ QPushButton:focus {
                     </property>
                     <property name="sizeHint" stdset="0">
                      <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="1" column="3">
-                   <spacer name="horizontalSpacer_20">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::Fixed</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>10</width>
+                      <width>0</width>
                       <height>20</height>
                      </size>
                     </property>

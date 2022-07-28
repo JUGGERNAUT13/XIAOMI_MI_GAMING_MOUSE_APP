@@ -63,13 +63,25 @@
                 PAGES_COUNT     = 5
             } pages;
 
+            typedef enum linux_key_modifiers {
+                LEFT_SHIFT      = 50,
+                RIGHT_SHIFT     = 62,
+                LEFT_CTRL       = 37,
+                RIGHT_CTRL      = 105,
+                LEFT_ALT        = 64,
+                RIGHT_ALT       = 108,
+                LEFT_WIN        = 133,
+                RIGHT_WIN       = 134
+            } linux_key_modifiers;
+
             void finish_init();
             void create_base_settings();
             void create_color_buttons();
             void remove_color_buttons(int new_clrs_cnt);
             void remove_color_buttons_from_ui();
             void change_state_of_ui(bool flg);
-            void write_key_to_list(QKeyEvent *event, QString icon_type);
+            QString get_key_name(QKeyEvent *event, bool *is_modifier_flg = nullptr);
+            void form_keys_combination();
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
             int mouse_non_sleep();
@@ -91,9 +103,11 @@
             QVector<int> crrnt_devs_clr_indxs;
             QList<QTime> pressed_keys_tmr_lst;
             QList<int> pressed_keys_lst;
+            QList<QString> cmb_mdfrs_lst;
             QString anim_img_nam;
             QString crrnt_tail_clr;
             QString crrnt_wheel_clr;
+            QString cmb_key = "";
             pages crrnt_page = HOME;
             pages prev_page = HOME;
             effects crrnt_tail_effct;
@@ -123,6 +137,7 @@
             void on_pshBttn_add_clr_clicked();
             void slot_no_sleep_timeout();
             void slot_anim_timeout();
+            void on_pshBttn_clr_cstm_key_cmb_clicked();
     };
 
 #endif // MAINWINDOW_H
