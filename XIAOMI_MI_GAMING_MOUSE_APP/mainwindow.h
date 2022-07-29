@@ -79,6 +79,7 @@
             void create_color_buttons();
             void remove_color_buttons(int new_clrs_cnt);
             void remove_color_buttons_from_ui();
+            void change_color_frame_size();
             void change_state_of_ui(bool flg);
             QString get_key_name(QKeyEvent *event, bool *is_modifier_flg = nullptr);
             void form_keys_combination();
@@ -120,6 +121,7 @@
             bool mnl_chng = false;
             bool is_frst_show = true;
             bool is_drag = false;
+            uint16_t clr_scrl_area_max_width = 0;
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
             int8_t img_cnt_dir = -1;

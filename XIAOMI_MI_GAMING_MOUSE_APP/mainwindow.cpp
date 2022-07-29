@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#define ORIGINAL_MAX_COLORS     8
 #define PART_SIZE               12
-#define ANIM_INTERVAL_MS        32
+#define COLOR_BUTTON_SIZE       20
+#define ANIM_INTERVAL_MS        30
 #define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
 #define INIT_INTERVAL_MS        1000
@@ -16,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
     gen_widg = new general_widget(this);
     QDir::setCurrent(gen_widg->get_app_path());
+    clr_scrl_area_max_width = (ORIGINAL_MAX_COLORS * COLOR_BUTTON_SIZE) + ((ORIGINAL_MAX_COLORS - 1) * ui->frm_clr_bttns->layout()->spacing());
 //    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
     settings = new QSettings("./user_color.ini", QSettings::IniFormat);
     create_base_settings();
@@ -23,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->frm_dlt_clr_bttns->setVisible(false);
     connect(ui->pshBttn_edt_clrs, &QPushButton::toggled, this, [=](bool tggld) {
         QList<QString> bttn_txt{tr("Edit color"), tr("Done")};
+        change_color_frame_size();
         ui->pshBttn_edt_clrs->setText(bttn_txt.at(static_cast<int>(tggld)));
         ui->frm_dlt_clr_bttns->setVisible(tggld);
         ui->pshBttn_add_clr->setVisible(!tggld);
@@ -478,8 +482,8 @@ void MainWindow::create_color_buttons() {
         clrs_dlt_bttns_lst.push_back(new QPushButton(ui->frm_dlt_clr_bttns));
         tmp_clr.setRgb(gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Red").toUInt(), gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Green").toUInt(),
                        gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue").toUInt());
-        clrs_bttns_lst[i]->setMinimumSize(20, 20);
-        clrs_bttns_lst[i]->setMaximumSize(20, 20);
+        clrs_bttns_lst[i]->setMinimumSize(COLOR_BUTTON_SIZE, COLOR_BUTTON_SIZE);
+        clrs_bttns_lst[i]->setMaximumSize(COLOR_BUTTON_SIZE, COLOR_BUTTON_SIZE);
         clrs_bttns_lst[i]->setFocusPolicy(Qt::NoFocus);
         tmp_clr_dsbld.setRgb(tmp_clr.rgb());
         tmp_clr_dsbld.setAlpha(128);
@@ -544,6 +548,7 @@ void MainWindow::create_color_buttons() {
             remove_color_buttons(clrs_cnt_tmp - 1);
         });
     }
+    change_color_frame_size();
 }
 
 void MainWindow::remove_color_buttons(int new_clrs_cnt) {
@@ -563,6 +568,22 @@ void MainWindow::remove_color_buttons_from_ui() {
         delete clrs_dlt_bttns_lst[0];
         clrs_dlt_bttns_lst.removeAt(0);
     }
+}
+
+void MainWindow::change_color_frame_size() {
+    int clrs_cnt = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt();
+    int max_clr_bttns_width = (clrs_cnt * COLOR_BUTTON_SIZE) + ((clrs_cnt - 1) * static_cast<bool>(clrs_cnt) * ui->frm_clr_bttns->layout()->spacing());
+    ui->frm_clr_bttns->setFixedSize(max_clr_bttns_width, ui->frm_clr_bttns->height());
+    bool shw_scrllbr = (max_clr_bttns_width > clr_scrl_area_max_width);
+    if(shw_scrllbr) {
+        max_clr_bttns_width = clr_scrl_area_max_width;
+    }
+    ui->scrollArea->setFixedWidth(max_clr_bttns_width);
+    int clrs_sldr_hght = ui->scrollArea->styleSheet().split("padding").first().split("height").last().replace(":", "").replace(";", "").replace("px", "").replace(" ", "").toInt();
+    int clrs_dlt_bttns_hght = ui->frm_dlt_clr_bttns->minimumHeight() + dynamic_cast<QGridLayout *>(ui->scrollAreaWidgetContents->layout())->verticalSpacing();
+    ui->frm_clr_uppr_spcr->setFixedHeight(ui->frm_clr_uppr_spcr_inner->height() + (clrs_sldr_hght * static_cast<int>(shw_scrllbr)));
+    ui->scrollArea->setFixedHeight(((ui->pshBttn_edt_clrs->isChecked() || !shw_scrllbr) * clrs_dlt_bttns_hght) + ui->frm_clr_bttns->minimumHeight() + (clrs_sldr_hght * static_cast<int>(shw_scrllbr)));
+    ui->frm_clr_lwr_spcr->setFixedHeight(static_cast<int>(!ui->pshBttn_edt_clrs->isChecked() && (shw_scrllbr)) * clrs_dlt_bttns_hght);
 }
 
 void MainWindow::change_state_of_ui(bool flg) {
