@@ -29,15 +29,14 @@
             QString app_path = "";
     };
 
-    class ButtonHoverWatcher : public QObject {
+    class Enter_Leave_Watcher : public QObject {
         Q_OBJECT
         public:
-            explicit ButtonHoverWatcher(QString _icon_name, QObject *parent = nullptr);
+            explicit Enter_Leave_Watcher(QObject *parent = nullptr);
             virtual bool eventFilter(QObject *watched, QEvent *event) override;
-            void uncheck_button(QPushButton *button);
 
-        private:
-            QString icon_name;
+        signals:
+            void signal_object_enter_leave_event(QObject *object, QEvent::Type event_type);
     };
 
 #endif // GENERAL_WIDGET_H

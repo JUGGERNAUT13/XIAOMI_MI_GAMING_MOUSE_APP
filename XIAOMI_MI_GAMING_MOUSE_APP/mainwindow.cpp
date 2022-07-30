@@ -1,8 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#define ORIGINAL_MAX_COLORS     8
 #define PART_SIZE               12
-#define ANIM_INTERVAL_MS        32
+#define LBL_ANIM_INTERVAL_MS    17
+#define COLOR_BUTTON_SIZE       20
+#define IMG_ANIM_INTERVAL_MS    30
 #define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
 #define INIT_INTERVAL_MS        1000
@@ -16,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
     gen_widg = new general_widget(this);
     QDir::setCurrent(gen_widg->get_app_path());
+    clr_scrl_area_max_width = (ORIGINAL_MAX_COLORS * COLOR_BUTTON_SIZE) + ((ORIGINAL_MAX_COLORS - 1) * ui->frm_clr_bttns->layout()->spacing());
 //    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
     settings = new QSettings("./user_color.ini", QSettings::IniFormat);
     create_base_settings();
@@ -23,20 +27,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->frm_dlt_clr_bttns->setVisible(false);
     connect(ui->pshBttn_edt_clrs, &QPushButton::toggled, this, [=](bool tggld) {
         QList<QString> bttn_txt{tr("Edit color"), tr("Done")};
+        change_color_frame_size();
         ui->pshBttn_edt_clrs->setText(bttn_txt.at(static_cast<int>(tggld)));
         ui->frm_dlt_clr_bttns->setVisible(tggld);
         ui->pshBttn_add_clr->setVisible(!tggld);
         for(int i = 0; i < clrs_bttns_lst.count(); i++) {
             clrs_bttns_lst[i]->setCheckable(!tggld);
         }
-        if(!tggld && (crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] != -1)) {
+        if(!tggld && (crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] != -1)) {
             mnl_chng = true;
-            clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
+            clrs_bttns_lst[crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
             mnl_chng = false;
         }
         ui->frm_clr_bttns->update();
     });
-    crrnt_devs_clr_indxs = {-1, -1};
+    crrnt_devs_clr_indxs_lst = {-1, -1};
     connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::/*hide*/close);
     connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::/*showMinimized*/hide);
     minimizeAction = new QAction(tr("Minimize"), this);
@@ -60,6 +65,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             this->setVisible(!this->isVisible());
         }
     });
+    chrctrstc_txt_lst = {tr("Welcome to Xiaomi Gaming Mouse!"),
+                         tr("The 6 buttons can be set independently according to the palyer's need using\n the software, and Mi Mouse can be made more convenient by setting the combination key."),
+                         tr("Mi Mouse uses a foot pad made of teflon material, which is more durable and can greatly\n increase the life of the mouse."),
+                         tr("Mi Mouse has two connection modes: wired and 2.4G wireless.\n The transmission speed using the wired connection is the fastest. Swift speed is a key to a prolific gaming\n"
+                            "experience. When switching to wireless mode, Mi Mouse can be useful for fun and office work."),
+                         tr("Mi Mouse is designed to fit really well in the hand, providing the player with a seamless gaming experience. Coupled with\n two rubber side skirts, it helps players get a "
+                            "great fell of the mouse."),
+                         tr("Mi Mouse is equipped with a 5-speed adjustable 7200DPI optical sensor to\n ensure efficient data tracking, providing high levels of accuracy, tracking speed, and "
+                            "operational consistency.\n The player is able to fully attune himself to the in-game action without missing any key instances."),
+                         tr("Mi Mouse is designed with an aim button. When the player presses the aim button during the game,\n the DPI will be adjusted to a pre-set low value to help the player make "
+                            "a more precise aim while playing."),
+                         tr("The special light setting of the Mi Mouse allows the user to set\n colorful RGB lights of the headlights and taillights, when also exhibiting various lightning effects."),
+                         tr("Mi Mouse is equipped with a 32-bit ARM processor, making the device more responsive and more efficient. The\n software can also set the refresh rate of four gears 125, "
+                            "250, 500, 1000, which can be fully adapt to individual needs of players.")
+                        };
     QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
     for(int i = 0; i < effects_lst.count(); i++) {
         connect(effects_lst[i], &QPushButton::toggled, this, [=]() {
@@ -106,13 +126,55 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     for(int i = 0; i < pnl_chldrns_lst.count(); i++) {
         pnl_chldrns_lst[i]->setAttribute(Qt::WA_TranslucentBackground, true);
     }
-    ui->lbl_logo->setPixmap(QPixmap(":/images/logo.png"));
     ui->frm_bttns_top_side_swtch->setVisible(false);
+    QVector<QFrame *> chrctrstc_frms_outr_lst{ui->frm_1_pgrmmbl_outr, ui->frm_2_drbl_outr, ui->frm_3_dual_mod_outr, ui->frm_4_ergnmc_outr, ui->frm_5_optcl_sns_outr, ui->frm_6_aimng_outr,
+                                              ui->frm_7_lghtnng_outr, ui->frm_8_rfrsh_rate_outr};
+    for(int i = 0; i < chrctrstc_frms_outr_lst.count(); i++) {
+        chrctrstc_dirctns_lst.push_back(0);
+        chrctrstc_frms_wtchrs_lst.push_back(new Enter_Leave_Watcher(this));
+        chrctrstc_frms_outr_lst[i]->installEventFilter(chrctrstc_frms_wtchrs_lst[i]);
+        chrctrstc_frms_tmrs_lst.push_back(new QTimer());
+        connect(chrctrstc_frms_tmrs_lst[i], &QTimer::timeout, this, [=]() {
+            chrctrstc_frms_tmrs_lst[i]->stop();
+            int top = chrctrstc_frms_outr_lst[i]->layout()->contentsMargins().top() - chrctrstc_dirctns_lst[i];
+            int bottom = chrctrstc_frms_outr_lst[i]->layout()->contentsMargins().bottom() + chrctrstc_dirctns_lst[i];
+            if(((bottom != -1) && (chrctrstc_dirctns_lst[i] == -1)) || ((top != -1) && (chrctrstc_dirctns_lst[i] == 1))) {
+                chrctrstc_frms_outr_lst[i]->layout()->setContentsMargins(chrctrstc_frms_outr_lst[i]->layout()->contentsMargins().left(), top, chrctrstc_frms_outr_lst[i]->layout()->contentsMargins().right(), bottom);
+                chrctrstc_frms_tmrs_lst[i]->setInterval(LBL_ANIM_INTERVAL_MS);
+                chrctrstc_frms_tmrs_lst[i]->start();
+            } else {
+                chrctrstc_dirctns_lst[i] = 0;
+            }
+        });
+        connect(chrctrstc_frms_wtchrs_lst[i], &Enter_Leave_Watcher::signal_object_enter_leave_event, this, [=](QObject *obj, QEvent::Type evnt_typ) {
+            QFrame *frame = qobject_cast<QFrame*>(obj);
+            if(frame) {
+                int8_t leave_flg = static_cast<int8_t>(QEvent::Leave - evnt_typ);
+                ui->lbl_chrctrstc_txt->setText(chrctrstc_txt_lst[leave_flg + (leave_flg * i)]);
+                chrctrstc_dirctns_lst[i] = leave_flg - static_cast<int8_t>(evnt_typ == QEvent::Leave);
+                ui->lbl_chrctrstc_txt->setFont(QFont(ui->lbl_chrctrstc_txt->font().family(), (ui->lbl_chrctrstc_txt->font().pointSize() - (5 * chrctrstc_dirctns_lst[i]))));
+                ui->frm_chrctrstc_spcr->setFixedHeight(ui->frm_chrctrstc_spcr->height() - (5 * chrctrstc_dirctns_lst[i]));
+                ui->lbl_chrctrstc_txt->setFixedHeight(ui->lbl_chrctrstc_txt->height() + (5 * chrctrstc_dirctns_lst[i]));
+                chrctrstc_frms_tmrs_lst[i]->setInterval(LBL_ANIM_INTERVAL_MS);
+                chrctrstc_frms_tmrs_lst[i]->start();
+            }
+        });
+    }
     QVector<QString> icons_names{"page_home", "page_buttons", "page_lightning", "page_speed", "page_update", "minimize", "close"};
     QVector<QPushButton *>bttns_lst{ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update, ui->pshBttn_mnmz, ui->pshBttn_close};
     for(int i = 0; i < bttns_lst.count(); i++) {
-        bttns_wtchrs_lst.push_back(new ButtonHoverWatcher(icons_names[i], this));
+        bttns_wtchrs_lst.push_back(new Enter_Leave_Watcher(this));
         bttns_lst[i]->installEventFilter(bttns_wtchrs_lst[i]);
+        connect(bttns_wtchrs_lst[i], &Enter_Leave_Watcher::signal_object_enter_leave_event, this, [=](QObject *obj, QEvent::Type evnt_typ) {
+            QPushButton *button = qobject_cast<QPushButton*>(obj);
+            if(button && !button->isChecked()) {
+                if(evnt_typ == QEvent::Enter) {
+                    button->setIcon(QIcon(":/images/icons/icon_" + icons_names[i] + "_checked.png"));
+                } else if(evnt_typ == QEvent::Leave) {
+                    button->setIcon(QIcon(":/images/icons/icon_" + icons_names[i] + "_unchecked.png"));
+                }
+            }
+        });
         if(i < PAGES_COUNT) {
             bttns_lst[i]->setText("    " + bttns_lst[i]->text());
             connect(bttns_lst[i], &QPushButton::toggled, this, [=]() {
@@ -122,7 +184,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 ui->frm_bttns_top_side_swtch->setVisible(i == BUTTONS);
                 prev_page = crrnt_page;
                 crrnt_page = static_cast<pages>(i);
-                bttns_wtchrs_lst[prev_page]->uncheck_button(bttns_lst[prev_page]);
+                bttns_lst[prev_page]->setIcon(QIcon(":/images/icons/icon_" + icons_names[prev_page] + "_unchecked.png"));
                 if((prev_page == HOME) || (prev_page == SPEED) || (prev_page == UPDATE)) {
                     if(crrnt_page == BUTTONS) {
                         anim_2(15, -1, -1);
@@ -171,7 +233,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             if(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()].compare(avlbl_clr, Qt::CaseInsensitive) == 0) {
                 clrs_bttns_lst[i]->setChecked(true);
                 break;
-            } else if((crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] == -1) && clrs_bttns_lst[i]->isChecked()) {
+            } else if((crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] == -1) && clrs_bttns_lst[i]->isChecked()) {
                 clrs_bttns_lst[i]->setAutoExclusive(false);
                 clrs_bttns_lst[i]->setChecked(false);
                 clrs_bttns_lst[i]->setAutoExclusive(true);
@@ -293,10 +355,9 @@ MainWindow::~MainWindow() {
     delete trayIconMenu;
     delete trayIcon;
     delete settings;
-    while(bttns_wtchrs_lst.count() != 0) {
-        delete bttns_wtchrs_lst[0];
-        bttns_wtchrs_lst.removeAt(0);
-    }
+    clear_vector(&bttns_wtchrs_lst);
+    clear_vector(&chrctrstc_frms_wtchrs_lst);
+    clear_vector(&chrctrstc_frms_tmrs_lst);
     delete gen_widg;
     delete ui;
 }
@@ -478,8 +539,8 @@ void MainWindow::create_color_buttons() {
         clrs_dlt_bttns_lst.push_back(new QPushButton(ui->frm_dlt_clr_bttns));
         tmp_clr.setRgb(gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Red").toUInt(), gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Green").toUInt(),
                        gen_widg->get_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue").toUInt());
-        clrs_bttns_lst[i]->setMinimumSize(20, 20);
-        clrs_bttns_lst[i]->setMaximumSize(20, 20);
+        clrs_bttns_lst[i]->setMinimumSize(COLOR_BUTTON_SIZE, COLOR_BUTTON_SIZE);
+        clrs_bttns_lst[i]->setMaximumSize(COLOR_BUTTON_SIZE, COLOR_BUTTON_SIZE);
         clrs_bttns_lst[i]->setFocusPolicy(Qt::NoFocus);
         tmp_clr_dsbld.setRgb(tmp_clr.rgb());
         tmp_clr_dsbld.setAlpha(128);
@@ -487,7 +548,7 @@ void MainWindow::create_color_buttons() {
         clrs_dlt_bttns_lst[i]->setStyleSheet(gen_widg->get_color_button_delete_stylesheet());
         if(QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]) == tmp_clr) {
             if(ui->pshBttn_edt_clrs->isChecked()) {
-                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = i;
+                crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] = i;
             } else {
                 clrs_bttns_lst[i]->setChecked(true);
             }
@@ -497,7 +558,12 @@ void MainWindow::create_color_buttons() {
             if(ui->pshBttn_edt_clrs->isChecked()) {
                 QColorDialog dlg(this);
                 dlg.setOption(QColorDialog::DontUseNativeDialog, true);
-                QColor tmp_clr("#" + clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
+                QColor tmp_clr;
+                if(crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] != -1) {
+                    tmp_clr.setNamedColor("#" + clrs_bttns_lst[crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
+                } else {
+                    tmp_clr.setNamedColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]);
+                }
                 dlg.setCurrentColor(tmp_clr);
                 if(dlg.exec() == QDialog::Accepted) {
                     QColor color = dlg.selectedColor();
@@ -514,7 +580,7 @@ void MainWindow::create_color_buttons() {
         });
         connect(clrs_bttns_lst[i], &QRadioButton::toggled, this, [=](bool tggld) {
             if(tggld) {
-                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = i;
+                crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] = i;
                 mouse_set_color_for_device();
             }
         });
@@ -524,10 +590,10 @@ void MainWindow::create_color_buttons() {
         clrs_dlt_bttns_lst[i]->setIcon(QIcon(":/images/icons/lightning/icon_delete_color.png"));
         ui->frm_dlt_clr_bttns->layout()->addWidget(clrs_dlt_bttns_lst[i]);
         connect(clrs_dlt_bttns_lst[i], &QPushButton::clicked, this, [=]() {
-            if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] > i) {
-                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]--;
-            } else if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] == i) {
-                crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] = -1;
+            if(crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] > i) {
+                crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()]--;
+            } else if(crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] == i) {
+                crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] = -1;
             }
             int clrs_cnt_tmp = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt();
             settings->beginGroup("COLOR" + QString::number(i + 1));
@@ -544,6 +610,7 @@ void MainWindow::create_color_buttons() {
             remove_color_buttons(clrs_cnt_tmp - 1);
         });
     }
+    change_color_frame_size();
 }
 
 void MainWindow::remove_color_buttons(int new_clrs_cnt) {
@@ -565,10 +632,34 @@ void MainWindow::remove_color_buttons_from_ui() {
     }
 }
 
+void MainWindow::change_color_frame_size() {
+    int clrs_cnt = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt();
+    int max_clr_bttns_width = (clrs_cnt * COLOR_BUTTON_SIZE) + ((clrs_cnt - 1) * static_cast<bool>(clrs_cnt) * ui->frm_clr_bttns->layout()->spacing());
+    ui->frm_clr_bttns->setFixedSize(max_clr_bttns_width, ui->frm_clr_bttns->height());
+    bool shw_scrllbr = (max_clr_bttns_width > clr_scrl_area_max_width);
+    if(shw_scrllbr) {
+        max_clr_bttns_width = clr_scrl_area_max_width;
+    }
+    ui->scrollArea->setFixedWidth(max_clr_bttns_width);
+    int clrs_sldr_hght = ui->scrollArea->styleSheet().split("padding").first().split("height").last().replace(":", "").replace(";", "").replace("px", "").replace(" ", "").toInt();
+    int clrs_dlt_bttns_hght = ui->frm_dlt_clr_bttns->minimumHeight() + dynamic_cast<QGridLayout *>(ui->scrollAreaWidgetContents->layout())->verticalSpacing();
+    ui->frm_clr_uppr_spcr->setFixedHeight(ui->frm_clr_uppr_spcr_inner->height() + (clrs_sldr_hght * static_cast<int>(shw_scrllbr)));
+    ui->scrollArea->setFixedHeight(((ui->pshBttn_edt_clrs->isChecked() || !shw_scrllbr) * clrs_dlt_bttns_hght) + ui->frm_clr_bttns->minimumHeight() + (clrs_sldr_hght * static_cast<int>(shw_scrllbr)));
+    ui->frm_clr_lwr_spcr->setFixedHeight(static_cast<int>(!ui->pshBttn_edt_clrs->isChecked() && (shw_scrllbr)) * clrs_dlt_bttns_hght);
+}
+
 void MainWindow::change_state_of_ui(bool flg) {
     ui->stckdWdgt_main_pages->setEnabled(flg);
     ui->lbl_mouse_img_anim->setEnabled(flg);
     ui->frm_slider->setEnabled(flg);
+}
+
+template <typename T>
+void MainWindow::clear_vector(QVector<T *> *vctr) {
+    while(vctr->count() != 0) {
+        delete (*vctr)[0];
+        vctr->removeAt(0);
+    }
 }
 
 QString MainWindow::get_key_name(QKeyEvent *event, bool *is_modifier_flg) {
@@ -678,8 +769,8 @@ int MainWindow::mouse_set_color_for_device() {
     QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
     QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
     QColor clr;
-    if(crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()] != -1) {
-        clr.setNamedColor("#" + clrs_bttns_lst[crrnt_devs_clr_indxs[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
+    if(crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] != -1) {
+        clr.setNamedColor("#" + clrs_bttns_lst[crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
     } else {
         clr.setNamedColor(*(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]));
     }
@@ -726,7 +817,7 @@ void MainWindow::slot_anim_timeout() {
     ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
     crrnt_img += img_cnt_dir;
     if(crrnt_img != img_end_val) {
-        anim_timer->setInterval(ANIM_INTERVAL_MS);
+        anim_timer->setInterval(IMG_ANIM_INTERVAL_MS);
         anim_timer->start();
     } else {
         anim_img_nam = ":/images/anim/" + anim_img_nam + tmp + ".png";
