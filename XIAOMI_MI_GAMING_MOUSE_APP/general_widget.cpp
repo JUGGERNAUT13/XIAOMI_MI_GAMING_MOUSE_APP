@@ -90,26 +90,12 @@ bool general_widget::check_setting_exist(QSettings *settings, QString type, QVar
     }
 }
 
-ButtonHoverWatcher::ButtonHoverWatcher(QString _icon_name, QObject *parent) : QObject(parent) {
-    icon_name = _icon_name;
-}
+Enter_Leave_Watcher::Enter_Leave_Watcher(QObject *parent) : QObject(parent) {}
 
-bool ButtonHoverWatcher::eventFilter(QObject *watched, QEvent *event) {
-    QPushButton *button = qobject_cast<QPushButton*>(watched);
-    if(!button || button->isChecked()) {
-        return false;
-    }
-    if(event->type() == QEvent::Enter) {
-        button->setIcon(QIcon(":/images/icons/icon_" + icon_name + "_checked.png"));
-        return true;
-    }
-    if(event->type() == QEvent::Leave) {
-        uncheck_button(button);
+bool Enter_Leave_Watcher::eventFilter(QObject *object, QEvent *event) {
+    if((event->type() == QEvent::Enter) || (event->type() == QEvent::Leave)) {
+        emit signal_object_enter_leave_event(object, event->type());
         return true;
     }
     return false;
-}
-
-void ButtonHoverWatcher::uncheck_button(QPushButton *button) {
-    button->setIcon(QIcon(":/images/icons/icon_" + icon_name + "_unchecked.png"));
 }

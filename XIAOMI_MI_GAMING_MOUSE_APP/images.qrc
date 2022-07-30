@@ -133,5 +133,13 @@
         <file>images/icons/buttons/icon_key_released.png</file>
         <file>images/icons/buttons/icon_key_pressed.png</file>
         <file>images/icons/buttons/icon_key_hold_delay.png</file>
+        <file>images/icons/home/icon_aiming_plus.png</file>
+        <file>images/icons/home/icon_dual_mode.png</file>
+        <file>images/icons/home/icon_durable.png</file>
+        <file>images/icons/home/icon_ergonomic.png</file>
+        <file>images/icons/home/icon_lightning.png</file>
+        <file>images/icons/home/icon_optical_sens.png</file>
+        <file>images/icons/home/icon_programmable.png</file>
+        <file>images/icons/home/icon_refresh_rate.png</file>
     </qresource>
 </RCC>
