@@ -10,10 +10,22 @@
     <height>750</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>1100</width>
     <height>750</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="font">
@@ -26,6 +38,12 @@
    <string notr="true">Mi Gaming Mouse App</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
@@ -5988,7 +6006,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>16</width>
+                     <width>98</width>
                      <height>42</height>
                     </rect>
                    </property>

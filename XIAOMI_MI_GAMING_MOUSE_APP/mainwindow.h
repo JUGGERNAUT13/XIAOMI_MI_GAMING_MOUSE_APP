@@ -4,6 +4,7 @@
     #include <QTime>
     #include <QMenu>
     #include <QTimer>
+    #include <QPainter>
     #include <QMainWindow>
     #include <QColorDialog>
     #include <QRadioButton>
@@ -63,7 +64,7 @@
                 PAGES_COUNT     = 5
             } pages;
 
-            typedef enum linux_key_modifiers {
+            typedef enum key_modifiers {
 #ifdef __linux__
                 LEFT_SHIFT      = 50,
                 RIGHT_SHIFT     = 62,
@@ -83,7 +84,7 @@
                 LEFT_WIN        = 133,      //??
                 RIGHT_WIN       = 348
 #endif
-            } linux_key_modifiers;
+            } key_modifiers;
 
             void finish_init();
             void create_base_settings();
@@ -96,6 +97,8 @@
             void clear_vector(QVector<T *> *vctr);
             QString get_key_name(QKeyEvent *event, bool *is_modifier_flg = nullptr);
             void form_keys_combination();
+            QPixmap apply_effects_on_mouse_image();
+            void prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header);
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
             int mouse_non_sleep();
