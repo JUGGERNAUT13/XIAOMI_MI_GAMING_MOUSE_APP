@@ -141,5 +141,11 @@
         <file>images/icons/home/icon_optical_sens.png</file>
         <file>images/icons/home/icon_programmable.png</file>
         <file>images/icons/home/icon_refresh_rate.png</file>
+        <file>images/effects/tail_rgb_mask_sider.png</file>
+        <file>images/effects/tail_rgb_mask_strabismus.png</file>
+        <file>images/effects/tail_rgb_mask_trail.png</file>
+        <file>images/effects/wheel_mask_position.png</file>
+        <file>images/effects/wheel_mask_sider.png</file>
+        <file>images/effects/wheel_mask_strabismus.png</file>
     </qresource>
 </RCC>

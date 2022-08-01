@@ -66,20 +66,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         }
     });
     chrctrstc_txt_lst = {tr("Welcome to Xiaomi Gaming Mouse!"),
-                         tr("The 6 buttons can be set independently according to the palyer's need using\n the software, and Mi Mouse can be made more convenient by setting the combination key."),
+                         tr("The 6 buttons can be set independently according to the player's needs using\n the software, and Mi Mouse can be made more convenient by setting the combination key."),
                          tr("Mi Mouse uses a foot pad made of teflon material, which is more durable and can greatly\n increase the life of the mouse."),
                          tr("Mi Mouse has two connection modes: wired and 2.4G wireless.\n The transmission speed using the wired connection is the fastest. Swift speed is a key to a prolific gaming\n"
                             "experience. When switching to wireless mode, Mi Mouse can be useful for fun and office work."),
                          tr("Mi Mouse is designed to fit really well in the hand, providing the player with a seamless gaming experience. Coupled with\n two rubber side skirts, it helps players get a "
-                            "great fell of the mouse."),
+                            "great feel of the mouse."),
                          tr("Mi Mouse is equipped with a 5-speed adjustable 7200DPI optical sensor to\n ensure efficient data tracking, providing high levels of accuracy, tracking speed, and "
                             "operational consistency.\n The player is able to fully attune himself to the in-game action without missing any key instances."),
                          tr("Mi Mouse is designed with an aim button. When the player presses the aim button during the game,\n the DPI will be adjusted to a pre-set low value to help the player make "
                             "a more precise aim while playing."),
-                         tr("The special light setting of the Mi Mouse allows the user to set\n colorful RGB lights of the headlights and taillights, when also exhibiting various lightning effects."),
+                         tr("The special light setting function of the Mi Mouse allows the user to set\n colorful RGB lights of the headlights and taillights, when also exhibiting various lightning effects."),
                          tr("Mi Mouse is equipped with a 32-bit ARM processor, making the device more responsive and more efficient. The\n software can also set the refresh rate of four gears 125, "
-                            "250, 500, 1000, which can be fully adapt to individual needs of players.")
-                        };
+                            "250, 500, 1000, which can fully adapt to individual needs of players.")};
     QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
     for(int i = 0; i < effects_lst.count(); i++) {
         connect(effects_lst[i], &QPushButton::toggled, this, [=]() {
@@ -90,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             mouse_set_color_for_device();
         });
     }
+    ui->lbl_logo->setPixmap(QPixmap(":/images/logo.png"));
     QIcon ico(":/images/icon.ico");
     trayIcon->setIcon(ico);
     qApp->setWindowIcon(ico);
@@ -150,6 +150,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             QFrame *frame = qobject_cast<QFrame*>(obj);
             if(frame) {
                 int8_t leave_flg = static_cast<int8_t>(QEvent::Leave - evnt_typ);
+                QVector<QLabel *> icon_lbls_lst{ui->lbl_prgmmbl_img, ui->lbl_drbl_img, ui->lbl_dual_mod_img, ui->lbl_ergnmc_img, ui->lbl_optcl_sns_img, ui->lbl_aimng_img,
+                                                ui->lbl_lghtnng_img, ui->lbl_rfrsh_rate_img};
+                QVector<QVector<QString>> icon_clsrs{{"#242830", "#232c33"}, {"#00e39b", "#00e39b"}};
+                QVector<QString> icon_nams_lst{"programmable", "durable", "dual_mode", "ergonomic", "optical_sens", "aiming_plus", "lightning", "refresh_rate"};
+                QString styleseet = "QLabel { background-image: url(:/images/icons/home/icon_" + icon_nams_lst[i] + ".png); background-position: center center; "
+                                    "background-repeat: no-repeat; background-color: " + icon_clsrs[leave_flg][0] + "; border-color: " + icon_clsrs[leave_flg][1] + "; "
+                                    "border-style: solid; border-width: 1px; border-radius: 30px; }\nQLabel:hover { background-color: #00e39b; border-color: #00e39b; }";
+                icon_lbls_lst[i]->setStyleSheet(styleseet);
                 ui->lbl_chrctrstc_txt->setText(chrctrstc_txt_lst[leave_flg + (leave_flg * i)]);
                 chrctrstc_dirctns_lst[i] = leave_flg - static_cast<int8_t>(evnt_typ == QEvent::Leave);
                 ui->lbl_chrctrstc_txt->setFont(QFont(ui->lbl_chrctrstc_txt->font().family(), (ui->lbl_chrctrstc_txt->font().pointSize() - (5 * chrctrstc_dirctns_lst[i]))));
@@ -264,6 +272,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     for(int i = 0; i < speed_bttns_lst.count(); i++) {
         connect(speed_bttns_lst[i], &QPushButton::toggled, this, [=]() {
             ui->stckdWdgt_rfrsh_rate_n_dpi->setCurrentIndex(i);
+            QByteArray tmp_in, tmp_out;
+            QVector<QSlider *> sldrs_lst{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
+            prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, "\x4d\xc2");
+            mnl_chng = true;
+            emit sldrs_lst[tmp_in.mid(8, 1).toHex().toInt(nullptr, 16)]->sliderReleased();
+            mnl_chng = false;
         });
     }
     QVector<QSlider *> sldrs_lst{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
@@ -375,8 +389,7 @@ void MainWindow::resizeEvent(QResizeEvent *) {
     main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     this->setPalette(main_palette);
     ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
-    QPixmap mouse_img(anim_img_nam);
-    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->width(), ui->lbl_mouse_img_anim->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    ui->lbl_mouse_img_anim->setPixmap(apply_effects_on_mouse_image());
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
@@ -483,26 +496,18 @@ void MainWindow::finish_init() {
     QVector<effects *> devs_effcts_lst{&crrnt_tail_effct, &crrnt_wheel_effct};
     QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
     QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
-    QByteArray tmp_out;
-    QByteArray tmp_in;
-    std::function<void(QByteArray *arr_out, QByteArray *arr_in, QByteArray header)> prepare_data_for_read_write = [=](QByteArray *arr_out, QByteArray *arr_in, QByteArray header) {
-        arr_in->fill('\x00', INPUT_PACKET_SIZE);
-        arr_out->clear();
-        arr_out->append(header);
-        arr_out->append((PACKET_SIZE - arr_out->count()), '\x00');
-        write_to_mouse_hid((*arr_out), true, arr_in);
-    };
+    QByteArray tmp_in, tmp_out;
     for(int i = 0; i < devs_lst.count(); i++) {
-        prepare_data_for_read_write(&tmp_out, &tmp_in, QByteArray("\x4d\xa0").append(devs_lst[i]));
+        prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, QByteArray("\x4d\xa0").append(devs_lst[i]));
         *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt(nullptr, 16) - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt(nullptr, 16) > TIC_TAC));
         *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt(nullptr, 16));
         *(devs_clrs_lst[i]) = (QColor("#" + QString(tmp_in.mid(8, 3).toHex())).name(QColor::HexRgb));
     }
     QVector<QPushButton *> rfrsh_rate_bttns_lst{ui->pshBttn_rfrsh_rate_1000, ui->pshBttn_rfrsh_rate_500, ui->pshBttn_rfrsh_rate_250, ui->pshBttn_rfrsh_rate_125};
-    prepare_data_for_read_write(&tmp_out, &tmp_in, "\x4d\xc4");
+    prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, "\x4d\xc4");
     int crrnt_rfrsh_rate = log2(tmp_in.mid(3, 1).toHex().toInt(nullptr, 16));
     QVector<QSlider *> sldrs_lst{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
-    prepare_data_for_read_write(&tmp_out, &tmp_in, "\x4d\xc2");
+    prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, "\x4d\xc2");
     mnl_chng = true;
     for(int i = 0; i < sldrs_lst.count(); i++) {
         sldrs_lst[i]->setValue(tmp_in.mid((3 + i), 1).toHex().toInt(nullptr, 16) * sldrs_lst[i]->singleStep());
@@ -709,6 +714,74 @@ void MainWindow::form_keys_combination() {
     ui->lbl_cstm_key_cmb->setText(cmb_str);
 }
 
+QPixmap MainWindow::apply_effects_on_mouse_image() {
+    QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
+    QVector<effects> curr_dev_effect{crrnt_tail_effct, crrnt_wheel_effct};
+    QVector<QColor> clrs_lst;
+    for(uint8_t i = 0; i < devs_clrs_lst.count(); i++) {
+        if(curr_dev_effect[i] == DISABLE) {
+            clrs_lst.push_back(QColor(Qt::darkGray));
+        } else if(crrnt_devs_clr_indxs_lst[i] != -1) {
+            clrs_lst.push_back(QColor("#" + clrs_bttns_lst[crrnt_devs_clr_indxs_lst[i]]->styleSheet().split("#").last().split(",").first()));
+        } else {
+            clrs_lst.push_back(QColor(*(devs_clrs_lst[i])));
+        }
+    }
+    QImage src_img(anim_img_nam);
+    src_img = src_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QVector<QString> mask_path{"", ""};
+    QImage tail_img(src_img.size(), QImage::Format_ARGB32);
+    QImage wheel_img(src_img.size(), QImage::Format_ARGB32);
+    if((crrnt_page == BUTTONS) && (ui->pshBttn_bttns_side->isChecked())) {
+        mask_path[0] = ":/images/effects/tail_rgb_mask_sider.png";
+        mask_path[1] = ":/images/effects/wheel_mask_sider.png";
+    } else if((crrnt_page == LIGHTNING) && (ui->pshBttn_lghtnng_tail->isChecked())) {
+        mask_path[0] = ":/images/effects/tail_rgb_mask_trail.png";
+    } else if(!((crrnt_page == BUTTONS) && (ui->pshBttn_bttns_top->isChecked()))) {
+        mask_path[0] = ":/images/effects/tail_rgb_mask_strabismus.png";
+        if(!((crrnt_page == LIGHTNING) && (ui->pshBttn_lghtnng_tail->isChecked()))) {
+            mask_path[1] = ":/images/effects/wheel_mask_strabismus.png";
+        }
+    } else if((crrnt_page == BUTTONS) && (ui->pshBttn_bttns_top->isChecked())) {
+        mask_path[1] = ":/images/effects/wheel_mask_position.png";
+    }
+    QVector<QImage *> mask_images{&tail_img, &wheel_img};
+    for(uint8_t i = 0; i < mask_images.count(); i++) {
+        mask_images[i]->fill(Qt::transparent);
+        if(mask_path[i].count()) {
+            QImage mask(mask_path[i]);
+            mask = mask.scaled(src_img.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            QPainter pntr(mask_images[i]);
+            if(curr_dev_effect[i] < COLORS_CHANGING) {
+                pntr.setPen(QPen(clrs_lst[i], Qt::SolidLine));
+                pntr.setBrush(QBrush(clrs_lst[i], Qt::SolidPattern));
+                pntr.drawRect(0, 0, src_img.width(), src_img.height());
+            }
+            pntr.setCompositionMode(QPainter::CompositionMode_Screen);
+            if(curr_dev_effect[i] < COLORS_CHANGING) {
+                pntr.drawImage(0, 0, mask.createHeuristicMask());
+                pntr.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+            }
+            pntr.drawImage(0, 0, mask);
+            pntr.end();
+        }
+    }
+    QPainter pntr(&src_img);
+    pntr.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+    pntr.drawImage(0, 0, tail_img);
+    pntr.drawImage(0, 0, wheel_img);
+    pntr.end();
+    return QPixmap::fromImage(src_img);
+}
+
+void MainWindow::prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header) {
+    arr_in->fill('\x00', INPUT_PACKET_SIZE);
+    arr_out->clear();
+    arr_out->append(header);
+    arr_out->append((PACKET_SIZE - arr_out->count()), '\x00');
+    write_to_mouse_hid((*arr_out), true, arr_in);
+}
+
 int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *output) {
     if(mnl_chng) {
         return 0;
@@ -784,6 +857,9 @@ int MainWindow::mouse_set_color_for_device() {
     clr_mod_spd_arr.append(clr.green());
     clr_mod_spd_arr.append(clr.blue());
     clr_mod_spd_arr.append((PACKET_SIZE - clr_mod_spd_arr.count()), '\x00');
+    if(!mnl_chng) {
+        ui->lbl_mouse_img_anim->setPixmap(apply_effects_on_mouse_image());
+    }
     return write_to_mouse_hid(clr_mod_spd_arr);
 }
 
@@ -821,5 +897,6 @@ void MainWindow::slot_anim_timeout() {
         anim_timer->start();
     } else {
         anim_img_nam = ":/images/anim/" + anim_img_nam + tmp + ".png";
+        ui->lbl_mouse_img_anim->setPixmap(apply_effects_on_mouse_image());
     }
 }
