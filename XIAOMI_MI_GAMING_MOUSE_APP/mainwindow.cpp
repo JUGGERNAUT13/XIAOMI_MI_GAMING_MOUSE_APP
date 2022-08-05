@@ -81,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                          tr("Mi Mouse is equipped with a 32-bit ARM processor, making the device more responsive and more efficient. The\n software can also set the refresh rate of four gears 125, "
                             "250, 500, 1000, which can fully adapt to individual needs of players.")};
     QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
-    for(int i = 0; i < effects_lst.count(); i++) {
+    for(uint8_t i = 0; i < effects_lst.count(); i++) {
         connect(effects_lst[i], &QPushButton::toggled, this, [=]() {
             ui->frm_spd->setEnabled(i > STATIC);
             ui->frm_clr->setEnabled(((i + static_cast<int>(i > TIC_TAC)) < COLORS_CHANGING) && (i > DISABLE));
@@ -124,13 +124,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         }
     };
     QList<QWidget *> pnl_chldrns_lst = ui->frm_slider->findChildren<QWidget *>();
-    for(int i = 0; i < pnl_chldrns_lst.count(); i++) {
+    for(uint8_t i = 0; i < pnl_chldrns_lst.count(); i++) {
         pnl_chldrns_lst[i]->setAttribute(Qt::WA_TranslucentBackground, true);
     }
     ui->frm_bttns_top_side_swtch->setVisible(false);
     QVector<QFrame *> chrctrstc_frms_outr_lst{ui->frm_1_pgrmmbl_outr, ui->frm_2_drbl_outr, ui->frm_3_dual_mod_outr, ui->frm_4_ergnmc_outr, ui->frm_5_optcl_sns_outr, ui->frm_6_aimng_outr,
                                               ui->frm_7_lghtnng_outr, ui->frm_8_rfrsh_rate_outr};
-    for(int i = 0; i < chrctrstc_frms_outr_lst.count(); i++) {
+    for(uint8_t i = 0; i < chrctrstc_frms_outr_lst.count(); i++) {
         chrctrstc_dirctns_lst.push_back(0);
         chrctrstc_frms_wtchrs_lst.push_back(new Enter_Leave_Watcher(this));
         chrctrstc_frms_outr_lst[i]->installEventFilter(chrctrstc_frms_wtchrs_lst[i]);
@@ -173,7 +173,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     QVector<QString> icons_names{"page_home", "page_buttons", "page_lightning", "page_speed", "page_update"};
     QVector<QString> bttn_icon_types{"unchecked", "checked"};
     QVector<QPushButton *>bttns_lst{ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
-    for(int i = 0; i < bttns_lst.count(); i++) {
+    for(uint8_t i = 0; i < bttns_lst.count(); i++) {
         bttns_wtchrs_lst.push_back(new Enter_Leave_Watcher(this));
         bttns_lst[i]->installEventFilter(bttns_wtchrs_lst[i]);
         connect(bttns_wtchrs_lst[i], &Enter_Leave_Watcher::signal_object_enter_leave_event, this, [=](QObject *obj, QEvent::Type evnt_typ) {
@@ -240,7 +240,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         QString avlbl_clr;
-        for(int i = 0; i < clrs_bttns_lst.count(); i++) {
+        for(uint8_t i = 0; i < clrs_bttns_lst.count(); i++) {
             avlbl_clr = "#" + clrs_bttns_lst[i]->styleSheet().split("#").last().split(",").first();
             if(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()].compare(avlbl_clr, Qt::CaseInsensitive) == 0) {
                 clrs_bttns_lst[i]->setChecked(true);
@@ -273,7 +273,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     });
     connect(ui->hrzntlSldr_effct_spd, &QSlider::valueChanged, this, &MainWindow::mouse_set_color_for_device);
     QVector<QPushButton *> speed_bttns_lst{ui->pshBttn_speed_rfrsh_rate, ui->pshBttn_speed_dpi};
-    for(int i = 0; i < speed_bttns_lst.count(); i++) {
+    for(uint8_t i = 0; i < speed_bttns_lst.count(); i++) {
         connect(speed_bttns_lst[i], &QPushButton::toggled, this, [=]() {
             ui->stckdWdgt_rfrsh_rate_n_dpi->setCurrentIndex(i);
             QByteArray tmp_in, tmp_out;
@@ -332,7 +332,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         });
     }
     QVector<QPushButton *> key_bttns_lst{ui->pshBttn_bttns_key_fnctns, ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_macros};
-    for(int i = 0; i < key_bttns_lst.count(); i++) {
+    for(uint8_t i = 0; i < key_bttns_lst.count(); i++) {
         connect(key_bttns_lst[i], &QPushButton::clicked, this, [=]() {
             ui->stckdWdgt_key_fnctns_cmbntns_macros->setCurrentIndex(i);
             ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
@@ -455,7 +455,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     QString key = get_key_name(event);
     if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && !event->isAutoRepeat() && key.count()) {
-        for(int i = 0; i < pressed_keys_lst.count(); i++) {
+        for(uint8_t i = 0; i < pressed_keys_lst.count(); i++) {
             if(event->key() == pressed_keys_lst[i]) {
                 if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
                     ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"), (QString::number(pressed_keys_tmr_lst[i].elapsed()) + " Milliseconds delay")));
@@ -478,7 +478,45 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 void MainWindow::on_pshBttn_rst_sttngs_clicked() {
     Dialog_Reset_Settings rst_sttngs_dlg(this);
     if(rst_sttngs_dlg.exec() == QDialog::Accepted) {
-        qDebug() << "yep";
+        crrnt_devs_clr_indxs_lst = {-1, -1};
+        crrnt_tail_clr = crrnt_wheel_clr = QColor(Qt::green).name();
+        crrnt_tail_effct = crrnt_wheel_effct = STATIC;
+        crrnt_tail_spped = crrnt_wheel_speed = SPEED_4;
+        QVector<devices> mouse_dvcs{TAIL, WHEEL};
+        QVector<QColor> mouse_dflt_clrs{QColor(crrnt_tail_clr), QColor(crrnt_wheel_clr)};
+        QVector<effects> mouse_dflt_effcts{crrnt_tail_effct, crrnt_wheel_effct};
+        QVector<speed> mouse_dflt_spd{crrnt_tail_spped, crrnt_wheel_speed};
+        QByteArray clr_mod_spd_arr;
+        for(uint8_t i = 0; i < mouse_dvcs.count(); i++) {
+            clr_mod_spd_arr.clear();
+            clr_mod_spd_arr.append("\x4d\xa1");
+            clr_mod_spd_arr.append(mouse_dvcs[i]);
+            clr_mod_spd_arr.append(mouse_dflt_effcts[i]);
+            clr_mod_spd_arr.append(mouse_dflt_spd[i]);
+            clr_mod_spd_arr.append("\x08\x08");
+            clr_mod_spd_arr.append(mouse_dflt_clrs[i].red());
+            clr_mod_spd_arr.append(mouse_dflt_clrs[i].green());
+            clr_mod_spd_arr.append(mouse_dflt_clrs[i].blue());
+            clr_mod_spd_arr.append((PACKET_SIZE - clr_mod_spd_arr.count()), '\x00');
+            write_to_mouse_hid(clr_mod_spd_arr);
+        }
+        remove_color_buttons(gen_widg->get_setting(settings, "USER_COLOR/Num").toInt());
+        ui->pshBttn_rfrsh_rate_1000->setChecked(true);
+        emit ui->pshBttn_rfrsh_rate_1000->toggled(true);
+        QVector<uint16_t> crrnt_dpi{100, 800, 1600, 2400, 4800};
+        QVector<QSlider *> crrnt_dpi_sldrs{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
+        for(uint8_t i = 0; i < crrnt_dpi_sldrs.count(); i++) {
+            crrnt_dpi_sldrs[i]->setValue(crrnt_dpi[i]);
+        }
+        emit ui->hrzntlSldr_rfrsh_rate_lvl_3->sliderReleased();
+        ui->pshBttn_bttns_top->setChecked(true);
+        emit ui->pshBttn_bttns_top->toggled(true);
+        ui->pshBttn_speed_rfrsh_rate->setChecked(true);
+        emit ui->pshBttn_speed_rfrsh_rate->toggled(true);
+        ui->pshBttn_lghtnng_head->setChecked(true);
+        emit ui->pshBttn_lghtnng_head->toggled(true);
+        ui->pshBttn_1_home->setChecked(true);
+        emit ui->pshBttn_1_home->toggled(true);
     }
 }
 
@@ -816,7 +854,7 @@ void MainWindow::read_mouse_parameters() {
     QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
     QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
     QByteArray tmp_in, tmp_out;
-    for(int i = 0; i < devs_lst.count(); i++) {
+    for(uint8_t i = 0; i < devs_lst.count(); i++) {
         prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, QByteArray("\x4d\xa0").append(devs_lst[i]));
         *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt(nullptr, 16) - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt(nullptr, 16) > TIC_TAC));
         *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt(nullptr, 16));
@@ -828,7 +866,7 @@ void MainWindow::read_mouse_parameters() {
     QVector<QSlider *> sldrs_lst{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
     prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, "\x4d\xc2");
     mnl_chng = true;
-    for(int i = 0; i < sldrs_lst.count(); i++) {
+    for(uint8_t i = 0; i < sldrs_lst.count(); i++) {
         sldrs_lst[i]->setValue(tmp_in.mid((3 + i), 1).toHex().toInt(nullptr, 16) * sldrs_lst[i]->singleStep());
         emit sldrs_lst[i]->valueChanged(sldrs_lst[i]->value());
     }
@@ -875,7 +913,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
         crrnt_prdct_id = PRODUCT_ID_WIRE;
     }
     QString path;
-    for(int i = 0; i < path_lst.count(); i++) {
+    for(uint16_t i = 0; i < path_lst.count(); i++) {
         if(prod_id_lst[i] == crrnt_prdct_id) {
             path = path_lst[i];
         }
