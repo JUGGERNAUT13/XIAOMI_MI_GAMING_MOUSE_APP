@@ -60,8 +60,7 @@
                 BUTTONS         = 1,
                 LIGHTNING       = 2,
                 SPEED           = 3,
-                UPDATE          = 4,
-                PAGES_COUNT     = 5
+                UPDATE          = 4
             } pages;
 
             typedef enum key_modifiers {
@@ -87,6 +86,7 @@
             } key_modifiers;
 
             void finish_init();
+            void resize_images();
             void create_base_settings();
             void create_color_buttons();
             void remove_color_buttons(int new_clrs_cnt);
@@ -97,8 +97,10 @@
             void clear_vector(QVector<T *> *vctr);
             QString get_key_name(QKeyEvent *event, bool *is_modifier_flg = nullptr);
             void form_keys_combination();
+            void change_backgound_for_page_widget(QWidget *page = nullptr, bool draw_gear = true);
             QPixmap apply_effects_on_mouse_image();
             void prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header);
+            void read_mouse_parameters();
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
             int mouse_non_sleep();
@@ -141,6 +143,9 @@
             bool mnl_chng = false;
             bool is_frst_show = true;
             bool is_drag = false;
+            bool mnl_rdng = false;
+            bool crrnt_ui_state = true;
+            bool prev_ui_state;
             uint16_t clr_scrl_area_max_width = 0;
             int16_t crrnt_img = -1;
             int16_t img_end_val = -1;
@@ -156,10 +161,28 @@
             void mouseReleaseEvent(QMouseEvent *event) override;
             void keyPressEvent(QKeyEvent *event) override;
             void keyReleaseEvent(QKeyEvent *event) override;
+            void on_pshBttn_rst_sttngs_clicked();
             void on_pshBttn_add_clr_clicked();
             void slot_no_sleep_timeout();
             void slot_anim_timeout();
             void on_pshBttn_clr_cstm_key_cmb_clicked();
+    };
+
+    //////////////////////////////////////////////////DIALOG RESET SETTINGS///////////////////////////////////////////////////
+    QT_BEGIN_NAMESPACE
+    namespace Ui {
+        class Dialog_Reset_Settings;
+    }
+    QT_END_NAMESPACE
+
+    class Dialog_Reset_Settings : public QDialog {
+        Q_OBJECT
+        public:
+            Dialog_Reset_Settings(QWidget *parent = nullptr);
+            ~Dialog_Reset_Settings() override;
+
+        private:
+            Ui::Dialog_Reset_Settings *ui;
     };
 
 #endif // MAINWINDOW_H

@@ -147,5 +147,8 @@
         <file>images/effects/wheel_mask_position.png</file>
         <file>images/effects/wheel_mask_sider.png</file>
         <file>images/effects/wheel_mask_strabismus.png</file>
+        <file>images/gear.png</file>
+        <file>images/icons/update/icon_follow.png</file>
+        <file>images/background_dialog_reset_settings.png</file>
     </qresource>
 </RCC>
