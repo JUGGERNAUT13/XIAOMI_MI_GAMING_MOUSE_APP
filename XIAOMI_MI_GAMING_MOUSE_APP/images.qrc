@@ -150,5 +150,7 @@
         <file>images/gear.png</file>
         <file>images/icons/update/icon_follow.png</file>
         <file>images/background_dialog_reset_settings.png</file>
+        <file>images/icons/buttons/icon_button_unselected.png</file>
+        <file>images/icons/buttons/icon_button_selected.png</file>
     </qresource>
 </RCC>

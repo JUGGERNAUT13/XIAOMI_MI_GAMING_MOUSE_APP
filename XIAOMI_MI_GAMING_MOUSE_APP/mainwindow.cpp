@@ -6,9 +6,10 @@
 #define PART_SIZE               12
 #define LBL_ANIM_INTERVAL_MS    17
 #define COLOR_BUTTON_SIZE       20
-#define IMG_ANIM_INTERVAL_MS    30
+#define IMG_ANIM_INTERVAL_MS    30/*500*/
 #define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
+#define KEY_MACRO_LENGHT        64
 #define INIT_INTERVAL_MS        1000
 #define NO_SLEEP_INTERVAL_MS    /*290000*/30000
 #define VENDOR_ID               0x2717
@@ -18,6 +19,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
+    ui->frm_mouse_img_anim->setAutoFillBackground(true);
     gen_widg = new general_widget(this);
     QDir::setCurrent(gen_widg->get_app_path());
     clr_scrl_area_max_width = (ORIGINAL_MAX_COLORS * COLOR_BUTTON_SIZE) + ((ORIGINAL_MAX_COLORS - 1) * ui->frm_clr_bttns->layout()->spacing());
@@ -81,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                          tr("Mi Mouse is equipped with a 32-bit ARM processor, making the device more responsive and more efficient. The\n software can also set the refresh rate of four gears 125, "
                             "250, 500, 1000, which can fully adapt to individual needs of players.")};
     QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
-    for(int i = 0; i < effects_lst.count(); i++) {
+    for(uint8_t i = 0; i < effects_lst.count(); i++) {
         connect(effects_lst[i], &QPushButton::toggled, this, [=]() {
             ui->frm_spd->setEnabled(i > STATIC);
             ui->frm_clr->setEnabled(((i + static_cast<int>(i > TIC_TAC)) < COLORS_CHANGING) && (i > DISABLE));
@@ -118,19 +120,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             anim_img_nam = "siderToTrail_0";
         }
         if(((crrnt_page == LIGHTNING) && ui->pshBttn_bttns_top->isChecked()) || ((crrnt_page == BUTTONS) && !ui->pshBttn_bttns_top->isChecked()))  {
-            anim_1(anim_img_nam, 15, -1, -1);
+//            anim_1(anim_img_nam, 15, -1, -1);     //orig
+            anim_1(anim_img_nam, 14, -1, -1);
         } else {
-            anim_1(anim_img_nam, 0, 16, 1);
+//            anim_1(anim_img_nam, 0, 16, 1);        //orig
+            anim_1(anim_img_nam, 1, 16, 1);
         }
     };
     QList<QWidget *> pnl_chldrns_lst = ui->frm_slider->findChildren<QWidget *>();
-    for(int i = 0; i < pnl_chldrns_lst.count(); i++) {
+    for(uint8_t i = 0; i < pnl_chldrns_lst.count(); i++) {
         pnl_chldrns_lst[i]->setAttribute(Qt::WA_TranslucentBackground, true);
     }
     ui->frm_bttns_top_side_swtch->setVisible(false);
     QVector<QFrame *> chrctrstc_frms_outr_lst{ui->frm_1_pgrmmbl_outr, ui->frm_2_drbl_outr, ui->frm_3_dual_mod_outr, ui->frm_4_ergnmc_outr, ui->frm_5_optcl_sns_outr, ui->frm_6_aimng_outr,
                                               ui->frm_7_lghtnng_outr, ui->frm_8_rfrsh_rate_outr};
-    for(int i = 0; i < chrctrstc_frms_outr_lst.count(); i++) {
+    for(uint8_t i = 0; i < chrctrstc_frms_outr_lst.count(); i++) {
         chrctrstc_dirctns_lst.push_back(0);
         chrctrstc_frms_wtchrs_lst.push_back(new Enter_Leave_Watcher(this));
         chrctrstc_frms_outr_lst[i]->installEventFilter(chrctrstc_frms_wtchrs_lst[i]);
@@ -172,22 +176,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
     QVector<QString> icons_names{"page_home", "page_buttons", "page_lightning", "page_speed", "page_update"};
     QVector<QString> bttn_icon_types{"unchecked", "checked"};
-    QVector<QPushButton *>bttns_lst{ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
-    for(int i = 0; i < bttns_lst.count(); i++) {
+    QVector<QPushButton *>page_bttns_lst{ui->pshBttn_1_home, ui->pshBttn_2_buttons, ui->pshBttn_3_lightning, ui->pshBttn_4_speed, ui->pshBttn_5_update};
+    for(uint8_t i = 0; i < page_bttns_lst.count(); i++) {
         bttns_wtchrs_lst.push_back(new Enter_Leave_Watcher(this));
-        bttns_lst[i]->installEventFilter(bttns_wtchrs_lst[i]);
+        page_bttns_lst[i]->installEventFilter(bttns_wtchrs_lst[i]);
         connect(bttns_wtchrs_lst[i], &Enter_Leave_Watcher::signal_object_enter_leave_event, this, [=](QObject *obj, QEvent::Type evnt_typ) {
             QPushButton *button = qobject_cast<QPushButton*>(obj);
             if(button && !button->isChecked()) {
                 button->setIcon(QIcon(":/images/icons/icon_" + icons_names[i] + "_" + bttn_icon_types[QEvent::Leave - evnt_typ] + ".png"));
             }
         });
-        bttns_lst[i]->setText("    " + bttns_lst[i]->text());
-        connect(bttns_lst[i], &QPushButton::toggled, this, [=](bool tggld) {
+        page_bttns_lst[i]->setText("    " + page_bttns_lst[i]->text());
+        connect(page_bttns_lst[i], &QPushButton::toggled, this, [=](bool tggld) {
             ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
             ui->lbl_cstm_key_cmb->clearFocus();
-            bttns_lst[i]->setIcon(QIcon(":/images/icons/icon_" + icons_names[i] + "_" + bttn_icon_types[static_cast<int>(tggld)] + ".png"));
+            page_bttns_lst[i]->setIcon(QIcon(":/images/icons/icon_" + icons_names[i] + "_" + bttn_icon_types[static_cast<int>(tggld)] + ".png"));
             if(tggld) {
+                ui->stckdWdgt_mouse_img_overlay->setCurrentWidget(ui->page_1_1_overlay_empty);
                 ui->stckdWdgt_all_pages->setCurrentIndex(i == UPDATE);
                 ui->frm_bttns_top_side_swtch->setVisible(i == BUTTONS);
                 if(i == UPDATE) {
@@ -199,16 +204,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 }
                 if((prev_page == HOME) || (prev_page == SPEED)) {
                     if(crrnt_page == BUTTONS) {
-                        anim_2(15, -1, -1);
+//                        anim_2(15, -1, -1);       //orig
+                        anim_2(14, -1, -1);
                     } else if((crrnt_page == LIGHTNING) && ui->pshBttn_lghtnng_tail->isChecked()) {
-                        anim_1("trailToStrabismus_0", 15, -1, -1);
+//                        anim_1("trailToStrabismus_0", 15, -1, -1);        //orig
+                        anim_1("trailToStrabismus_0", 14, -1, -1);
                     }
                 } else if(prev_page == BUTTONS) {
                     if((crrnt_page == HOME) || (crrnt_page == SPEED)) {
-                        anim_2(0, 16, 1);
+//                        anim_2(0, 16, 1);           //orig
+                        anim_2(1, 16, 1);
                     } else if(crrnt_page == LIGHTNING) {
                         if(ui->pshBttn_lghtnng_head->isChecked()) {
-                            anim_2(0, 16, 1);
+//                            anim_2(0, 16, 1);       //orig
+                            anim_2(1, 16, 1);
                         } else {
                             anim_3(crrnt_page);
                         }
@@ -216,11 +225,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 } else if(prev_page == LIGHTNING) {
                     if((crrnt_page == HOME) || (crrnt_page == SPEED)) {
                         if(ui->pshBttn_lghtnng_tail->isChecked()) {
-                            anim_1("trailToStrabismus_0", 0, 16, 1);
+//                            anim_1("trailToStrabismus_0", 0, 16, 1);        //orig
+                            anim_1("trailToStrabismus_0", 1, 16, 1);
                         }
                     } else if(crrnt_page == BUTTONS) {
                         if(ui->pshBttn_lghtnng_head->isChecked()) {
-                            anim_2(15, -1, -1);
+//                            anim_2(15, -1, -1);       //orig
+                            anim_2(14, -1, -1);
                         } else {
                             anim_3(crrnt_page);
                         }
@@ -240,7 +251,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
         QString avlbl_clr;
-        for(int i = 0; i < clrs_bttns_lst.count(); i++) {
+        for(uint8_t i = 0; i < clrs_bttns_lst.count(); i++) {
             avlbl_clr = "#" + clrs_bttns_lst[i]->styleSheet().split("#").last().split(",").first();
             if(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()].compare(avlbl_clr, Qt::CaseInsensitive) == 0) {
                 clrs_bttns_lst[i]->setChecked(true);
@@ -257,23 +268,39 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
         mnl_chng = false;
     };
-    connect(ui->pshBttn_bttns_top, &QPushButton::toggled, this, [=]() {
-        ui->pshBttn_bttns_key_cmbntns->click();
-        anim_1("siderToPosition_0", 0, 16, 1);
-    });
-    connect(ui->pshBttn_bttns_side, &QPushButton::toggled, this, [=]() {
-        ui->pshBttn_bttns_key_fnctns->click();
-        anim_1("siderToPosition_0", 15, -1, -1);
-    });
-    connect(ui->pshBttn_lghtnng_head, &QPushButton::toggled, this, [=]() {
-        change_currnt_dev(0, 16, 1);
-    });
-    connect(ui->pshBttn_lghtnng_tail, &QPushButton::toggled, this, [=]() {
-        change_currnt_dev(15, -1, -1);
-    });
+    QVector<QPushButton *> bttns_lst{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_lghtnng_head, ui->pshBttn_lghtnng_tail};
+//    QVector<QVector<int>> anim_params_lst{{0, 16, 1}, {15, -1, -1}};         //orig
+    QVector<QVector<int>> anim_params_lst{{1, 16, 1}, {14, -1, -1}};
+    for(uint8_t i = 0; i < bttns_lst.count(); i++) {
+        connect(bttns_lst[i], &QPushButton::toggled, this, [=](bool tggld) {
+            if(tggld) {
+                if(crrnt_page == BUTTONS) {
+                    ui->stckdWdgt_mouse_img_overlay->setCurrentWidget(ui->page_1_1_overlay_empty);
+                    ui->pshBttn_bttns_key_cmbntns->click();
+                    anim_1("siderToPosition_0", anim_params_lst[i % 2][0], anim_params_lst[i % 2][1], anim_params_lst[i % 2][2]);
+                } else if(crrnt_page == LIGHTNING) {
+                    change_currnt_dev(anim_params_lst[i % 2][0], anim_params_lst[i % 2][1], anim_params_lst[i % 2][2]);
+                }
+            }
+        });
+    }
+    key_fnc_bttns_grp = new QButtonGroup(this);
+    QVector<QRadioButton *> key_fnc_bttns_lst{ui->rdBttn_key_func_lft_clck, ui->rdBttn_key_func_rght_clck, ui->rdBttn_key_func_mddl_clck, ui->rdBttn_key_func_mv_bck, ui->rdBttn_key_func_mv_frwrd,
+                                              ui->rdBttn_key_func_rise_dpi, ui->rdBttn_key_func_lwr_dpi, ui->rdBttn_key_func_trn_dpi, ui->rdBttn_key_func_vlm_up, ui->rdBttn_key_func_vlm_dwn,
+                                              ui->rdBttn_key_func_slnt_mod, ui->rdBttn_key_cmb_cls_wndw, ui->rdBttn_key_cmb_prev_tab_in_brwsr, ui->rdBttn_key_cmb_cut, ui->rdBttn_key_cmb_shw_dsktp,
+                                              ui->rdBttn_key_cmb_nxt_tab_in_brwsr, ui->rdBttn_key_cmb_copy, ui->rdBttn_key_cmb_undo, ui->rdBttn_key_cmb_redo, ui->rdBttn_key_cmb_paste};
+    for(uint8_t i = 0; i < key_fnc_bttns_lst.count(); i++) {
+        key_fnc_bttns_grp->addButton(key_fnc_bttns_lst[i]);
+        connect(key_fnc_bttns_lst[i], &QRadioButton::toggled, this, [=](bool tggld) {
+            if(tggld) {
+                bind_mouse_button(get_current_mouse_button(), i);
+            }
+        });
+    }
+    key_fnc_bttns_grp->setExclusive(true);
     connect(ui->hrzntlSldr_effct_spd, &QSlider::valueChanged, this, &MainWindow::mouse_set_color_for_device);
     QVector<QPushButton *> speed_bttns_lst{ui->pshBttn_speed_rfrsh_rate, ui->pshBttn_speed_dpi};
-    for(int i = 0; i < speed_bttns_lst.count(); i++) {
+    for(uint8_t i = 0; i < speed_bttns_lst.count(); i++) {
         connect(speed_bttns_lst[i], &QPushButton::toggled, this, [=]() {
             ui->stckdWdgt_rfrsh_rate_n_dpi->setCurrentIndex(i);
             QByteArray tmp_in, tmp_out;
@@ -332,7 +359,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         });
     }
     QVector<QPushButton *> key_bttns_lst{ui->pshBttn_bttns_key_fnctns, ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_macros};
-    for(int i = 0; i < key_bttns_lst.count(); i++) {
+    for(uint8_t i = 0; i < key_bttns_lst.count(); i++) {
         connect(key_bttns_lst[i], &QPushButton::clicked, this, [=]() {
             ui->stckdWdgt_key_fnctns_cmbntns_macros->setCurrentIndex(i);
             ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
@@ -380,6 +407,7 @@ MainWindow::~MainWindow() {
     clear_vector(&bttns_wtchrs_lst);
     clear_vector(&chrctrstc_frms_wtchrs_lst);
     clear_vector(&chrctrstc_frms_tmrs_lst);
+    delete key_fnc_bttns_grp;
     delete gen_widg;
     delete ui;
 }
@@ -446,7 +474,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
                 cmb_mdfrs_lst.append(key);
             }
         } else {
-            cmb_key = key;
+            cmb_key = key.toUpper();
         }
         form_keys_combination();
     }
@@ -455,7 +483,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     QString key = get_key_name(event);
     if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && !event->isAutoRepeat() && key.count()) {
-        for(int i = 0; i < pressed_keys_lst.count(); i++) {
+        for(uint8_t i = 0; i < pressed_keys_lst.count(); i++) {
             if(event->key() == pressed_keys_lst[i]) {
                 if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
                     ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"), (QString::number(pressed_keys_tmr_lst[i].elapsed()) + " Milliseconds delay")));
@@ -465,7 +493,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
                 pressed_keys_lst.removeAt(i);
                 pressed_keys_tmr_lst.removeAt(i);
                 mcrs_prssd_cnt++;
-                if(mcrs_prssd_cnt == 64) {
+                if(mcrs_prssd_cnt == KEY_MACRO_LENGHT) {
                     mcrs_prssd_cnt = 0;
                     ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
                 }
@@ -478,7 +506,45 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 void MainWindow::on_pshBttn_rst_sttngs_clicked() {
     Dialog_Reset_Settings rst_sttngs_dlg(this);
     if(rst_sttngs_dlg.exec() == QDialog::Accepted) {
-        qDebug() << "yep";
+        crrnt_devs_clr_indxs_lst = {-1, -1};
+        crrnt_tail_clr = crrnt_wheel_clr = QColor(Qt::green).name();
+        crrnt_tail_effct = crrnt_wheel_effct = STATIC;
+        crrnt_tail_spped = crrnt_wheel_speed = SPEED_4;
+        QVector<devices> mouse_dvcs{TAIL, WHEEL};
+        QVector<QColor> mouse_dflt_clrs{QColor(crrnt_tail_clr), QColor(crrnt_wheel_clr)};
+        QVector<effects> mouse_dflt_effcts{crrnt_tail_effct, crrnt_wheel_effct};
+        QVector<speed> mouse_dflt_spd{crrnt_tail_spped, crrnt_wheel_speed};
+        QByteArray clr_mod_spd_arr;
+        for(uint8_t i = 0; i < mouse_dvcs.count(); i++) {
+            clr_mod_spd_arr.clear();
+            clr_mod_spd_arr.append("\x4d\xa1");
+            clr_mod_spd_arr.append(mouse_dvcs[i]);
+            clr_mod_spd_arr.append(mouse_dflt_effcts[i]);
+            clr_mod_spd_arr.append(mouse_dflt_spd[i]);
+            clr_mod_spd_arr.append("\x08\x08");
+            clr_mod_spd_arr.append(mouse_dflt_clrs[i].red());
+            clr_mod_spd_arr.append(mouse_dflt_clrs[i].green());
+            clr_mod_spd_arr.append(mouse_dflt_clrs[i].blue());
+            clr_mod_spd_arr.append((PACKET_SIZE - clr_mod_spd_arr.count()), '\x00');
+            write_to_mouse_hid(clr_mod_spd_arr);
+        }
+        remove_color_buttons(gen_widg->get_setting(settings, "USER_COLOR/Num").toInt());
+        ui->pshBttn_rfrsh_rate_1000->setChecked(true);
+        emit ui->pshBttn_rfrsh_rate_1000->toggled(true);
+        QVector<uint16_t> crrnt_dpi{100, 800, 1600, 2400, 4800};
+        QVector<QSlider *> crrnt_dpi_sldrs{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
+        for(uint8_t i = 0; i < crrnt_dpi_sldrs.count(); i++) {
+            crrnt_dpi_sldrs[i]->setValue(crrnt_dpi[i]);
+        }
+        emit ui->hrzntlSldr_rfrsh_rate_lvl_3->sliderReleased();
+        ui->pshBttn_bttns_top->setChecked(true);
+        emit ui->pshBttn_bttns_top->toggled(true);
+        ui->pshBttn_speed_rfrsh_rate->setChecked(true);
+        emit ui->pshBttn_speed_rfrsh_rate->toggled(true);
+        ui->pshBttn_lghtnng_head->setChecked(true);
+        emit ui->pshBttn_lghtnng_head->toggled(true);
+        ui->pshBttn_1_home->setChecked(true);
+        emit ui->pshBttn_1_home->toggled(true);
     }
 }
 
@@ -505,6 +571,55 @@ void MainWindow::on_pshBttn_clr_cstm_key_cmb_clicked() {
     form_keys_combination();
 }
 
+void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
+    if(ui->lbl_cstm_key_cmb->text().count()) {
+        QAbstractButton *checked = key_fnc_bttns_grp->checkedButton();
+        if(checked) {
+            key_fnc_bttns_grp->setExclusive(false);
+            checked->setChecked(false);
+            key_fnc_bttns_grp->setExclusive(true);
+        }
+        QList<QString> cmb_keys_lst = ui->lbl_cstm_key_cmb->text().split("+");
+        cmb_keys_lst.removeAll(QString(""));
+        if(cmb_key.contains("+")) {
+            cmb_keys_lst.append("+");
+        }
+        QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
+                                           KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE,
+                                           KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_LESS,
+                                           KEY_GREATER, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN,
+                                           KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW,
+                                           KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4,
+                                           KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_APPS_MENU};
+        QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "Q", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
+                                  "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", "<", ">", "/", "CAPSLOCK", "F1", "F2", "F3",
+                                  "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN",
+                                  "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "MENU"};
+        QVector<mouse_key_modifiers> mouse_keys_mdfrs_lst{KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN};
+        QVector<QString> keys_mdfrs_lst{"L CTRL", "L SHIFT", "L ALT", "L WIN", "R CTRL", "R SHIFT", "R ALT", "R WIN"};
+        uint8_t key = 0;
+        if(cmb_key.count()) {
+            for(uint8_t i = 0; i < keys_lst.count(); i++) {
+                if(cmb_key.compare(keys_lst[i], Qt::CaseInsensitive) == 0) {
+                    key = mouse_keys_lst[i];
+                    break;
+                }
+            }
+            cmb_keys_lst.removeAt(cmb_keys_lst.count() - 1);
+        }
+        uint8_t modifiers = 0;
+        for(uint8_t i = 0; i < cmb_keys_lst.count(); i++) {
+            for(uint8_t k = 0; k < keys_mdfrs_lst.count(); k++) {
+                if(cmb_keys_lst[i].compare(keys_mdfrs_lst[k], Qt::CaseInsensitive) == 0) {
+                    modifiers += mouse_keys_mdfrs_lst[k];
+                    break;
+                }
+            }
+        }
+        bind_mouse_button(get_current_mouse_button(), (COMBOS_COUNT - 1), modifiers, key);
+    }
+}
+
 void MainWindow::finish_init() {
     read_mouse_parameters();
     ui->pshBttn_lghtnng_head->setChecked(true);
@@ -517,10 +632,10 @@ void MainWindow::finish_init() {
 void MainWindow::resize_images() {
     QPixmap bkgnd(":/images/background.png");
     QPalette main_palette;
-    main_palette.setBrush(QPalette::Background, bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    main_palette.setBrush(this->backgroundRole(), bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     this->setPalette(main_palette);
     ui->frm_slider->setStyleSheet("background-image: url(:/images/background_slider.png); border-right-width: 1px; border-right-style: solid; border-right-color: #1c2228;");
-    ui->lbl_mouse_img_anim->setPixmap(apply_effects_on_mouse_image());
+    draw_mouse_anim_img(anim_img_nam, true);
 }
 
 void MainWindow::create_base_settings() {
@@ -653,7 +768,7 @@ void MainWindow::change_color_frame_size() {
 void MainWindow::change_state_of_ui(bool flg) {
     if(!mnl_rdng) {
         ui->stckdWdgt_main_pages->setEnabled(flg);
-        ui->lbl_mouse_img_anim->setEnabled(flg);
+        ui->frm_mouse_img_anim->setEnabled(flg);
         ui->frm_slider->setEnabled(flg);
         ui->lbl_chrg_lvl->setVisible(flg);
         ui->stckdWdgt_all_pages->setCurrentIndex(ui->stckdWdgt_all_pages->indexOf(ui->page_3_unit_not_detected) * !flg);
@@ -674,6 +789,19 @@ void MainWindow::clear_vector(QVector<T *> *vctr) {
         delete (*vctr)[0];
         vctr->removeAt(0);
     }
+}
+
+uint8_t MainWindow::get_current_mouse_button() {
+    QVector<QRadioButton *> mouse_bttns{ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn, ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
+    QVector<QPushButton *> crrnt_mouse_pos_bttn{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_bttns_side, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side};
+    uint8_t crrnt_mouse_bttn = 0;
+    for(uint8_t i = 0; i < mouse_bttns.count(); i++) {
+        if(crrnt_mouse_pos_bttn[i]->isChecked() && mouse_bttns[i]->isChecked()) {
+            crrnt_mouse_bttn = i;
+            break;
+        }
+    }
+    return crrnt_mouse_bttn;
 }
 
 QString MainWindow::get_key_name(QKeyEvent *event, bool *is_modifier_flg) {
@@ -700,7 +828,7 @@ QString MainWindow::get_key_name(QKeyEvent *event, bool *is_modifier_flg) {
         if(is_modifier_flg) {
             *is_modifier_flg = false;
         }
-        return QKeySequence(event->key()).toString();
+        return key;
     }
 }
 
@@ -730,12 +858,12 @@ void MainWindow::change_backgound_for_page_widget(QWidget *page, bool draw_gear)
         cmbn_img.fill(Qt::transparent);
         QPainter pntr(&cmbn_img);
         pntr.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        ui->lbl_mouse_img_anim->render(&pntr, QPoint(((page->width() - ui->lbl_mouse_img_anim->width()) / 2), 0), QRegion(), QWidget::IgnoreMask);
+        ui->frm_mouse_img_anim->render(&pntr, QPoint(((page->width() - ui->frm_mouse_img_anim->width()) / 2), 0), QRegion(), QWidget::IgnoreMask);
         pntr.drawImage(0, 0, QImage(":/images/background.png"), crrnt_frm_abslt_pos.x(), crrnt_frm_abslt_pos.y(), page->width(), page->height());
         pntr.setCompositionMode(QPainter::CompositionMode_Plus);
         if(draw_gear) {
             QImage gear_img(":/images/gear.png");
-            pntr.drawImage(((page->width() - gear_img.width()) / 2), ((ui->lbl_mouse_img_anim->height() / 2) - gear_img.height()), gear_img);
+            pntr.drawImage(((page->width() - gear_img.width()) / 2), ((ui->frm_mouse_img_anim->height() / 2) - gear_img.height()), gear_img);
         }
         page->setAutoFillBackground(true);
         QPalette palette;
@@ -757,8 +885,7 @@ QPixmap MainWindow::apply_effects_on_mouse_image() {
             clrs_lst.push_back(QColor(*(devs_clrs_lst[i])));
         }
     }
-    QImage src_img(anim_img_nam);
-    src_img = src_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QImage src_img = QImage(anim_img_nam).scaled(ui->frm_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     QVector<QString> mask_path{"", ""};
     QImage tail_img(src_img.size(), QImage::Format_ARGB32);
     QImage wheel_img(src_img.size(), QImage::Format_ARGB32);
@@ -795,11 +922,33 @@ QPixmap MainWindow::apply_effects_on_mouse_image() {
             pntr.drawImage(0, 0, mask);
         }
     }
-    QPainter pntr(&src_img);
+    QImage cmbn_img(ui->frm_mouse_img_anim->size(), QImage::Format_ARGB32);
+    cmbn_img.fill(Qt::transparent);
+    QPainter pntr(&cmbn_img);
     pntr.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    pntr.drawImage(0, 0, tail_img);
-    pntr.drawImage(0, 0, wheel_img);
-    return QPixmap::fromImage(src_img);
+    pntr.drawImage(((ui->frm_mouse_img_anim->width() - src_img.width()) / 2), ((ui->frm_mouse_img_anim->height() - src_img.height()) / 2), src_img);
+    pntr.drawImage(((ui->frm_mouse_img_anim->width() - src_img.width()) / 2), ((ui->frm_mouse_img_anim->height() - src_img.height()) / 2), tail_img);
+    pntr.drawImage(((ui->frm_mouse_img_anim->width() - src_img.width()) / 2), ((ui->frm_mouse_img_anim->height() - src_img.height()) / 2), wheel_img);
+    ui->stckdWdgt_mouse_img_overlay->setCurrentIndex((crrnt_page == BUTTONS) * (static_cast<int>(ui->pshBttn_bttns_side->isChecked()) + 1));
+    return QPixmap::fromImage(cmbn_img);
+}
+
+void MainWindow::draw_mouse_anim_img(QString path_to_img, bool apply_effects) {
+    QPixmap pxmp;
+    QPalette palette;
+    if(apply_effects) {
+        pxmp = apply_effects_on_mouse_image();
+    } else {
+        QImage src_img = QImage(path_to_img).scaled(ui->frm_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        QImage cmbn_img(ui->frm_mouse_img_anim->size(), QImage::Format_ARGB32);
+        cmbn_img.fill(Qt::transparent);
+        QPainter pntr(&cmbn_img);
+        pntr.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+        pntr.drawImage(((ui->frm_mouse_img_anim->width() - src_img.width()) / 2), ((ui->frm_mouse_img_anim->height() - src_img.height()) / 2), src_img);
+        pxmp = QPixmap::fromImage(cmbn_img);
+    }
+    palette.setBrush(ui->frm_mouse_img_anim->backgroundRole(), pxmp);
+    ui->frm_mouse_img_anim->setPalette(palette);
 }
 
 void MainWindow::prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header) {
@@ -816,7 +965,7 @@ void MainWindow::read_mouse_parameters() {
     QVector<speed *> devs_speed_lst{&crrnt_tail_spped, &crrnt_wheel_speed};
     QVector<QString *> devs_clrs_lst{&crrnt_tail_clr, &crrnt_wheel_clr};
     QByteArray tmp_in, tmp_out;
-    for(int i = 0; i < devs_lst.count(); i++) {
+    for(uint8_t i = 0; i < devs_lst.count(); i++) {
         prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, QByteArray("\x4d\xa0").append(devs_lst[i]));
         *(devs_effcts_lst[i]) = static_cast<effects>(tmp_in.mid(4, 1).toHex().toInt(nullptr, 16) - static_cast<int>(tmp_in.mid(4, 1).toHex().toInt(nullptr, 16) > TIC_TAC));
         *(devs_speed_lst[i]) = static_cast<speed>(tmp_in.mid(5, 1).toHex().toInt(nullptr, 16));
@@ -828,7 +977,7 @@ void MainWindow::read_mouse_parameters() {
     QVector<QSlider *> sldrs_lst{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
     prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, "\x4d\xc2");
     mnl_chng = true;
-    for(int i = 0; i < sldrs_lst.count(); i++) {
+    for(uint8_t i = 0; i < sldrs_lst.count(); i++) {
         sldrs_lst[i]->setValue(tmp_in.mid((3 + i), 1).toHex().toInt(nullptr, 16) * sldrs_lst[i]->singleStep());
         emit sldrs_lst[i]->valueChanged(sldrs_lst[i]->value());
     }
@@ -875,7 +1024,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
         crrnt_prdct_id = PRODUCT_ID_WIRE;
     }
     QString path;
-    for(int i = 0; i < path_lst.count(); i++) {
+    for(uint16_t i = 0; i < path_lst.count(); i++) {
         if(prod_id_lst[i] == crrnt_prdct_id) {
             path = path_lst[i];
         }
@@ -924,9 +1073,23 @@ int MainWindow::mouse_set_color_for_device() {
     clr_mod_spd_arr.append(clr.blue());
     clr_mod_spd_arr.append((PACKET_SIZE - clr_mod_spd_arr.count()), '\x00');
     if(!mnl_chng) {
-        ui->lbl_mouse_img_anim->setPixmap(apply_effects_on_mouse_image());
+        draw_mouse_anim_img(anim_img_nam, true);
     }
     return write_to_mouse_hid(clr_mod_spd_arr);
+}
+
+int MainWindow::bind_mouse_button(uint8_t mouse_button, uint8_t mouse_key_combo, uint8_t mouse_key_modifiers, uint8_t mouse_key) {
+    QVector<mouse_buttons> mouse_bttns{SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
+    QVector<mouse_key_combos> mouse_key_cmbs{LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK, MOVE_BACK, MOVE_FORWARD, RISE_DPI, LOWER_DPI, TURN_DPI, VOLUME_UP, VOLUME_DOWN, SILENT_MODE, ALT_F4,
+                                             CTRL_SHIFT_TAB, CTRL_X, WIN_D, CTRL_TAB, CTRL_C, CTRL_Z, CTRL_Y, CTRL_V, CUSTOM_KEY_COMBO};
+    QByteArray bnd_key_arr = "\x4d\xb1";
+    bnd_key_arr.append(mouse_bttns[mouse_button]);
+    bnd_key_arr.append(mouse_key_cmbs[mouse_key_combo] >> 8);
+    bnd_key_arr.append(mouse_key_cmbs[mouse_key_combo]);
+    bnd_key_arr.append(mouse_key_modifiers);
+    bnd_key_arr.append(mouse_key);
+    bnd_key_arr.append((PACKET_SIZE - bnd_key_arr.count()), '\x00');
+    return write_to_mouse_hid(bnd_key_arr);
 }
 
 int MainWindow::mouse_non_sleep() {
@@ -955,15 +1118,14 @@ void MainWindow::slot_anim_timeout() {
     if(crrnt_img < 10) {
         tmp.prepend("0");
     }
-    QPixmap mouse_img(":/images/anim/" + anim_img_nam + tmp + ".png");
-    ui->lbl_mouse_img_anim->setPixmap(QPixmap(mouse_img.scaled(ui->lbl_mouse_img_anim->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    draw_mouse_anim_img(":/images/anim/" + anim_img_nam + tmp + ".png", false);
     crrnt_img += img_cnt_dir;
     if(crrnt_img != img_end_val) {
         anim_timer->setInterval(IMG_ANIM_INTERVAL_MS);
         anim_timer->start();
     } else {
         anim_img_nam = ":/images/anim/" + anim_img_nam + tmp + ".png";
-        ui->lbl_mouse_img_anim->setPixmap(apply_effects_on_mouse_image());
+        draw_mouse_anim_img(anim_img_nam, true);
     }
 }
 
