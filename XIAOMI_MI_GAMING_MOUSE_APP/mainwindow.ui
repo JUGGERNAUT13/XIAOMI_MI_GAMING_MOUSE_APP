@@ -93,7 +93,7 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <item row="0" column="0" rowspan="2">
+       <item row="0" column="0">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -109,169 +109,7 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="5" rowspan="2">
-        <widget class="QFrame" name="frm_mnmz_n_cls_bttns">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Plain</enum>
-         </property>
-         <property name="lineWidth">
-          <number>0</number>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_9">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>4</number>
-          </property>
-          <property name="rightMargin">
-           <number>23</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <property name="horizontalSpacing">
-           <number>7</number>
-          </property>
-          <property name="verticalSpacing">
-           <number>0</number>
-          </property>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pshBttn_close">
-            <property name="minimumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>Close</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	background-image: url(:/images/icons/icon_close_unchecked.png);
-	background-position: center center;
-    background-repeat: no-repeat;
-	border: 0px;
-	background-color: transparent;
-}
-QPushButton:checked {
-	background-image: url(:/images/icons/icon_close_checked.png);
-}
-QPushButton:pressed {
-	background-image: url(:/images/icons/icon_close_checked.png);
-}
-QPushButton:hover {
-	background-image: url(:/images/icons/icon_close_checked.png);
-}
-QPushButton:focus {
-   outline: none;
-}</string>
-            </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pshBttn_mnmz">
-            <property name="minimumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>25</width>
-              <height>25</height>
-             </size>
-            </property>
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
-            </property>
-            <property name="toolTip">
-             <string>Minimize</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-	background-image: url(:/images/icons/icon_minimize_unchecked.png);
-	background-position: center center;
-    background-repeat: no-repeat;
-	border: 0px;
-	background-color: transparent;
-}
-QPushButton:checked {
-	background-image: url(:/images/icons/icon_minimize_checked.png);
-}
-QPushButton:pressed {
-	background-image: url(:/images/icons/icon_minimize_checked.png);
-}
-QPushButton:hover {
-	background-image: url(:/images/icons/icon_minimize_checked.png);
-}
-QPushButton:focus {
-   outline: none;
-}</string>
-            </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <spacer name="verticalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>15</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="1" colspan="4">
+       <item row="0" column="1">
         <widget class="QStackedWidget" name="stckdWdgt_all_pages">
          <widget class="QWidget" name="page_1_main_pages">
           <layout class="QGridLayout" name="gridLayout_28">
@@ -308,28 +146,6 @@ QPushButton:focus {
               </size>
              </property>
             </spacer>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="lbl_mouse_img_anim">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>390</height>
-              </size>
-             </property>
-             <property name="text">
-              <string notr="true"/>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
            </item>
            <item row="0" column="2">
             <widget class="QFrame" name="frm_bttns_top_side_swtch_wrppr">
@@ -2655,6 +2471,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Right-click</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="0">
@@ -2686,6 +2505,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Rise DPI</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -2719,6 +2541,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Volume down</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
@@ -2750,6 +2575,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Lower DPI</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -2783,6 +2611,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Middle-click</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="2">
@@ -2814,6 +2645,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Turn DPI</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -2847,6 +2681,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Move forward</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="0" column="3">
@@ -2878,6 +2715,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Move back</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -2912,7 +2752,10 @@ QRadioButton:focus {
                       <string>Left-click</string>
                      </property>
                      <property name="checked">
-                      <bool>true</bool>
+                      <bool>false</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -2946,6 +2789,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Volume up</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="2" column="0" colspan="5">
@@ -2977,6 +2823,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Silent mode</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -3045,6 +2894,9 @@ QRadioButton:focus {
                      <property name="checked">
                       <bool>true</bool>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="5" column="0" colspan="5">
@@ -3090,6 +2942,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Undo(Ctrl+Z)</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="0" column="2">
@@ -3121,6 +2976,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Prev tab in browser(Ctrl+Shift+Tab)</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -3154,6 +3012,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Paste(Ctrl+V)</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="4">
@@ -3185,6 +3046,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Copy(Ctrl+C)</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -3234,6 +3098,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Next tab in browser(Ctrl+Tab)</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="0" column="1" rowspan="3">
@@ -3282,6 +3149,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Redo(Ctrl+Y)</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="0">
@@ -3320,6 +3190,9 @@ QRadioButton:focus {
                      <property name="text">
                       <string>Show desktop(WIN+D)</string>
                      </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="0" column="4">
@@ -3351,6 +3224,9 @@ QRadioButton:focus {
                      </property>
                      <property name="text">
                       <string>Cut(Ctrl+X)</string>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -8120,6 +7996,650 @@ QSlider::handle:horizontal {
              </widget>
             </widget>
            </item>
+           <item row="0" column="1">
+            <widget class="QFrame" name="frm_mouse_img_anim">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>390</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_8">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QStackedWidget" name="stckdWdgt_mouse_img_overlay">
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <widget class="QWidget" name="page_1_1_overlay_empty"/>
+                <widget class="QWidget" name="page_1_2_overlay_mouse_top_bttns">
+                 <layout class="QGridLayout" name="gridLayout_34" rowstretch="1,0,0,0,0,0,0" columnstretch="60,0,56">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item row="0" column="1">
+                   <spacer name="verticalSpacer_28">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="2" column="1">
+                   <spacer name="verticalSpacer_31">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>75</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QRadioButton" name="rdBttn_lwr_dpi">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QRadioButton::indicator {
+	height: 20px;
+	width: 20px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_button_unselected.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton::indicator::hover {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QRadioButton" name="rdBttn_rise_dpi">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QRadioButton::indicator {
+	height: 20px;
+	width: 20px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_button_unselected.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton::indicator::hover {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <spacer name="horizontalSpacer_45">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="6" column="1">
+                   <spacer name="verticalSpacer_29">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>50</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QRadioButton" name="rdBttn_scrll_bttn">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::NoFocus</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QRadioButton::indicator {
+	height: 20px;
+	width: 20px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_button_unselected.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton::indicator::hover {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                    </property>
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <spacer name="verticalSpacer_30">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>15</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="2" column="2">
+                   <spacer name="horizontalSpacer_46">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="page_1_3_overlay_mouse_side_bttns">
+                 <layout class="QGridLayout" name="gridLayout_35" columnstretch="204,0,220">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item row="0" column="0">
+                   <spacer name="horizontalSpacer_47">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="0" column="1">
+                   <layout class="QGridLayout" name="gridLayout_39" rowstretch="100,0,0,0,89">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <item row="3" column="0" colspan="3">
+                     <layout class="QGridLayout" name="gridLayout_38">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <item row="0" column="1">
+                       <widget class="QRadioButton" name="rdBttn_amng_bttn">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QRadioButton::indicator {
+	height: 20px;
+	width: 20px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_button_unselected.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton::indicator::hover {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                        </property>
+                        <property name="text">
+                         <string notr="true"/>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="2">
+                       <spacer name="horizontalSpacer_51">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>10</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item row="0" column="0">
+                       <spacer name="horizontalSpacer_52">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                         <enum>QSizePolicy::Fixed</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>6</width>
+                          <height>10</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item row="1" column="0">
+                     <layout class="QGridLayout" name="gridLayout_37">
+                      <property name="topMargin">
+                       <number>11</number>
+                      </property>
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <item row="0" column="1">
+                       <widget class="QRadioButton" name="rdBttn_m5_bttn">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QRadioButton::indicator {
+	height: 20px;
+	width: 20px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_button_unselected.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton::indicator::hover {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                        </property>
+                        <property name="text">
+                         <string notr="true"/>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="0">
+                       <spacer name="horizontalSpacer_49">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                         <enum>QSizePolicy::Fixed</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>19</width>
+                          <height>10</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item row="1" column="1">
+                     <spacer name="horizontalSpacer_50">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>65</width>
+                        <height>10</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="1" column="2">
+                     <layout class="QVBoxLayout" name="verticalLayout_17" stretch="0">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>1</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>10</number>
+                      </property>
+                      <item>
+                       <widget class="QRadioButton" name="rdBttn_m4_bttn">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QRadioButton::indicator {
+	height: 20px;
+	width: 20px;
+	border: 0px;
+ }
+QRadioButton::indicator::unchecked {
+	background-image: url(:/images/icons/buttons/icon_button_unselected.png);
+}
+QRadioButton::indicator::checked {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton::indicator::hover {
+	background-image: url(:/images/icons/buttons/icon_button_selected.png);
+}
+QRadioButton:focus {
+   outline: none;
+}</string>
+                        </property>
+                        <property name="text">
+                         <string notr="true"/>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item row="0" column="0" colspan="3">
+                     <spacer name="verticalSpacer_39">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="4" column="0" colspan="3">
+                     <spacer name="verticalSpacer_40">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="2" column="0" colspan="3">
+                     <spacer name="verticalSpacer_32">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="0" column="2">
+                   <spacer name="horizontalSpacer_48">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_2_update">
@@ -8468,6 +8988,168 @@ color: silver;</string>
            </item>
           </layout>
          </widget>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QFrame" name="frm_mnmz_n_cls_bttns">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_9">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>23</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="horizontalSpacing">
+           <number>7</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pshBttn_close">
+            <property name="minimumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="toolTip">
+             <string>Close</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	background-image: url(:/images/icons/icon_close_unchecked.png);
+	background-position: center center;
+    background-repeat: no-repeat;
+	border: 0px;
+	background-color: transparent;
+}
+QPushButton:checked {
+	background-image: url(:/images/icons/icon_close_checked.png);
+}
+QPushButton:pressed {
+	background-image: url(:/images/icons/icon_close_checked.png);
+}
+QPushButton:hover {
+	background-image: url(:/images/icons/icon_close_checked.png);
+}
+QPushButton:focus {
+   outline: none;
+}</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pshBttn_mnmz">
+            <property name="minimumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>25</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="toolTip">
+             <string>Minimize</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QPushButton {
+	background-image: url(:/images/icons/icon_minimize_unchecked.png);
+	background-position: center center;
+    background-repeat: no-repeat;
+	border: 0px;
+	background-color: transparent;
+}
+QPushButton:checked {
+	background-image: url(:/images/icons/icon_minimize_checked.png);
+}
+QPushButton:pressed {
+	background-image: url(:/images/icons/icon_minimize_checked.png);
+}
+QPushButton:hover {
+	background-image: url(:/images/icons/icon_minimize_checked.png);
+}
+QPushButton:focus {
+   outline: none;
+}</string>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>15</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
