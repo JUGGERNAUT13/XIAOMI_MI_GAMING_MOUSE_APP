@@ -260,12 +260,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 clrs_bttns_lst[i]->setAutoExclusive(false);
                 clrs_bttns_lst[i]->setChecked(false);
                 clrs_bttns_lst[i]->setAutoExclusive(true);
-                break;
             }
         }
         effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
         emit effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->toggled(true);
-        anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
+        if(!mnl_rdng) {
+            anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
+        }
         mnl_chng = false;
     };
     QVector<QPushButton *> bttns_lst{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_lghtnng_head, ui->pshBttn_lghtnng_tail};
@@ -622,8 +623,6 @@ void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
 
 void MainWindow::finish_init() {
     read_mouse_parameters();
-    ui->pshBttn_lghtnng_head->setChecked(true);
-    emit ui->pshBttn_lghtnng_head->toggled(true);
     anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
     trayIcon->show();
     this->show();
@@ -992,6 +991,11 @@ void MainWindow::read_mouse_parameters() {
         crrnt_rfrsh_rate = 0;
     }
     rfrsh_rate_bttns_lst[crrnt_rfrsh_rate]->click();
+    pages tmp_crrnt_page = crrnt_page;
+    crrnt_page = LIGHTNING;
+    ui->pshBttn_lghtnng_head->setChecked(true);
+    emit ui->pshBttn_lghtnng_head->toggled(true);
+    crrnt_page = tmp_crrnt_page;
     mnl_chng = false;
 }
 
