@@ -251,7 +251,7 @@
             void change_backgound_for_page_widget(QWidget *page = nullptr, bool draw_gear = true);
             QPixmap apply_effects_on_mouse_image();
             void draw_mouse_anim_img(QString path_to_img, bool apply_effects);
-            void prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header);
+            int prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header);
             void read_mouse_parameters();
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
