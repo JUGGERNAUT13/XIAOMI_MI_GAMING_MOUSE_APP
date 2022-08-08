@@ -792,8 +792,10 @@ void MainWindow::clear_vector(QVector<T *> *vctr) {
 }
 
 uint8_t MainWindow::get_current_mouse_button() {
-    QVector<QRadioButton *> mouse_bttns{ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn, ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
-    QVector<QPushButton *> crrnt_mouse_pos_bttn{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_bttns_side, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side};
+    QVector<QRadioButton *> mouse_bttns{ui->rdBtn_lft_bttn, ui->rdBttn_rght_bttn, ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn,
+                                        ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
+    QVector<QPushButton *> crrnt_mouse_pos_bttn{ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side,
+                                                ui->pshBttn_bttns_side, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side};
     uint8_t crrnt_mouse_bttn = 0;
     for(uint8_t i = 0; i < mouse_bttns.count(); i++) {
         if(crrnt_mouse_pos_bttn[i]->isChecked() && mouse_bttns[i]->isChecked()) {
@@ -1079,7 +1081,7 @@ int MainWindow::mouse_set_color_for_device() {
 }
 
 int MainWindow::bind_mouse_button(uint8_t mouse_button, uint8_t mouse_key_combo, uint8_t mouse_key_modifiers, uint8_t mouse_key) {
-    QVector<mouse_buttons> mouse_bttns{SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
+    QVector<mouse_buttons> mouse_bttns{LEFT_BUTTON, RIGHT_BUTTON, SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
     QVector<mouse_key_combos> mouse_key_cmbs{LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK, MOVE_BACK, MOVE_FORWARD, RISE_DPI, LOWER_DPI, TURN_DPI, VOLUME_UP, VOLUME_DOWN, SILENT_MODE, ALT_F4,
                                              CTRL_SHIFT_TAB, CTRL_X, WIN_D, CTRL_TAB, CTRL_C, CTRL_Z, CTRL_Y, CTRL_V, CUSTOM_KEY_COMBO};
     QByteArray bnd_key_arr = "\x4d\xb1";
