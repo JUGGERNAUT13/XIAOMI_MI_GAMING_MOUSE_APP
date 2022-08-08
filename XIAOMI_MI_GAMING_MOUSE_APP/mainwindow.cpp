@@ -260,12 +260,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 clrs_bttns_lst[i]->setAutoExclusive(false);
                 clrs_bttns_lst[i]->setChecked(false);
                 clrs_bttns_lst[i]->setAutoExclusive(true);
-                break;
             }
         }
         effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->setChecked(true);
         emit effects_lst[devs_effcts_lst[ui->pshBttn_lghtnng_head->isChecked()]]->toggled(true);
-        anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
+        if(!mnl_rdng) {
+            anim_1("trailToStrabismus_0", crnt_val, end_val, cnt_dir);
+        }
         mnl_chng = false;
     };
     QVector<QPushButton *> bttns_lst{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_lghtnng_head, ui->pshBttn_lghtnng_tail};
@@ -622,8 +623,6 @@ void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
 
 void MainWindow::finish_init() {
     read_mouse_parameters();
-    ui->pshBttn_lghtnng_head->setChecked(true);
-    emit ui->pshBttn_lghtnng_head->toggled(true);
     anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
     trayIcon->show();
     this->show();
@@ -792,8 +791,10 @@ void MainWindow::clear_vector(QVector<T *> *vctr) {
 }
 
 uint8_t MainWindow::get_current_mouse_button() {
-    QVector<QRadioButton *> mouse_bttns{ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn, ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
-    QVector<QPushButton *> crrnt_mouse_pos_bttn{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_bttns_side, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side};
+    QVector<QRadioButton *> mouse_bttns{ui->rdBtn_lft_bttn, ui->rdBttn_rght_bttn, ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn,
+                                        ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
+    QVector<QPushButton *> crrnt_mouse_pos_bttn{ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side,
+                                                ui->pshBttn_bttns_side, ui->pshBttn_bttns_top, ui->pshBttn_bttns_top, ui->pshBttn_bttns_side};
     uint8_t crrnt_mouse_bttn = 0;
     for(uint8_t i = 0; i < mouse_bttns.count(); i++) {
         if(crrnt_mouse_pos_bttn[i]->isChecked() && mouse_bttns[i]->isChecked()) {
@@ -990,6 +991,11 @@ void MainWindow::read_mouse_parameters() {
         crrnt_rfrsh_rate = 0;
     }
     rfrsh_rate_bttns_lst[crrnt_rfrsh_rate]->click();
+    pages tmp_crrnt_page = crrnt_page;
+    crrnt_page = LIGHTNING;
+    ui->pshBttn_lghtnng_head->setChecked(true);
+    emit ui->pshBttn_lghtnng_head->toggled(true);
+    crrnt_page = tmp_crrnt_page;
     mnl_chng = false;
 }
 
@@ -1079,7 +1085,7 @@ int MainWindow::mouse_set_color_for_device() {
 }
 
 int MainWindow::bind_mouse_button(uint8_t mouse_button, uint8_t mouse_key_combo, uint8_t mouse_key_modifiers, uint8_t mouse_key) {
-    QVector<mouse_buttons> mouse_bttns{SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
+    QVector<mouse_buttons> mouse_bttns{LEFT_BUTTON, RIGHT_BUTTON, SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
     QVector<mouse_key_combos> mouse_key_cmbs{LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK, MOVE_BACK, MOVE_FORWARD, RISE_DPI, LOWER_DPI, TURN_DPI, VOLUME_UP, VOLUME_DOWN, SILENT_MODE, ALT_F4,
                                              CTRL_SHIFT_TAB, CTRL_X, WIN_D, CTRL_TAB, CTRL_C, CTRL_Z, CTRL_Y, CTRL_V, CUSTOM_KEY_COMBO};
     QByteArray bnd_key_arr = "\x4d\xb1";

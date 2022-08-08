@@ -35,17 +35,17 @@
                 WHEEL               = 1
             } devices;
 
-            typedef enum effects {      //modes 2..6 not allowed for WHEEL
+            typedef enum effects {              //modes 2..6 not allowed for WHEEL
                 DISABLE             = 0,
                 STATIC              = 1,
                 BREATH              = 2,
                 TIC_TAC             = 3,
-                COLORS_CHANGING     = 5,
+                COLORS_CHANGING     = 5,        //this mode not realized in original app, maybe it's debug mode
                 RGB                 = 6
             } effects;
 
             typedef enum speed {
-                SPEED_WRONG         = 0,    //the fastest blink for WHEEL, but has no effect for TAIL, maybe a bug(not usable value)
+                SPEED_WRONG         = 0,        //the fastest blink for WHEEL, but has no effect for TAIL, maybe a bug(not usable value)
                 SPEED_1             = 1,
                 SPEED_2             = 2,
                 SPEED_3             = 3,
@@ -87,6 +87,8 @@
             } key_modifiers;
 
             typedef enum mouse_buttons {
+                LEFT_BUTTON         = 0,        //'left-click' and 'right-click' buttons cannot be binded in original app, but it's feature realized in mouse firmware
+                RIGHT_BUTTON        = 1,
                 SCROLL_BUTTON       = 2,
                 M5_BUTTON           = 3,
                 M4_BUTTON           = 4,
