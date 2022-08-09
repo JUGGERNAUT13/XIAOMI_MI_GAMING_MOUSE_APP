@@ -2061,6 +2061,9 @@ QLabel:hover {
                  <property name="alignment">
                   <set>Qt::AlignHCenter|Qt::AlignTop</set>
                  </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
                  <property name="margin">
                   <number>0</number>
                  </property>
@@ -5137,7 +5140,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
                         <rect>
                          <x>0</x>
                          <y>0</y>
-                         <width>16</width>
+                         <width>98</width>
                          <height>42</height>
                         </rect>
                        </property>
@@ -8135,7 +8138,7 @@ QRadioButton:focus {
                    </spacer>
                   </item>
                   <item row="0" column="1" rowspan="7">
-                   <layout class="QVBoxLayout" name="verticalLayout_15" stretch="4,0,10">
+                   <layout class="QVBoxLayout" name="verticalLayout_15" stretch="5,0,10">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -8399,7 +8402,7 @@ QRadioButton:focus {
                    </widget>
                   </item>
                   <item row="0" column="5" rowspan="7">
-                   <layout class="QVBoxLayout" name="verticalLayout_16" stretch="4,0,10">
+                   <layout class="QVBoxLayout" name="verticalLayout_16" stretch="5,0,10">
                     <property name="spacing">
                      <number>0</number>
                     </property>
@@ -8572,7 +8575,7 @@ QRadioButton:focus {
                          <string notr="true"/>
                         </property>
                         <property name="checked">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -8659,6 +8662,9 @@ QRadioButton:focus {
                         </property>
                         <property name="text">
                          <string notr="true"/>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
                         </property>
                        </widget>
                       </item>
@@ -9512,7 +9518,7 @@ QPushButton:focus {
              <string notr="true">color: dimgrey;</string>
             </property>
             <property name="text">
-             <string>Charge level xxx%</string>
+             <string>Charge level</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
