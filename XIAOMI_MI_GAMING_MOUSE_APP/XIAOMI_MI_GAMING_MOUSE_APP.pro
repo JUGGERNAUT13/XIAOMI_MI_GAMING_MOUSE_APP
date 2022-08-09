@@ -8,16 +8,16 @@ CONFIG += app c++11
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
+INCLUDEPATH += $$PWD
+
 linux|macx {
-    LIBS += -ludev -L$$PWD/lib.linux -lhidapi-hidraw
-    PRE_TARGETDEPS += $$PWD/lib.linux/libhidapi-hidraw.a
+    LIBS += "$$PWD/lib.linux/libhidapi-hidraw.a" -no-pie
+    LIBS += -ludev
 }
 
 win32 {
     LIBS += -L$$PWD/lib.win32/ -lhidapi
 }
-
-INCLUDEPATH += $$PWD
 
 HEADERS += \
     $$PWD/general_widget.h \

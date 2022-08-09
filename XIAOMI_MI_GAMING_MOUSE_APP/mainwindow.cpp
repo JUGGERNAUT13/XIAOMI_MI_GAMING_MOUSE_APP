@@ -6,7 +6,7 @@
 #define PART_SIZE               12
 #define LBL_ANIM_INTERVAL_MS    17
 #define COLOR_BUTTON_SIZE       20
-#define IMG_ANIM_INTERVAL_MS    30/*500*/
+#define IMG_ANIM_INTERVAL_MS    30
 #define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
 #define KEY_MACRO_LENGHT        64
@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                          tr("Mi Mouse uses a foot pad made of teflon material, which is more durable and can greatly\n increase the life of the mouse."),
                          tr("Mi Mouse has two connection modes: wired and 2.4G wireless.\n The transmission speed using the wired connection is the fastest. Swift speed is a key to a prolific gaming\n"
                             "experience. When switching to wireless mode, Mi Mouse can be useful for fun and office work."),
-                         tr("Mi Mouse is designed to fit really well in the hand, providing the player with a seamless gaming experience. Coupled with\n two rubber side skirts, it helps players get a "
+                         tr("Mi Mouse is designed to fit really well in the hand, providing the player with a seamless gaming experience. Coupled with two rubber side skirts, it helps players get a "
                             "great feel of the mouse."),
                          tr("Mi Mouse is equipped with a 5-speed adjustable 7200DPI optical sensor to\n ensure efficient data tracking, providing high levels of accuracy, tracking speed, and "
                             "operational consistency.\n The player is able to fully attune himself to the in-game action without missing any key instances."),
@@ -120,10 +120,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             anim_img_nam = "siderToTrail_0";
         }
         if(((crrnt_page == LIGHTNING) && ui->pshBttn_bttns_top->isChecked()) || ((crrnt_page == BUTTONS) && !ui->pshBttn_bttns_top->isChecked()))  {
-//            anim_1(anim_img_nam, 15, -1, -1);     //orig
             anim_1(anim_img_nam, 14, -1, -1);
         } else {
-//            anim_1(anim_img_nam, 0, 16, 1);        //orig
             anim_1(anim_img_nam, 1, 16, 1);
         }
     };
@@ -204,19 +202,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 }
                 if((prev_page == HOME) || (prev_page == SPEED)) {
                     if(crrnt_page == BUTTONS) {
-//                        anim_2(15, -1, -1);       //orig
                         anim_2(14, -1, -1);
                     } else if((crrnt_page == LIGHTNING) && ui->pshBttn_lghtnng_tail->isChecked()) {
-//                        anim_1("trailToStrabismus_0", 15, -1, -1);        //orig
                         anim_1("trailToStrabismus_0", 14, -1, -1);
                     }
                 } else if(prev_page == BUTTONS) {
                     if((crrnt_page == HOME) || (crrnt_page == SPEED)) {
-//                        anim_2(0, 16, 1);           //orig
                         anim_2(1, 16, 1);
                     } else if(crrnt_page == LIGHTNING) {
                         if(ui->pshBttn_lghtnng_head->isChecked()) {
-//                            anim_2(0, 16, 1);       //orig
                             anim_2(1, 16, 1);
                         } else {
                             anim_3(crrnt_page);
@@ -225,12 +219,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 } else if(prev_page == LIGHTNING) {
                     if((crrnt_page == HOME) || (crrnt_page == SPEED)) {
                         if(ui->pshBttn_lghtnng_tail->isChecked()) {
-//                            anim_1("trailToStrabismus_0", 0, 16, 1);        //orig
                             anim_1("trailToStrabismus_0", 1, 16, 1);
                         }
                     } else if(crrnt_page == BUTTONS) {
                         if(ui->pshBttn_lghtnng_head->isChecked()) {
-//                            anim_2(15, -1, -1);       //orig
                             anim_2(14, -1, -1);
                         } else {
                             anim_3(crrnt_page);
@@ -271,7 +263,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     };
     QVector<QPushButton *> bttns_lst{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_lghtnng_head, ui->pshBttn_lghtnng_tail};
     QVector<QPushButton *> bttns_pages_lst{ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_fnctns};
-//    QVector<QVector<int>> anim_params_lst{{0, 16, 1}, {15, -1, -1}};         //orig
     QVector<QVector<int>> anim_params_lst{{1, 16, 1}, {14, -1, -1}};
     for(uint8_t i = 0; i < bttns_lst.count(); i++) {
         connect(bttns_lst[i], &QPushButton::toggled, this, [=](bool tggld) {
