@@ -317,10 +317,10 @@
             void keyReleaseEvent(QKeyEvent *event) override;
             void on_pshBttn_rst_sttngs_clicked();
             void on_pshBttn_add_clr_clicked();
-            void slot_no_sleep_timeout();
-            void slot_anim_timeout();
             void on_pshBttn_clr_cstm_key_cmb_clicked();
             void on_pshBttn_sav_cstm_key_cmb_clicked();
+            void slot_no_sleep_timeout();
+            void slot_anim_timeout();
     };
 
     //////////////////////////////////////////////////DIALOG RESET SETTINGS///////////////////////////////////////////////////

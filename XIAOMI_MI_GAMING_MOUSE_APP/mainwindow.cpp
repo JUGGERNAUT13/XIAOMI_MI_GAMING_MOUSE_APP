@@ -247,9 +247,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
         QVector<QPushButton *> effects_lst{ui->pshBttn_lghtnng_disable, ui->pshBttn_lghtnng_static, ui->pshBttn_lghtnng_breath, ui->pshBttn_lghtnng_tic_tac, ui->pshBttn_lghtnng_switching, ui->pshBttn_lghtnng_rgb};
         ui->hrzntlSldr_effct_spd->setValue(devs_speed_lst[ui->pshBttn_lghtnng_head->isChecked()]);
-        ui->pshBttn_lghtnng_tic_tac->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
-        ui->pshBttn_lghtnng_switching->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
-        ui->pshBttn_lghtnng_rgb->setVisible(ui->pshBttn_lghtnng_tail->isChecked());
+        ui->pshBttn_lghtnng_tic_tac->setVisible(!ui->pshBttn_lghtnng_head->isChecked());
+        ui->pshBttn_lghtnng_switching->setVisible(!ui->pshBttn_lghtnng_head->isChecked());
+        ui->pshBttn_lghtnng_rgb->setVisible(!ui->pshBttn_lghtnng_head->isChecked());
         QString avlbl_clr;
         for(uint8_t i = 0; i < clrs_bttns_lst.count(); i++) {
             avlbl_clr = "#" + clrs_bttns_lst[i]->styleSheet().split("#").last().split(",").first();
@@ -279,6 +279,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 if(crrnt_page == BUTTONS) {
                     ui->stckdWdgt_mouse_img_overlay->setCurrentWidget(ui->page_1_1_overlay_empty);
                     bttns_pages_lst[i % 2]->click();
+                    emit bttns_pages_lst[i % 2]->clicked();
                     QVector<QRadioButton *> mouse_bttns{ui->rdBtn_lft_bttn, ui->rdBttn_rght_bttn, ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn,
                                                         ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
                     emit mouse_bttns[get_current_mouse_button()]->toggled(true);
@@ -587,35 +588,60 @@ void MainWindow::on_pshBttn_rst_sttngs_clicked() {
         QVector<QColor> mouse_dflt_clrs{QColor(crrnt_tail_clr), QColor(crrnt_wheel_clr)};
         QVector<effects> mouse_dflt_effcts{crrnt_tail_effct, crrnt_wheel_effct};
         QVector<speed> mouse_dflt_spd{crrnt_tail_spped, crrnt_wheel_speed};
-        QByteArray clr_mod_spd_arr;
+        QByteArray dflt_sttgs_arr;
         for(uint8_t i = 0; i < mouse_dvcs.count(); i++) {
-            clr_mod_spd_arr.clear();
-            clr_mod_spd_arr.append("\x4d\xa1");
-            clr_mod_spd_arr.append(mouse_dvcs[i]);
-            clr_mod_spd_arr.append(mouse_dflt_effcts[i]);
-            clr_mod_spd_arr.append(mouse_dflt_spd[i]);
-            clr_mod_spd_arr.append("\x08\x08");
-            clr_mod_spd_arr.append(mouse_dflt_clrs[i].red());
-            clr_mod_spd_arr.append(mouse_dflt_clrs[i].green());
-            clr_mod_spd_arr.append(mouse_dflt_clrs[i].blue());
-            clr_mod_spd_arr.append((PACKET_SIZE - clr_mod_spd_arr.count()), '\x00');
-            write_to_mouse_hid(clr_mod_spd_arr);
+            dflt_sttgs_arr.clear();
+            dflt_sttgs_arr.append("\x4d\xa1");
+            dflt_sttgs_arr.append(mouse_dvcs[i]);
+            dflt_sttgs_arr.append(mouse_dflt_effcts[i]);
+            dflt_sttgs_arr.append(mouse_dflt_spd[i]);
+            dflt_sttgs_arr.append("\x08\x08");
+            dflt_sttgs_arr.append(mouse_dflt_clrs[i].red());
+            dflt_sttgs_arr.append(mouse_dflt_clrs[i].green());
+            dflt_sttgs_arr.append(mouse_dflt_clrs[i].blue());
+            dflt_sttgs_arr.append((PACKET_SIZE - dflt_sttgs_arr.count()), '\x00');
+            write_to_mouse_hid(dflt_sttgs_arr);
         }
         remove_color_buttons(gen_widg->get_setting(settings, "USER_COLOR/Num").toInt());
-        ui->pshBttn_rfrsh_rate_1000->setChecked(true);
-        emit ui->pshBttn_rfrsh_rate_1000->toggled(true);
         QVector<uint16_t> crrnt_dpi{100, 800, 1600, 2400, 4800};
         QVector<QSlider *> crrnt_dpi_sldrs{ui->hrzntlSldr_rfrsh_rate_lvl_1, ui->hrzntlSldr_rfrsh_rate_lvl_2, ui->hrzntlSldr_rfrsh_rate_lvl_3, ui->hrzntlSldr_rfrsh_rate_lvl_4, ui->hrzntlSldr_rfrsh_rate_lvl_5};
         for(uint8_t i = 0; i < crrnt_dpi_sldrs.count(); i++) {
             crrnt_dpi_sldrs[i]->setValue(crrnt_dpi[i]);
         }
-        emit ui->hrzntlSldr_rfrsh_rate_lvl_3->sliderReleased();
-        ui->pshBttn_bttns_top->setChecked(true);
-        emit ui->pshBttn_bttns_top->toggled(true);
+        dflt_sttgs_arr = "\x4d\xc3";
+        dflt_sttgs_arr.append(1);
+        dflt_sttgs_arr.append((PACKET_SIZE - dflt_sttgs_arr.count()), '\x00');
+        write_to_mouse_hid(dflt_sttgs_arr);
+        QVector<mouse_buttons> mouse_bttns_lst{LEFT_BUTTON, RIGHT_BUTTON, SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
+        QVector<mouse_key_combos> dflt_mouse_key_cmbs_lst{LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK, MOVE_FORWARD, MOVE_BACK, RISE_DPI, LOWER_DPI, TURN_DPI};
+        for(uint8_t i = 0; i < mouse_bttns_lst.count(); i++) {
+            dflt_sttgs_arr.clear();
+            dflt_sttgs_arr.append("\x4d\xb1");
+            dflt_sttgs_arr.append(mouse_bttns_lst[i]);
+            dflt_sttgs_arr.append(dflt_mouse_key_cmbs_lst[i] >> 8);
+            dflt_sttgs_arr.append(dflt_mouse_key_cmbs_lst[i]);
+            dflt_sttgs_arr.append((PACKET_SIZE - dflt_sttgs_arr.count()), '\x00');
+            write_to_mouse_hid(dflt_sttgs_arr);
+        }
+        ui->pshBttn_4_speed->setChecked(true);
+        emit ui->pshBttn_4_speed->toggled(true);
         ui->pshBttn_speed_rfrsh_rate->setChecked(true);
         emit ui->pshBttn_speed_rfrsh_rate->toggled(true);
+        ui->pshBttn_rfrsh_rate_1000->setChecked(true);
+        emit ui->pshBttn_rfrsh_rate_1000->toggled(true);
+        emit ui->hrzntlSldr_rfrsh_rate_lvl_3->sliderReleased();
+        ui->pshBttn_3_lightning->setChecked(true);
+        emit ui->pshBttn_3_lightning->toggled(true);
         ui->pshBttn_lghtnng_head->setChecked(true);
         emit ui->pshBttn_lghtnng_head->toggled(true);
+        ui->pshBttn_2_buttons->setChecked(true);
+        emit ui->pshBttn_2_buttons->toggled(true);
+        ui->pshBttn_bttns_top->setChecked(true);
+        emit ui->pshBttn_bttns_top->toggled(true);
+        ui->rdBttn_scrll_bttn->setChecked(true);
+        emit ui->rdBttn_scrll_bttn->toggled(true);
+        ui->rdBttn_m5_bttn->setChecked(true);
+        emit ui->rdBttn_m5_bttn->toggled(true);
         ui->pshBttn_1_home->setChecked(true);
         emit ui->pshBttn_1_home->toggled(true);
     }
@@ -1063,6 +1089,7 @@ void MainWindow::read_mouse_parameters() {
         crrnt_rfrsh_rate = 0;
     }
     rfrsh_rate_bttns_lst[crrnt_rfrsh_rate]->click();
+    emit rfrsh_rate_bttns_lst[crrnt_rfrsh_rate]->clicked();
     pages tmp_crrnt_page = crrnt_page;
     crrnt_page = LIGHTNING;
     ui->pshBttn_lghtnng_head->setChecked(true);
