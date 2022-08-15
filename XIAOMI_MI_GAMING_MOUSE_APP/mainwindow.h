@@ -1,10 +1,13 @@
 #ifndef MAINWINDOW_H
     #define MAINWINDOW_H
 
+    #define PACKET_SIZE             32
+
     #include <QTime>
     #include <QMenu>
     #include <QTimer>
     #include <QPainter>
+    #include <QListWidget>
     #include <QMainWindow>
     #include <QColorDialog>
     #include <QRadioButton>
@@ -119,18 +122,20 @@
                 CTRL_Y              = 0x0108,
                 CTRL_V              = 0x0106,
                 CUSTOM_KEY_COMBO    = 0x0100,
-                COMBOS_COUNT        = 21
+                MACROS_NO_DELAY     = 0x0200,
+                MACROS_WITH_DELAY   = 0x0201,
+                COMBOS_COUNT        = 23
             } mouse_key_combos;
 
             typedef enum mouse_key_modifiers {
-                KEY_LEFT_CTRL       = 0x01,
-                KEY_LEFT_SHIFT      = 0x02,
-                KEY_LEFT_ALT        = 0x04,
-                KEY_LEFT_WIN        = 0x08,
-                KEY_RIGHT_CTRL      = 0x10,
-                KEY_RIGHT_SHIFT     = 0x20,
-                KEY_RIGHT_ALT       = 0x40,
-                KEY_RIGHT_WIN       = 0x80
+                MOD_LEFT_CTRL       = 0x01,
+                MOD_LEFT_SHIFT      = 0x02,
+                MOD_LEFT_ALT        = 0x04,
+                MOD_LEFT_WIN        = 0x08,
+                MOD_RIGHT_CTRL      = 0x10,
+                MOD_RIGHT_SHIFT     = 0x20,
+                MOD_RIGHT_ALT       = 0x40,
+                MOD_RIGHT_WIN       = 0x80
             } mouse_key_modifiers;
 
             typedef enum mouse_keys {
@@ -180,13 +185,12 @@
                 KEY_EQUAL           = 0x2E,
                 KEY_SQR_BRCKT_OPEN  = 0x2F,
                 KEY_SQR_BRCKT_CLOSE = 0x30,
-                KEY_BACKSLASH       = 0x31,
-
+                KEY_BACKSLASH       = 0x31,     //KEY_BACKSLASH       = 0x32
                 KEY_SEMICOLON       = 0x33,
                 KEY_APOSTROPHE      = 0x34,
                 KEY_BACKTICK        = 0x35,
-                KEY_LESS            = 0x36,
-                KEY_GREATER         = 0x37,
+                KEY_COMMA           = 0x36,
+                KEY_DOT             = 0x37,
                 KEY_SLASH           = 0x38,
                 KEY_CAPS_LOCK       = 0x39,
                 KEY_F1              = 0x3A,
@@ -219,20 +223,28 @@
                 KEY_NUMPAD_MULT     = 0x55,
                 KEY_NUMPAD_SUB      = 0x56,
                 KEY_NUMPAD_ADD      = 0x57,
-
-                KEY_NUMPAD_1        = 0x59,
-                KEY_NUMPAD_2        = 0x5A,
-                KEY_NUMPAD_3        = 0x5B,
-                KEY_NUMPAD_4        = 0x5C,
+                KEY_NUMPAD_ENTER    = 0x58,
+                KEY_NUMPAD_1        = 0x59,     //END
+                KEY_NUMPAD_2        = 0x5A,     //ARROW DOWN
+                KEY_NUMPAD_3        = 0x5B,     //PAGE DOWN
+                KEY_NUMPAD_4        = 0x5C,     //ARROW LEFT
                 KEY_NUMPAD_5        = 0x5D,
-                KEY_NUMPAD_6        = 0x5E,
-                KEY_NUMPAD_7        = 0x5F,
-                KEY_NUMPAD_8        = 0x60,
-                KEY_NUMPAD_9        = 0x61,
-                KEY_NUMPAD_0        = 0x62,
+                KEY_NUMPAD_6        = 0x5E,     //ARROW RIGHT
+                KEY_NUMPAD_7        = 0x5F,     //HOME
+                KEY_NUMPAD_8        = 0x60,     //ARROW UP
+                KEY_NUMPAD_9        = 0x61,     //PAGE UP
+                KEY_NUMPAD_0        = 0x62,     //INSERT
                 KEY_NUMPAD_DOT      = 0x63,
-
-                KEY_APPS_MENU       = 0x65
+                KEY_LESS            = 0x64,
+                KEY_APPS_MENU       = 0x65,
+                KEY_LEFT_CTRL       = 0xE0,
+                KEY_LEFT_SHIFT      = 0xE1,
+                KEY_LEFT_ALT        = 0xE2,
+                KEY_LEFT_WIN        = 0xE3,     //??
+                KEY_RIGHT_CTRL      = 0xE4,
+                KEY_RIGHT_SHIFT     = 0xE5,
+                KEY_RIGHT_ALT       = 0xE6,
+                KEY_RIGHT_WIN       = 0xE7
             } mouse_keys;
 
             void finish_init();
@@ -245,13 +257,14 @@
             void change_state_of_ui(bool flg);
             template <typename T>
             void clear_vector(QVector<T *> *vctr);
+            void clear_list_widget(QListWidget *widg, bool prcssng_flg = true);
             uint8_t get_current_mouse_button();
             QString get_key_name(QKeyEvent *event, bool *is_modifier_flg = nullptr);
             void form_keys_combination();
             void change_backgound_for_page_widget(QWidget *page = nullptr, bool draw_gear = true);
             QPixmap apply_effects_on_mouse_image();
             void draw_mouse_anim_img(QString path_to_img, bool apply_effects);
-            int prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header);
+            int prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header, uint8_t pckt_size = PACKET_SIZE);
             void read_mouse_parameters();
             int write_to_mouse_hid(QByteArray &data, bool read = false, QByteArray *output = nullptr);
             int mouse_set_color_for_device();
@@ -293,6 +306,7 @@
             speed crrnt_wheel_speed;
             QPoint clck_pos;
             QTime key_hold_timer;
+            QTime between_key_timer;
 
             bool mnl_chng = false;
             bool is_frst_show = true;
@@ -319,6 +333,7 @@
             void on_pshBttn_add_clr_clicked();
             void on_pshBttn_clr_cstm_key_cmb_clicked();
             void on_pshBttn_sav_cstm_key_cmb_clicked();
+            void on_pshBttn_save_mcrs_clicked();
             void slot_no_sleep_timeout();
             void slot_anim_timeout();
     };

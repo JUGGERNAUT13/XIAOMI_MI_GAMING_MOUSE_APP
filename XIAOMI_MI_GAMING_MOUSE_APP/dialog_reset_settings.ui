@@ -230,7 +230,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="toolTip">
-               <string>Close</string>
+               <string notr="true"/>
               </property>
               <property name="styleSheet">
                <string notr="true">QPushButton {
