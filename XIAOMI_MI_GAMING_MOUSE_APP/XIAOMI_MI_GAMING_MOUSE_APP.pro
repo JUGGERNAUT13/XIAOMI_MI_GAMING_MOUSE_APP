@@ -34,11 +34,11 @@ FORMS += \
     $$PWD/mainwindow.ui
 
 RESOURCES += \
-    images.qrc
+    $$PWD/images.qrc
 
 CODECFORSRC = UTF-8
 
-win32:RC_ICONS += images/icon.ico
+win32:RC_ICONS += $$PWD/images/icon.ico
 
 system(lrelease \"$$_PRO_FILE_\")
 tr.commands = lupdate \"$$_PRO_FILE_\" && lrelease \"$$_PRO_FILE_\"

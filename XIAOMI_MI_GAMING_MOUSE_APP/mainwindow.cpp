@@ -2,12 +2,14 @@
 #include "ui_mainwindow.h"
 #include "ui_dialog_reset_settings.h"
 
+#define BYTE                    8
 #define ORIGINAL_MAX_COLORS     8
+#define MACROS_HEADER_LENGHT    8
+#define MACROS_BUTTON_LENGHT    8
 #define PART_SIZE               12
 #define LBL_ANIM_INTERVAL_MS    17
 #define COLOR_BUTTON_SIZE       20
 #define IMG_ANIM_INTERVAL_MS    30
-#define PACKET_SIZE             32
 #define INPUT_PACKET_SIZE       64
 #define KEY_MACRO_LENGHT        64
 #define INIT_INTERVAL_MS        1000
@@ -262,15 +264,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         mnl_chng = false;
     };
     QVector<QPushButton *> bttns_lst{ui->pshBttn_bttns_top, ui->pshBttn_bttns_side, ui->pshBttn_lghtnng_head, ui->pshBttn_lghtnng_tail};
-    QVector<QPushButton *> bttns_pages_lst{ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_fnctns};
     QVector<QVector<int>> anim_params_lst{{1, 16, 1}, {14, -1, -1}};
     for(uint8_t i = 0; i < bttns_lst.count(); i++) {
         connect(bttns_lst[i], &QPushButton::toggled, this, [=](bool tggld) {
             if(tggld) {
                 if(crrnt_page == BUTTONS) {
                     ui->stckdWdgt_mouse_img_overlay->setCurrentWidget(ui->page_1_1_overlay_empty);
-                    bttns_pages_lst[i % 2]->click();
-                    emit bttns_pages_lst[i % 2]->clicked();
                     QVector<QRadioButton *> mouse_bttns{ui->rdBtn_lft_bttn, ui->rdBttn_rght_bttn, ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn,
                                                         ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
                     emit mouse_bttns[get_current_mouse_button()]->toggled(true);
@@ -311,11 +310,62 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                     checked->setChecked(false);
                     key_fnc_bttns_grp->setExclusive(true);
                 }
-                cmb_key.clear();
-                cmb_mdfrs_lst.clear();
-                ui->lbl_cstm_key_cmb->clear();
-                if(mode == CUSTOM_KEY_COMBO) {
-                    QVector<mouse_key_modifiers> mouse_keys_mdfrs_lst{KEY_RIGHT_WIN, KEY_RIGHT_ALT, KEY_RIGHT_SHIFT, KEY_RIGHT_CTRL, KEY_LEFT_WIN, KEY_LEFT_ALT, KEY_LEFT_SHIFT, KEY_LEFT_CTRL};
+                on_pshBttn_clr_cstm_key_cmb_clicked();
+                clear_list_widget(ui->lstWdgt_mcrs_evnts_lst);
+                QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S,
+                                                   KEY_T, KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE,
+                                                   KEY_BACKSPACE, KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE,
+                                                   KEY_BACKTICK, KEY_COMMA, KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11,
+                                                   KEY_F12, KEY_PRINT_SCREEN, KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW,
+                                                   KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1,
+                                                   KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT,
+                                                   KEY_LESS, KEY_APPS_MENU, KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN};
+                QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
+                                          "4", "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1",
+                                          "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT",
+                                          "LEFT", "DOWN", "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU", "L CTRL", "L SHIFT", "L ALT", "L WIN",
+                                          "R CTRL", "R SHIFT", "R ALT", "R WIN"};
+                QVector<QPushButton *> bttns_pages_lst{ui->pshBttn_bttns_key_fnctns, ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_macros};
+                if((mode == MACROS_NO_DELAY) || (mode == MACROS_WITH_DELAY)) {
+                    mnl_chng = false;
+                    int16_t size = tmp_in.mid(6, 2).toHex().toInt(nullptr, 16);
+                    int16_t diff = 0;
+                    int16_t pckts_size = 0;
+                    uint8_t rqst_size = ceil((static_cast<double>(size) / MACROS_BUTTON_LENGHT) / ((KEY_MACRO_LENGHT - MACROS_HEADER_LENGHT) / MACROS_BUTTON_LENGHT));
+                    QVector<QString> key_types{"pressed", "released"};
+                    uint8_t pos, key_pckt_size;
+                    for(uint8_t i = 0; i < rqst_size; i++) {
+                        header = "\x57\xf0\x0d";
+                        tmp_in.clear();
+                        diff = size - (KEY_MACRO_LENGHT - MACROS_HEADER_LENGHT);
+                        if(diff < 0) {
+                            diff += (KEY_MACRO_LENGHT - MACROS_HEADER_LENGHT);
+                        } else {
+                            diff = (KEY_MACRO_LENGHT - MACROS_HEADER_LENGHT);
+                        }
+                        size -= diff;
+                        header.append(diff & 0xFF);
+                        header.append(2, '\x00');
+                        header.append(pckts_size >> BYTE);
+                        header.append(pckts_size & 0xFF);
+                        pckts_size += diff;
+                        prepare_data_for_mouse_read_write(&tmp_out, &tmp_in, header, KEY_MACRO_LENGHT);
+                        key_pckt_size = tmp_in.mid(3, 1).toHex().toUInt(nullptr, 16);
+                        if(key_pckt_size < MACROS_BUTTON_LENGHT) {
+                            break;
+                        }
+                        for(uint8_t j = 0; j < (key_pckt_size / (MACROS_BUTTON_LENGHT / 2)); j++) {
+                            pos = MACROS_HEADER_LENGHT + ((MACROS_BUTTON_LENGHT / 2) * j);
+                            if((mode == MACROS_WITH_DELAY) && (j != 0)) {
+                                ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"),
+                                                                                       (QString::number(tmp_in.mid((pos + 2), 2).toHex().toUInt(nullptr, 16)) + " Milliseconds delay")));
+                            }
+                            ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_" + key_types[tmp_in.mid((pos + 1), 1).toHex().toUInt(nullptr, 16)] + ".png"),
+                                                                                    keys_lst[mouse_keys_lst.indexOf(static_cast<mouse_keys>(tmp_in.mid(pos, 1).toHex().toUInt(nullptr, 16)))]));
+                        }
+                    }
+                } else if(mode == CUSTOM_KEY_COMBO) {
+                    QVector<mouse_key_modifiers> mouse_keys_mdfrs_lst{MOD_RIGHT_WIN, MOD_RIGHT_ALT, MOD_RIGHT_SHIFT, MOD_RIGHT_CTRL, MOD_LEFT_WIN, MOD_LEFT_ALT, MOD_LEFT_SHIFT, MOD_LEFT_CTRL};
                     QVector<QString> cmb_names{"R WIN", "R ALT", "R SHIFT", "R CTRL", "L WIN", "L ALT", "L SHIFT", "L CTRL"};
                     uint8_t modifiers = tmp_in.mid(6, 1).toHex().toUInt(nullptr, 16);
                     for(uint8_t j = 0; j < mouse_keys_mdfrs_lst.count(); j++) {
@@ -324,25 +374,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                             cmb_mdfrs_lst.prepend(cmb_names[j]);
                         }
                     }
-                    QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q,
-                                                       KEY_R, KEY_S, KEY_T, KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0,
-                                                       KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE, KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH,
-                                                       KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_LESS, KEY_GREATER, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5,
-                                                       KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN, KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP,
-                                                       KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV,
-                                                       KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6,
-                                                       KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_APPS_MENU};
-                    QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "Q", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1",
-                                              "2", "3", "4", "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", "<", ">", "/",
-                                              "CAPSLOCK", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP",
-                                              "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN", "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "MENU"};
-                    uint8_t key = tmp_in.mid(7, 1).toHex().toUInt(nullptr, 16);
-                    for(uint8_t j = 0; j < mouse_keys_lst.count(); j++) {
-                        if(key == mouse_keys_lst[j]) {
-                            cmb_key = keys_lst[j];
-                            break;
-                        }
-                    }
+                    cmb_key = keys_lst[mouse_keys_lst.indexOf(static_cast<mouse_keys>(tmp_in.mid(7, 1).toHex().toUInt(nullptr, 16)))];
                     form_keys_combination();
                 } else {
                     QVector<QRadioButton *> key_fnc_bttns_lst{ui->rdBttn_key_func_lft_clck, ui->rdBttn_key_func_rght_clck, ui->rdBttn_key_func_mddl_clck, ui->rdBttn_key_func_mv_bck,
@@ -354,11 +386,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                                                              ALT_F4, CTRL_SHIFT_TAB, CTRL_X, WIN_D, CTRL_TAB, CTRL_C, CTRL_Z, CTRL_Y, CTRL_V};
                     for(uint8_t j = 0; j < mouse_key_cmbs.count(); j++) {
                         if(mode == mouse_key_cmbs[j]) {
+                            mode = CUSTOM_KEY_COMBO * (j > mouse_key_cmbs.indexOf(SILENT_MODE));
                             key_fnc_bttns_lst[j]->setChecked(true);
                             break;
                         }
                     }
                 }
+                bttns_pages_lst[((mode == CUSTOM_KEY_COMBO) + (2 * ((mode == MACROS_NO_DELAY) || (mode == MACROS_WITH_DELAY))))]->click();
+                emit bttns_pages_lst[((mode == CUSTOM_KEY_COMBO) + (2 * ((mode == MACROS_NO_DELAY) || (mode == MACROS_WITH_DELAY))))]->clicked();
                 mnl_chng = false;
             }
         });
@@ -435,9 +470,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->pshBttn_strt_stp_rcrd_mcrs, &QPushButton::toggled, this, [=](bool tggld) {
         QVector<QString> strt_stp_rcrd_names{tr("Start record"), tr("Stop record")};
         ui->pshBttn_strt_stp_rcrd_mcrs->setText(strt_stp_rcrd_names[static_cast<int>(tggld)]);
-        while(tggld && (ui->lstWdgt_mcrs_evnts_lst->count() > 0)) {
-            delete ui->lstWdgt_mcrs_evnts_lst->takeItem(0);
-        }
+        clear_list_widget(ui->lstWdgt_mcrs_evnts_lst, tggld);
         pressed_keys_lst.clear();
         pressed_keys_tmr_lst.clear();
         ui->pshBttn_save_mcrs->setEnabled(!tggld);
@@ -459,9 +492,7 @@ MainWindow::~MainWindow() {
     remove_color_buttons_from_ui();
     anim_timer->stop();
     delete anim_timer;
-    while(ui->lstWdgt_mcrs_evnts_lst->count() > 0) {
-        delete ui->lstWdgt_mcrs_evnts_lst->takeItem(0);
-    }
+    clear_list_widget(ui->lstWdgt_mcrs_evnts_lst);
     delete minimizeAction;
     delete maximizeAction;
     delete restoreAction;
@@ -515,6 +546,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     bool is_modifier_flg = true;
     QString key = get_key_name(event, &is_modifier_flg);
     if(ui->pshBttn_strt_stp_rcrd_mcrs->isChecked() && !event->isAutoRepeat() && key.count()) {
+        if(ui->rdBttn_dly_btwn_evnts->isChecked() && !pressed_keys_lst.count() && ui->lstWdgt_mcrs_evnts_lst->count()) {
+            ui->lstWdgt_mcrs_evnts_lst->addItem(new QListWidgetItem(QIcon(":/images/icons/buttons/icon_key_hold_delay.png"), (QString::number(between_key_timer.elapsed()) + " Milliseconds delay")));
+        }
         pressed_keys_lst.append(event->key());
         if(ui->rdBttn_dly_btwn_evnts->isChecked()) {
             pressed_keys_tmr_lst.append(QTime());
@@ -539,7 +573,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
                 cmb_mdfrs_lst.append(key);
             }
         } else {
-            cmb_key = key.toUpper();
+            cmb_key = key;
         }
         form_keys_combination();
     }
@@ -561,6 +595,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
                 if(mcrs_prssd_cnt == KEY_MACRO_LENGHT) {
                     mcrs_prssd_cnt = 0;
                     ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
+                } else if(pressed_keys_lst.count() == 0) {
+                    between_key_timer.restart();
                 }
                 break;
             }
@@ -609,8 +645,8 @@ void MainWindow::on_pshBttn_rst_sttngs_clicked() {
             dflt_sttgs_arr.clear();
             dflt_sttgs_arr.append("\x4d\xb1");
             dflt_sttgs_arr.append(mouse_bttns_lst[i]);
-            dflt_sttgs_arr.append(dflt_mouse_key_cmbs_lst[i] >> 8);
-            dflt_sttgs_arr.append(dflt_mouse_key_cmbs_lst[i]);
+            dflt_sttgs_arr.append(dflt_mouse_key_cmbs_lst[i] >> BYTE);
+            dflt_sttgs_arr.append(dflt_mouse_key_cmbs_lst[i] & 0xFF);
             dflt_sttgs_arr.append((PACKET_SIZE - dflt_sttgs_arr.count()), '\x00');
             write_to_mouse_hid(dflt_sttgs_arr);
         }
@@ -658,7 +694,7 @@ void MainWindow::on_pshBttn_add_clr_clicked() {
 void MainWindow::on_pshBttn_clr_cstm_key_cmb_clicked() {
     cmb_key.clear();
     cmb_mdfrs_lst.clear();
-    form_keys_combination();
+    ui->lbl_cstm_key_cmb->clear();
 }
 
 void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
@@ -676,25 +712,20 @@ void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
         }
         QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
                                            KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE,
-                                           KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_LESS,
-                                           KEY_GREATER, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN,
+                                           KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_COMMA,
+                                           KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN,
                                            KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW,
                                            KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4,
-                                           KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_APPS_MENU};
-        QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "Q", "P", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
-                                  "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", "<", ">", "/", "CAPSLOCK", "F1", "F2", "F3",
+                                           KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_LESS, KEY_APPS_MENU};
+        QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
+                                  "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1", "F2", "F3",
                                   "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN",
-                                  "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "MENU"};
-        QVector<mouse_key_modifiers> mouse_keys_mdfrs_lst{KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN};
+                                  "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU"};
+        QVector<mouse_key_modifiers> mouse_keys_mdfrs_lst{MOD_LEFT_CTRL, MOD_LEFT_SHIFT, MOD_LEFT_ALT, MOD_LEFT_WIN, MOD_RIGHT_CTRL, MOD_RIGHT_SHIFT, MOD_RIGHT_ALT, MOD_RIGHT_WIN};
         QVector<QString> keys_mdfrs_lst{"L CTRL", "L SHIFT", "L ALT", "L WIN", "R CTRL", "R SHIFT", "R ALT", "R WIN"};
         uint8_t key = 0;
         if(cmb_key.count()) {
-            for(uint8_t i = 0; i < keys_lst.count(); i++) {
-                if(cmb_key.compare(keys_lst[i], Qt::CaseInsensitive) == 0) {
-                    key = mouse_keys_lst[i];
-                    break;
-                }
-            }
+            key = mouse_keys_lst[keys_lst.indexOf(cmb_key)];
             cmb_keys_lst.removeAt(cmb_keys_lst.count() - 1);
         }
         uint8_t modifiers = 0;
@@ -706,7 +737,75 @@ void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
                 }
             }
         }
-        bind_mouse_button(get_current_mouse_button(), (COMBOS_COUNT - 1), modifiers, key);
+        bind_mouse_button(get_current_mouse_button(), (COMBOS_COUNT - 3), modifiers, key);
+    }
+}
+
+void MainWindow::on_pshBttn_save_mcrs_clicked() {
+    if(ui->lstWdgt_mcrs_evnts_lst->model()->rowCount() != 0) {
+        QIcon prssd_icon_cache_icn(":/images/icons/buttons/icon_key_pressed.png");
+        QIcon rlsd_icon_cache_icn(":/images/icons/buttons/icon_key_released.png");
+        QIcon dly_icon_cache_icn(":/images/icons/buttons/icon_key_hold_delay.png");
+        QImage prssd_icon_cache = prssd_icon_cache_icn.pixmap(prssd_icon_cache_icn.availableSizes().at(0)).toImage();
+        QImage rlsd_icon_cache = rlsd_icon_cache_icn.pixmap(rlsd_icon_cache_icn.availableSizes().at(0)).toImage();
+        QImage dly_icon_cache = dly_icon_cache_icn.pixmap(dly_icon_cache_icn.availableSizes().at(0)).toImage();
+        QImage crrnt_icon_cache;
+        uint16_t crrnt_dly = 0;
+        uint8_t crrnt_bttn_stat = 0;
+        uint8_t crrnt_bttn = 0;
+        QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
+                                           KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE,
+                                           KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_COMMA,
+                                           KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN,
+                                           KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW,
+                                           KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4,
+                                           KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_LESS, KEY_APPS_MENU, KEY_LEFT_CTRL, KEY_LEFT_SHIFT,
+                                           KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN};
+        QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
+                                  "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1", "F2", "F3",
+                                  "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN",
+                                  "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU", "L CTRL", "L SHIFT", "L ALT", "L WIN", "R CTRL", "R SHIFT",
+                                  "R ALT", "R WIN"};
+        QByteArray mcrs_arr = "\x4d\xb1";
+        uint16_t bttns_cnt_size = ceil(static_cast<double>(ui->lstWdgt_mcrs_evnts_lst->model()->rowCount()) / (2 << ui->rdBttn_dly_btwn_evnts->isChecked())) * BYTE;
+        QVector<mouse_key_combos> mcrs_typ_lst{MACROS_NO_DELAY, MACROS_WITH_DELAY};
+        mcrs_arr.append(get_current_mouse_button());
+        mcrs_arr.append(mcrs_typ_lst[ui->rdBttn_dly_btwn_evnts->isChecked()] >> BYTE);
+        mcrs_arr.append(mcrs_typ_lst[ui->rdBttn_dly_btwn_evnts->isChecked()] & 0xFF);
+        mcrs_arr.append(bttns_cnt_size >> BYTE);
+        mcrs_arr.append(bttns_cnt_size & 0xFF);
+        mcrs_arr.append((PACKET_SIZE - mcrs_arr.count()), '\x00');
+        write_to_mouse_hid(mcrs_arr);
+        mcrs_arr.clear();
+        uint16_t prev_pckt_size = 0;
+        uint8_t crrnt_pckt_size = 0;
+        for(uint16_t i = 0; i < ui->lstWdgt_mcrs_evnts_lst->model()->rowCount(); i++) {
+            crrnt_icon_cache = ui->lstWdgt_mcrs_evnts_lst->item(i)->icon().pixmap(ui->lstWdgt_mcrs_evnts_lst->item(i)->icon().availableSizes().at(0)).toImage();
+            if(crrnt_icon_cache == dly_icon_cache) {
+                crrnt_dly = ui->lstWdgt_mcrs_evnts_lst->item(i)->text().split(" ").first().toUInt(nullptr, 10);
+            } else if((crrnt_icon_cache == rlsd_icon_cache) || (crrnt_icon_cache == prssd_icon_cache)) {
+                crrnt_bttn_stat = static_cast<uint8_t>(crrnt_icon_cache == rlsd_icon_cache);
+                crrnt_bttn = mouse_keys_lst[keys_lst.indexOf(ui->lstWdgt_mcrs_evnts_lst->item(i)->text())];
+            }
+            if(!ui->rdBttn_dly_btwn_evnts->isChecked() || (ui->rdBttn_dly_btwn_evnts->isChecked() && ((i % 2) == 0))) {
+                mcrs_arr.append(crrnt_bttn);
+                mcrs_arr.append(crrnt_bttn_stat);
+                mcrs_arr.append(crrnt_dly >> BYTE);
+                mcrs_arr.append(crrnt_dly & 0xFF);
+                if((mcrs_arr.count() == (KEY_MACRO_LENGHT - MACROS_HEADER_LENGHT)) || (i == (ui->lstWdgt_mcrs_evnts_lst->model()->rowCount() - 1))) {
+                    crrnt_pckt_size = mcrs_arr.count();
+                    mcrs_arr.prepend(prev_pckt_size & 0xFF);
+                    mcrs_arr.prepend(prev_pckt_size >> BYTE);
+                    prev_pckt_size += crrnt_pckt_size;
+                    mcrs_arr.prepend(2, '\x00');
+                    mcrs_arr.prepend(crrnt_pckt_size);
+                    mcrs_arr.prepend("\x57\xf1\x0d", 3);
+                    mcrs_arr.append((KEY_MACRO_LENGHT - mcrs_arr.count()), '\x00');
+                    write_to_mouse_hid(mcrs_arr);
+                    mcrs_arr.clear();
+                }
+            }
+        }
     }
 }
 
@@ -879,6 +978,12 @@ void MainWindow::clear_vector(QVector<T *> *vctr) {
     }
 }
 
+void MainWindow::clear_list_widget(QListWidget *widg, bool prcssng_flg) {
+    while(prcssng_flg && (widg->count() > 0)) {
+        delete widg->takeItem(0);
+    }
+}
+
 uint8_t MainWindow::get_current_mouse_button() {
     QVector<QRadioButton *> mouse_bttns{ui->rdBtn_lft_bttn, ui->rdBttn_rght_bttn, ui->rdBttn_scrll_bttn, ui->rdBttn_m5_bttn,
                                         ui->rdBttn_m4_bttn, ui->rdBttn_rise_dpi, ui->rdBttn_lwr_dpi, ui->rdBttn_amng_bttn};
@@ -918,7 +1023,7 @@ QString MainWindow::get_key_name(QKeyEvent *event, bool *is_modifier_flg) {
         if(is_modifier_flg) {
             *is_modifier_flg = false;
         }
-        return key;
+        return key.toUpper();
     }
 }
 
@@ -1041,11 +1146,11 @@ void MainWindow::draw_mouse_anim_img(QString path_to_img, bool apply_effects) {
     ui->frm_mouse_img_anim->setPalette(palette);
 }
 
-int MainWindow::prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header) {
+int MainWindow::prepare_data_for_mouse_read_write(QByteArray *arr_out, QByteArray *arr_in, QByteArray header, uint8_t pckt_size) {
     arr_in->fill('\x00', INPUT_PACKET_SIZE);
     arr_out->clear();
     arr_out->append(header);
-    arr_out->append((PACKET_SIZE - arr_out->count()), '\x00');
+    arr_out->append((pckt_size - arr_out->count()), '\x00');
     return write_to_mouse_hid((*arr_out), true, arr_in);
 }
 
@@ -1124,13 +1229,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
     if(cnt == 2) {
         crrnt_prdct_id = PRODUCT_ID_WIRE;
     }
-    QString path;
-    for(uint16_t i = 0; i < path_lst.count(); i++) {
-        if(prod_id_lst[i] == crrnt_prdct_id) {
-            path = path_lst[i];
-        }
-    }
-    hid_device *handle = hid_open_path(path.toLatin1().data());
+    hid_device *handle = hid_open_path(path_lst[prod_id_lst.indexOf(crrnt_prdct_id)].toLatin1().data());
     if(crrnt_ui_state != (crrnt_prdct_id == PRODUCT_ID_WIRE)) {
         crrnt_ui_state = (crrnt_prdct_id == PRODUCT_ID_WIRE);
         change_state_of_ui(crrnt_ui_state);
@@ -1139,10 +1238,10 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
     if(handle) {
         result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
     }
-    if((result == 0) || (result == PACKET_SIZE)) {
+    if((result == 0) || (result == PACKET_SIZE) || (result == KEY_MACRO_LENGHT)) {
         result = 0;
         if(read) {
-            result = hid_read(handle, reinterpret_cast<unsigned char *>(output->data()), INPUT_PACKET_SIZE);
+            result = hid_read(handle, reinterpret_cast<unsigned char *>(output->data()), output->count());
         }
     } else {
         const wchar_t *string = hid_error(handle);
@@ -1183,10 +1282,13 @@ int MainWindow::bind_mouse_button(uint8_t mouse_button, uint8_t mouse_key_combo,
     QVector<mouse_buttons> mouse_bttns{LEFT_BUTTON, RIGHT_BUTTON, SCROLL_BUTTON, M5_BUTTON, M4_BUTTON, RISE_DPI_BUTTON, LOWER_DPI_BUTTON, AIMING_BUTTON};
     QVector<mouse_key_combos> mouse_key_cmbs{LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK, MOVE_BACK, MOVE_FORWARD, RISE_DPI, LOWER_DPI, TURN_DPI, VOLUME_UP, VOLUME_DOWN, SILENT_MODE, ALT_F4,
                                              CTRL_SHIFT_TAB, CTRL_X, WIN_D, CTRL_TAB, CTRL_C, CTRL_Z, CTRL_Y, CTRL_V, CUSTOM_KEY_COMBO};
+    if(mouse_key_cmbs[mouse_key_combo] != CUSTOM_KEY_COMBO) {
+        on_pshBttn_clr_cstm_key_cmb_clicked();
+    }
     QByteArray bnd_key_arr = "\x4d\xb1";
     bnd_key_arr.append(mouse_bttns[mouse_button]);
-    bnd_key_arr.append(mouse_key_cmbs[mouse_key_combo] >> 8);
-    bnd_key_arr.append(mouse_key_cmbs[mouse_key_combo]);
+    bnd_key_arr.append(mouse_key_cmbs[mouse_key_combo] >> BYTE);
+    bnd_key_arr.append(mouse_key_cmbs[mouse_key_combo] & 0xFF);
     bnd_key_arr.append(mouse_key_modifiers);
     bnd_key_arr.append(mouse_key);
     bnd_key_arr.append((PACKET_SIZE - bnd_key_arr.count()), '\x00');
