@@ -1229,25 +1229,27 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
     if(cnt == 2) {
         crrnt_prdct_id = PRODUCT_ID_WIRE;
     }
-    hid_device *handle = hid_open_path(path_lst[prod_id_lst.indexOf(crrnt_prdct_id)].toLatin1().data());
-    if(crrnt_ui_state != (crrnt_prdct_id == PRODUCT_ID_WIRE)) {
-        crrnt_ui_state = (crrnt_prdct_id == PRODUCT_ID_WIRE);
-        change_state_of_ui(crrnt_ui_state);
-    }
     int result = -1;
-    if(handle) {
-        result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
-    }
-    if((result == 0) || (result == PACKET_SIZE) || (result == KEY_MACRO_LENGHT)) {
-        result = 0;
-        if(read) {
-            result = hid_read(handle, reinterpret_cast<unsigned char *>(output->data()), output->count());
+    if(prod_id_lst.count()) {
+        hid_device *handle = hid_open_path(path_lst[prod_id_lst.indexOf(crrnt_prdct_id)].toLatin1().data());
+        if(crrnt_ui_state != (crrnt_prdct_id == PRODUCT_ID_WIRE)) {
+            crrnt_ui_state = (crrnt_prdct_id == PRODUCT_ID_WIRE);
+            change_state_of_ui(crrnt_ui_state);
         }
-    } else {
-        const wchar_t *string = hid_error(handle);
-        qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof(string) / sizeof(const wchar_t *))) << ";  code:" << result;
+        if(handle) {
+            result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
+        }
+        if((result == 0) || (result == PACKET_SIZE) || (result == KEY_MACRO_LENGHT)) {
+            result = 0;
+            if(read) {
+                result = hid_read(handle, reinterpret_cast<unsigned char *>(output->data()), output->count());
+            }
+        } else {
+            const wchar_t *string = hid_error(handle);
+            qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof(string) / sizeof(const wchar_t *))) << ";  code:" << result;
+        }
+        hid_close(handle);
     }
-    hid_close(handle);
     return result;
 }
 
