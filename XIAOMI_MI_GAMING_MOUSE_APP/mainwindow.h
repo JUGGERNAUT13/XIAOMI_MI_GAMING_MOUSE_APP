@@ -247,6 +247,7 @@
                 KEY_RIGHT_WIN       = 0xE7
             } mouse_keys;
 
+            bool is_app_started();
             void finish_init();
             void resize_images();
             void create_base_settings();

@@ -20,9 +20,15 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    gen_widg = new general_widget();
+    if(is_app_started()) {
+        gen_widg->show_message_box("", tr("Application already started"), QMessageBox::Warning, nullptr);
+        delete gen_widg;
+        delete ui;
+        throw std::runtime_error("Process exists");
+    }
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
     ui->frm_mouse_img_anim->setAutoFillBackground(true);
-    gen_widg = new general_widget(this);
     QDir::setCurrent(gen_widg->get_app_path());
     clr_scrl_area_max_width = (ORIGINAL_MAX_COLORS * COLOR_BUTTON_SIZE) + ((ORIGINAL_MAX_COLORS - 1) * ui->frm_clr_bttns->layout()->spacing());
 //    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
@@ -65,8 +71,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     trayIconMenu->addAction(quitAction);
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-    connect(trayIcon, &QSystemTrayIcon::activated, this, [=]() {
-        if(QApplication::mouseButtons().testFlag(Qt::LeftButton)) {
+    connect(trayIcon, &QSystemTrayIcon::activated, this, [=](QSystemTrayIcon::ActivationReason actvtn_rsn) {
+        if(actvtn_rsn == QSystemTrayIcon::Trigger) {
             this->setVisible(!this->isVisible());
         }
     });
@@ -182,7 +188,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         page_bttns_lst[i]->installEventFilter(bttns_wtchrs_lst[i]);
         connect(bttns_wtchrs_lst[i], &Enter_Leave_Watcher::signal_object_enter_leave_event, this, [=](QObject *obj, QEvent::Type evnt_typ) {
             QPushButton *button = qobject_cast<QPushButton*>(obj);
-            if(button && !button->isChecked()) {
+            if(button && !button->isChecked() && dynamic_cast<QWidget *>(button->parent())->isEnabled()) {
                 button->setIcon(QIcon(":/images/icons/icon_" + icons_names[i] + "_" + bttn_icon_types[QEvent::Leave - evnt_typ] + ".png"));
             }
         });
@@ -807,6 +813,17 @@ void MainWindow::on_pshBttn_save_mcrs_clicked() {
             }
         }
     }
+}
+
+bool MainWindow::is_app_started() {
+#ifdef __linux__
+    QProcess process;
+    process.start("pidof \"" + QFileInfo(QCoreApplication::applicationFilePath()).fileName() + "\"");
+    process.waitForFinished();
+    return (process.readAllStandardOutput().split(' ').count() > 1);
+#else
+    return false;
+#endif
 }
 
 void MainWindow::finish_init() {

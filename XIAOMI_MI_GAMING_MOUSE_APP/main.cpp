@@ -10,6 +10,10 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     a.setStyle("windowsvista");
 //    QFontDatabase::addApplicationFont(":/data/tahoma.ttf");
-    MainWindow Mw;
-    return a.exec();
+    try {
+        MainWindow Mw;
+        return a.exec();
+    } catch(const std::runtime_error& error) {
+        return 0;
+    }
 }

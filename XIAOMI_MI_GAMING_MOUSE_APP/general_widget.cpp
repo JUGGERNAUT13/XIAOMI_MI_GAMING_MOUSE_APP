@@ -1,7 +1,6 @@
 #include "general_widget.h"
 
-general_widget::general_widget(QWidget *prnt) {
-    parent = prnt;
+general_widget::general_widget() {
 #ifdef __linux__
     app_path.append(QProcessEnvironment::systemEnvironment().value(QStringLiteral("APPIMAGE")));        //Path Of Image Deployed with 'linuxdeployqt'
 #endif
@@ -15,6 +14,16 @@ general_widget::general_widget(QWidget *prnt) {
             app_path.append("/" + QString(lst.at(i)).remove("/"));
         }
     }
+    QString sub_style_sheet = "background-color: lightblue; border-style: outset; color: black; font: bold 10p; border-style: outset; border-width: 1px; border-radius: 0px; border-color: blue; padding: 0px 0px;";
+    style_sheet.append("pattern_1 { background-color: #F5F5F5; }"
+                       "pattern_2"
+                       "QPushButton:checked { " + sub_style_sheet + " }"
+                       "QPushButton:pressed { " + sub_style_sheet + " }"
+                       "QPushButton:disabled { " + sub_style_sheet + " }"
+                       "QPushButton { background-color: lightGray; color: black; border-style: outset; border-width: 1px; border-radius: 0px; border-color: gray; padding: 0px 0px; }"
+                       "QPushButton:hover { border-style: outset; border-width: 1px; border-radius: 0px; border-color: royalblue; }"
+                       "QPushButton { min-width:73; min-height:21; }"
+                      );
 }
 
 general_widget::~general_widget() {}
@@ -88,6 +97,44 @@ bool general_widget::check_setting_exist(QSettings *settings, QString type, QVar
     } else {
         return true;
     }
+}
+
+//-------------------------------------------------------------------------
+// GET STYLE_SHEET TO CUSTOMIZE SOME WINDOWS
+//-------------------------------------------------------------------------
+QString general_widget::get_style_sheet(QString pattern_1, QString pattern_2) {
+    QString str = style_sheet;
+    return str.replace("pattern_1", pattern_1).replace("pattern_2", pattern_2);
+}
+
+//-------------------------------------------------------------------------
+// DISPLAYING WARNING/QUESTION/INFO MESSAGES
+//-------------------------------------------------------------------------
+int general_widget::show_message_box(QString title, QString message, QMessageBox::Icon type, QWidget *parent) {
+    QMessageBox msgBox(type, title, QString("\n").append(message));
+    msgBox.setStyleSheet(get_style_sheet("QMessageBox", "QMessageBox QLabel { color: #000000; }"));
+    if(title.count() == 0) {
+        msgBox.setWindowTitle(tr("Warning"));
+        if(type == QMessageBox::Question) {
+            msgBox.setWindowTitle(tr("Question"));
+        } else if(type == QMessageBox::Information) {
+            msgBox.setWindowTitle(tr("Information"));
+        }
+    }
+    msgBox.setParent(parent);
+    if(type == QMessageBox::Question) {
+        msgBox.addButton(QMessageBox::Yes);
+        msgBox.addButton(QMessageBox::No);
+        msgBox.setButtonText(QMessageBox::Yes, tr("Yes"));
+        msgBox.setButtonText(QMessageBox::No, tr("No"));
+    }
+    msgBox.setWindowModality(Qt::ApplicationModal);
+    msgBox.setModal(true);
+    msgBox.setWindowFlags(msgBox.windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    QGridLayout *layout = dynamic_cast<QGridLayout *>(msgBox.layout());
+    layout->setColumnMinimumWidth(1, 20);
+    msgBox.setLayout(layout);
+    return msgBox.exec();
 }
 
 Enter_Leave_Watcher::Enter_Leave_Watcher(QObject *parent) : QObject(parent) {}
