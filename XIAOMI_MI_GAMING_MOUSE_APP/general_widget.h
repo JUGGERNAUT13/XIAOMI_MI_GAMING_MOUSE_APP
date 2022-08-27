@@ -5,16 +5,18 @@
     #include <QDebug>
     #include <QWidget>
     #include <QSettings>
+    #include <QMessageBox>
     #include <QMouseEvent>
     #include <QPushButton>
+    #include <QGridLayout>
     #include <QApplication>
     #include <QFontDatabase>
     #include <QProcessEnvironment>
 
-    class general_widget : public QWidget {
+    class general_widget : public QObject {
         Q_OBJECT
         public:
-            general_widget(QWidget *prnt = nullptr);
+            general_widget();
             ~general_widget() override;
 
             QString get_app_path();
@@ -23,9 +25,11 @@
             QVariant get_setting(QSettings *settings, QString type);
             void save_setting(QSettings *settings, QString type, QVariant val);
             bool check_setting_exist(QSettings *settings, QString type, QVariant val, bool create);
+            QString get_style_sheet(QString pattern_1, QString pattern_2);
+            int show_message_box(QString title, QString message, QMessageBox::Icon type, QWidget *parent);
 
         private:
-            QWidget *parent = nullptr;
+            QString style_sheet = "";
             QString app_path = "";
     };
 

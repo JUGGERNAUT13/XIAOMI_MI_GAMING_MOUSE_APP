@@ -30,6 +30,7 @@ SOURCES += \
     $$PWD/mainwindow.cpp
 
 FORMS += \
+    $$PWD/dialog_get_color.ui \
     $$PWD/dialog_reset_settings.ui \
     $$PWD/mainwindow.ui
 

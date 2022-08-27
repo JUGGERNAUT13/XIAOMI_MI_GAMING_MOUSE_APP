@@ -152,5 +152,11 @@
         <file>images/background_dialog_reset_settings.png</file>
         <file>images/icons/buttons/icon_button_unselected.png</file>
         <file>images/icons/buttons/icon_button_selected.png</file>
+        <file>images/background_dialog_get_color.png</file>
+        <file>images/icons/lightning/color_dialog/icon_close_color_dialog_checked.png</file>
+        <file>images/icons/lightning/color_dialog/icon_close_color_dialog_unchecked.png</file>
+        <file>images/icons/lightning/color_dialog/icon_select_color.png</file>
+        <file>images/icons/lightning/color_dialog/icon_accept_color_checked.png</file>
+        <file>images/icons/lightning/color_dialog/icon_accept_color_unchecked.png</file>
     </qresource>
 </RCC>
