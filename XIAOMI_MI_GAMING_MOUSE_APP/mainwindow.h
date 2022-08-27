@@ -356,4 +356,36 @@
             Ui::Dialog_Reset_Settings *ui;
     };
 
+    ////////////////////////////////////////////////////DIALOG GET COLOR//////////////////////////////////////////////////////
+    QT_BEGIN_NAMESPACE
+    namespace Ui {
+        class Dialog_Get_Color;
+    }
+    QT_END_NAMESPACE
+
+    class Dialog_Get_Color : public QDialog {
+        Q_OBJECT
+        public:
+            Dialog_Get_Color(QWidget *parent = nullptr, QColor _crrnt_clr = QColor(-1, -1, -1), QPoint pos = QPoint(-1, -1));
+            ~Dialog_Get_Color() override;
+
+            QColor get_selected_color();
+
+        private:
+            void change_color(QMouseEvent *event);
+            void select_color_on_hsv_disk();
+            void set_current_color(QColor &clr);
+
+            Ui::Dialog_Get_Color *ui;
+
+            bool is_frst_show = true;
+
+        private slots:
+            void showEvent(QShowEvent *) override;
+            void resizeEvent(QResizeEvent *) override;
+            void mousePressEvent(QMouseEvent *event) override;
+            void mouseMoveEvent(QMouseEvent *event) override;
+            void mouseReleaseEvent(QMouseEvent *) override;
+    };
+
 #endif // MAINWINDOW_H

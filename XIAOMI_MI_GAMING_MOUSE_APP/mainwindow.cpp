@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ui_dialog_reset_settings.h"
+#include "ui_dialog_get_color.h"
 
 #define BYTE                    8
 #define ORIGINAL_MAX_COLORS     8
@@ -681,12 +682,11 @@ void MainWindow::on_pshBttn_rst_sttngs_clicked() {
 }
 
 void MainWindow::on_pshBttn_add_clr_clicked() {
-    QColorDialog dlg(this);
     QVector<QString> devs_clrs_lst{crrnt_tail_clr, crrnt_wheel_clr};
-    dlg.setOption(QColorDialog::DontUseNativeDialog, true);
-    dlg.setCurrentColor(QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]));
-    if(dlg.exec() == QDialog::Accepted) {
-        QColor color = dlg.selectedColor();
+    Dialog_Get_Color clr_dlg(this, QColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]),
+                             ui->pshBttn_add_clr->mapToGlobal(QPoint((ui->pshBttn_add_clr->pos().x() + ui->pshBttn_add_clr->width()), ui->pshBttn_add_clr->pos().y())));
+    if(clr_dlg.exec() == QDialog::Accepted) {
+        QColor color = clr_dlg.get_selected_color();
         if(color.isValid()) {
             int clrs_cnt = gen_widg->get_setting(settings, "USER_COLOR/Num").toInt() + 1;
             gen_widg->check_setting_exist(settings, "COLOR" + QString::number(clrs_cnt) + "/Red", color.red(), true);
@@ -816,13 +816,15 @@ void MainWindow::on_pshBttn_save_mcrs_clicked() {
 }
 
 bool MainWindow::is_app_started() {
+    QProcess tsk_lst_prcss;
 #ifdef __linux__
-    QProcess process;
-    process.start("pidof \"" + QFileInfo(QCoreApplication::applicationFilePath()).fileName() + "\"");
-    process.waitForFinished();
-    return (process.readAllStandardOutput().split(' ').count() > 1);
-#else
-    return false;
+    tsk_lst_prcss.start("pidof \"" + QFileInfo(QCoreApplication::applicationFilePath()).fileName() + "\"");
+    tsk_lst_prcss.waitForFinished();
+    return (QString(tsk_lst_prcss.readAllStandardOutput()).split(" ").count() > 1);
+#elif __WIN32__
+    tsk_lst_prcss.start("tasklist", QStringList() << "/NH" << "/FO" << "CSV" << "/FI" << QString("IMAGENAME eq %1").arg(QFileInfo(QCoreApplication::applicationFilePath()).fileName()));
+    tsk_lst_prcss.waitForFinished();
+    return (QString(tsk_lst_prcss.readAllStandardOutput()).split(QFileInfo(QCoreApplication::applicationFilePath()).fileName()).count() > 2);
 #endif
 }
 
@@ -877,17 +879,15 @@ void MainWindow::create_color_buttons() {
         ui->frm_clr_bttns->layout()->addWidget(clrs_bttns_lst[i]);
         connect(clrs_bttns_lst[i], &QRadioButton::clicked, this, [=]() {
             if(ui->pshBttn_edt_clrs->isChecked()) {
-                QColorDialog dlg(this);
-                dlg.setOption(QColorDialog::DontUseNativeDialog, true);
                 QColor tmp_clr;
                 if(crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] != -1) {
-                    tmp_clr.setNamedColor("#" + clrs_bttns_lst[crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()]]->styleSheet().split("#").last().split(",").first());
+                    tmp_clr.setNamedColor("#" + clrs_bttns_lst[i]->styleSheet().split("#").last().split(",").first());
                 } else {
                     tmp_clr.setNamedColor(devs_clrs_lst[ui->pshBttn_lghtnng_head->isChecked()]);
                 }
-                dlg.setCurrentColor(tmp_clr);
-                if(dlg.exec() == QDialog::Accepted) {
-                    QColor color = dlg.selectedColor();
+                Dialog_Get_Color clr_dlg(this, tmp_clr, clrs_bttns_lst[0]->mapToGlobal(QPoint((clrs_bttns_lst[i]->pos().x() + clrs_bttns_lst[i]->width()), (clrs_bttns_lst[i]->pos().y() - 3))));
+                if(clr_dlg.exec() == QDialog::Accepted) {
+                    QColor color = clr_dlg.get_selected_color();
                     if(color.isValid()) {
                         tmp_clr.setRgb(color.rgb());
                         tmp_clr.setAlpha(128);
@@ -895,6 +895,9 @@ void MainWindow::create_color_buttons() {
                         gen_widg->save_setting(settings, "COLOR" + QString::number(i + 1) + "/Red", color.red());
                         gen_widg->save_setting(settings, "COLOR" + QString::number(i + 1) + "/Green", color.green());
                         gen_widg->save_setting(settings, "COLOR" + QString::number(i + 1) + "/Blue", color.blue());
+                        if(crrnt_devs_clr_indxs_lst[ui->pshBttn_lghtnng_head->isChecked()] == i) {
+                            mouse_set_color_for_device();
+                        }
                     }
                 }
             }
@@ -1373,4 +1376,130 @@ Dialog_Reset_Settings::Dialog_Reset_Settings(QWidget *parent) : QDialog(parent),
 
 Dialog_Reset_Settings::~Dialog_Reset_Settings() {
     delete ui;
+}
+
+////////////////////////////////////////////////////DIALOG GET COLOR//////////////////////////////////////////////////////
+Dialog_Get_Color::Dialog_Get_Color(QWidget *parent, QColor _crrnt_clr, QPoint pos) : QDialog(parent), ui(new Ui::Dialog_Get_Color) {
+    ui->setupUi(this);
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground);
+    ui->frm_hsv_clr->setAutoFillBackground(true);
+    ui->frm_clr_slctr->setAutoFillBackground(true);
+    QVector<QSpinBox *> clrs_spn_bxs_lst{ui->spnBx_clr_red, ui->spnBx_clr_green, ui->spnBx_clr_blue};
+    for(uint8_t i = 0; i < clrs_spn_bxs_lst.count(); i++) {
+        connect(clrs_spn_bxs_lst[i], QOverload<int>::of(&QSpinBox::valueChanged), this, [=]() {
+            select_color_on_hsv_disk();
+        });
+    }
+    connect(ui->pshBttn_close, &QPushButton::clicked, this, [=]() {
+        QDialog::done(QDialog::Rejected);
+    });
+    connect(ui->pshBttn_accp_clr, &QPushButton::clicked, this, [=]() {
+        QDialog::done(QDialog::Accepted);
+    });
+    QColor crrnt_clr(Qt::white);
+    if(_crrnt_clr.isValid()) {
+        crrnt_clr = _crrnt_clr;
+    }
+    if((pos.x() != -1) && (pos.y() != -1)) {
+        this->move(pos.x(), (pos.y() - 48));
+    }
+    set_current_color(crrnt_clr);
+    ui->hrzntlSldr_clr_brghtnss->setValue(crrnt_clr.toHsv().value());
+}
+
+Dialog_Get_Color::~Dialog_Get_Color() {
+    delete ui;
+}
+
+void Dialog_Get_Color::showEvent(QShowEvent *) {
+    if(is_frst_show) {
+        is_frst_show = false;
+        resizeEvent(nullptr);
+    }
+}
+
+void Dialog_Get_Color::resizeEvent(QResizeEvent *) {
+    if(!this->isHidden()) {
+        QImage cmbn_img(ui->frm_hsv_clr->size(), QImage::Format_ARGB32);
+        cmbn_img.fill(Qt::transparent);
+        QPainter painter(&cmbn_img);
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setRenderHint(QPainter::HighQualityAntialiasing);
+        uint16_t diameter = std::min(cmbn_img.width(), cmbn_img.height()) - 20;
+        QPointF center((cmbn_img.width() / 2.0), (cmbn_img.height() / 2.0));
+        QRectF rect((center.x() - (diameter / 2.0)), (center.y() - (diameter / 2.0)), diameter, diameter);
+        QRadialGradient gradient(center, (diameter / 2.0));
+        gradient.setColorAt(0, QColor(Qt::white));
+        for(uint16_t angle = 0; angle < 360; angle++) {
+            gradient.setColorAt(1, QColor::fromHsv(angle, 255, 255));
+            QBrush brush(gradient);
+            painter.setPen(QPen(brush, 1.0));
+            painter.setBrush(brush);
+            painter.drawPie(rect, (angle * 16), 16);
+        }
+        QPalette palette;
+        palette.setBrush(ui->frm_hsv_clr->backgroundRole(), cmbn_img);
+        ui->frm_hsv_clr->setPalette(palette);
+        select_color_on_hsv_disk();
+    }
+}
+
+void Dialog_Get_Color::mousePressEvent(QMouseEvent *event) {
+    change_color(event);
+}
+
+void Dialog_Get_Color::mouseMoveEvent(QMouseEvent *event) {
+    change_color(event);
+}
+
+void Dialog_Get_Color::mouseReleaseEvent(QMouseEvent *) {
+    qApp->setOverrideCursor(QCursor(Qt::ArrowCursor));
+    this->setCursor(Qt::ArrowCursor);
+}
+
+QColor Dialog_Get_Color::get_selected_color() {
+    QColor clr(ui->spnBx_clr_red->value(), ui->spnBx_clr_green->value(), ui->spnBx_clr_blue->value());
+    clr.setHsv(clr.hue(), clr.saturation(), ui->hrzntlSldr_clr_brghtnss->value());
+    return clr;
+}
+
+void Dialog_Get_Color::change_color(QMouseEvent *event) {
+    if(ui->frm_hsv_clr->contentsRect().contains(event->pos()) && QApplication::mouseButtons().testFlag(Qt::LeftButton)) {
+        QImage cmbn_img(ui->frm_hsv_clr->size(), QImage::Format_ARGB32);
+        cmbn_img.fill(Qt::transparent);
+        QPainter pntr(&cmbn_img);
+        pntr.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        ui->frm_hsv_clr->render(&pntr, ui->frm_hsv_clr->pos(), ui->frm_hsv_clr->rect(), QWidget::IgnoreMask);
+        QColor clr = cmbn_img.pixelColor(ui->frm_hsv_clr->mapFromGlobal(this->mapToGlobal(event->pos())));
+        if(clr.alpha()) {
+            qApp->setOverrideCursor(QCursor(Qt::BlankCursor));
+            this->setCursor(Qt::BlankCursor);
+            set_current_color(clr);
+        }
+    }
+}
+
+void Dialog_Get_Color::select_color_on_hsv_disk() {
+    QColor clr(ui->spnBx_clr_red->value(), ui->spnBx_clr_green->value(), ui->spnBx_clr_blue->value());
+    int angle = abs(((clr.hue() + 270) % 360) - 360) % 360;
+    uint16_t diameter = std::min(ui->frm_hsv_clr->width(), ui->frm_hsv_clr->height()) - 20;
+    double radius_part = (diameter / 2.0) * (clr.saturation() / 255.0);
+    QPoint pnt((round(radius_part * sin(angle * (M_PI / 180.0))) + (ui->frm_hsv_clr->width() / 2.0)), abs(round(radius_part * cos(angle * (M_PI / 180.0))) - (ui->frm_hsv_clr->height() / 2.0)));
+    QPalette palette;
+    QImage src_img(":/images/icons/lightning/color_dialog/icon_select_color.png");
+    QImage cmbn_img(ui->frm_clr_slctr->size(), QImage::Format_ARGB32);
+    cmbn_img.fill(Qt::transparent);
+    QPainter pntr(&cmbn_img);
+    pntr.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+    pntr.drawImage((pnt.x() - (src_img.width() / 2)), (pnt.y() - (src_img.height() / 2)), src_img);
+    palette.setBrush(ui->frm_clr_slctr->backgroundRole(), cmbn_img);
+    ui->frm_clr_slctr->setPalette(palette);
+}
+
+void Dialog_Get_Color::set_current_color(QColor &clr) {
+    ui->spnBx_clr_red->setValue(clr.red());
+    ui->spnBx_clr_green->setValue(clr.green());
+    ui->spnBx_clr_blue->setValue(clr.blue());
 }
