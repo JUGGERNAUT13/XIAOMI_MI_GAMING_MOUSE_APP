@@ -1223,6 +1223,8 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
     if(mnl_chng) {
         return 0;
     }
+    int result = -1;
+#ifdef __linux__
     struct hid_device_info *devs = hid_enumerate(0x0, 0x0);
     struct hid_device_info *cur_dev = nullptr;
     int cnt = 0;
@@ -1249,7 +1251,6 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
     if(cnt == 2) {
         crrnt_prdct_id = PRODUCT_ID_WIRE;
     }
-    int result = -1;
     if(prod_id_lst.count()) {
         hid_device *handle = hid_open_path(path_lst[prod_id_lst.indexOf(crrnt_prdct_id)].toLatin1().data());
         if(crrnt_ui_state != (crrnt_prdct_id == PRODUCT_ID_WIRE)) {
@@ -1265,11 +1266,90 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
                 result = hid_read(handle, reinterpret_cast<unsigned char *>(output->data()), output->count());
             }
         } else {
-            const wchar_t *string = hid_error(handle);
-            qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof(string) / sizeof(const wchar_t *))) << ";  code:" << result;
+            std::wcout << hid_error(handle) << std::endl;
+//            const wchar_t *string = hid_error(handle);
+//            qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof(string) / sizeof(const wchar_t *))) << ";  code:" << result;
         }
         hid_close(handle);
     }
+#elif __WIN32__
+    HANDLE DeviceHandle = INVALID_HANDLE_VALUE;
+    HDEVINFO DeviceInfoSet;
+    GUID InterfaceClassGuid;
+    SP_DEVICE_INTERFACE_DATA DeviceInterfaceData;
+    PSP_DEVICE_INTERFACE_DETAIL_DATA pDeviceInterfaceDetailData;
+    HIDD_ATTRIBUTES Attributes;
+    DWORD Result;
+    DWORD MemberIndex = 0;
+    DWORD Required;
+    HidD_GetHidGuid(&InterfaceClassGuid);
+    DeviceInfoSet = SetupDiGetClassDevsW(&InterfaceClassGuid, NULL, NULL, (DIGCF_PRESENT | DIGCF_DEVICEINTERFACE));
+    if(DeviceInfoSet == INVALID_HANDLE_VALUE) {
+        return -1;
+    }
+    DeviceInterfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+    while(SetupDiEnumDeviceInterfaces(DeviceInfoSet, NULL, &InterfaceClassGuid, MemberIndex, &DeviceInterfaceData)) {
+        Result = SetupDiGetDeviceInterfaceDetailW(DeviceInfoSet, &DeviceInterfaceData, NULL, 0, &Required, NULL);
+        pDeviceInterfaceDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(Required);
+        if(!pDeviceInterfaceDetailData) {
+            result = -1;
+            break;
+        }
+        pDeviceInterfaceDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+        Result = SetupDiGetDeviceInterfaceDetailW(DeviceInfoSet, &DeviceInterfaceData, pDeviceInterfaceDetailData, Required, NULL, NULL);
+        if(!Result) {
+            free(pDeviceInterfaceDetailData);
+            result = -1;
+            break;
+        }
+        DeviceHandle = CreateFileW(pDeviceInterfaceDetailData->DevicePath, (GENERIC_READ | GENERIC_WRITE), (FILE_SHARE_READ | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, 0, NULL);
+        if(DeviceHandle != INVALID_HANDLE_VALUE) {
+            Attributes.Size = sizeof(Attributes);
+            Result = HidD_GetAttributes(DeviceHandle, &Attributes);
+            if(!Result) {
+                result = -1;
+                CloseHandle(DeviceHandle);
+                free(pDeviceInterfaceDetailData);
+                break;
+            }
+            if((Attributes.VendorID == VENDOR_ID) && (Attributes.ProductID == PRODUCT_ID_WIRE) && (((data.count() == PACKET_SIZE) && wcsstr(pDeviceInterfaceDetailData->DevicePath, L"&col03")) ||
+                                                                                                   ((data.count() == KEY_MACRO_LENGHT) && wcsstr(pDeviceInterfaceDetailData->DevicePath, L"&col02")))) {
+                result = HidD_SetOutputReport(DeviceHandle, reinterpret_cast<unsigned char *>(data.data()), data.count());
+                if(result && read) {
+                    OVERLAPPED overlapped;
+                    overlapped.Offset = 0;
+                    overlapped.OffsetHigh = 0;
+                    overlapped.hEvent = 0;
+                    DWORD bytes;
+                    result = ReadFile(DeviceHandle, reinterpret_cast<unsigned char *>(output->data()), output->count(), &bytes, &overlapped);
+//                    if(done == FALSE) {
+//                        DWORD error = GetLastError();
+//                        if (error != ERROR_IO_PENDING) {
+//                            //dprintf(D_ALWAYS, "ReadFileError: %u\n", error);
+//                            return -1;
+//                        }
+//                        if (GetOverlappedResult(DeviceHandle, &overlapped, &bytes, TRUE) == FALSE) {
+//                            //dprintf(D_ALWAYS, "GetOverlappedResult error: %u\n", GetLastError());
+//                            return -1;
+//                        }
+//                    }
+                    if(!result) {
+                        qDebug() << GetLastError();
+                    }
+                }
+                CloseHandle(DeviceHandle);
+                free(pDeviceInterfaceDetailData);
+                DeviceHandle = NULL;
+                break;
+            } else {
+                CloseHandle(DeviceHandle);
+            }
+        }
+        MemberIndex++;
+        free(pDeviceInterfaceDetailData);
+    }
+    SetupDiDestroyDeviceInfoList(DeviceInfoSet);
+#endif
     return result;
 }
 
@@ -1483,7 +1563,7 @@ void Dialog_Get_Color::change_color(QMouseEvent *event) {
 
 void Dialog_Get_Color::select_color_on_hsv_disk() {
     QColor clr(ui->spnBx_clr_red->value(), ui->spnBx_clr_green->value(), ui->spnBx_clr_blue->value());
-    int angle = abs(((clr.hue() + 270) % 360) - 360) % 360;
+    int16_t angle = abs(((clr.hue() + 270) % 360) - 360) % 360;
     uint16_t diameter = std::min(ui->frm_hsv_clr->width(), ui->frm_hsv_clr->height()) - 20;
     double radius_part = (diameter / 2.0) * (clr.saturation() / 255.0);
     QPoint pnt((round(radius_part * sin(angle * (M_PI / 180.0))) + (ui->frm_hsv_clr->width() / 2.0)), abs(round(radius_part * cos(angle * (M_PI / 180.0))) - (ui->frm_hsv_clr->height() / 2.0)));

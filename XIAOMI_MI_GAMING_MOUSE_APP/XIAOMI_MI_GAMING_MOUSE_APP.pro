@@ -16,7 +16,7 @@ linux|macx {
 }
 
 win32 {
-    LIBS += -L$$PWD/lib.win32/ -lhidapi
+    LIBS += -lhid -lsetupapi
 }
 
 HEADERS += \

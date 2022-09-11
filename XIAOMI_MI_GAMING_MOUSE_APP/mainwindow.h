@@ -13,8 +13,19 @@
     #include <QRadioButton>
     #include <QButtonGroup>
     #include <QSystemTrayIcon>
+    #include <iostream>
     #include <math.h>
+#ifdef __WIN32__
+    #include <windows.h>
+    #include <setupapi.h>
+    #include <fileapi.h>
+    #include <usbioctl.h>
+    extern "C" {
+        #include <hidsdi.h>
+    }
+#elif __linux__
     #include "hidapi.h"
+#endif
     #include "general_widget.h"
 
     namespace Ui {
