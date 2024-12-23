@@ -35,7 +35,7 @@
     class MainWindow : public QMainWindow {
         Q_OBJECT
         public:
-            explicit MainWindow(QWidget *parent = nullptr);
+            explicit MainWindow(bool _show_hidden = false, QWidget *parent = nullptr);
             ~MainWindow() override;
 
         private:
@@ -267,6 +267,7 @@
             void remove_color_buttons_from_ui();
             void change_color_frame_size();
             void change_state_of_ui(bool flg);
+            void add_button_keys_to_list(QVector<mouse_keys> *mouse_keys_lst = nullptr, QVector<QString> *keys_lst = nullptr);
             template <typename T>
             void clear_vector(QVector<T *> *vctr);
             void clear_list_widget(QListWidget *widg, bool prcssng_flg = true);
@@ -287,12 +288,11 @@
             general_widget *gen_widg = nullptr;
             QTimer *no_sleep_timer = nullptr;
             QTimer *anim_timer = nullptr;
-            QAction *minimizeAction = nullptr;
-            QAction *maximizeAction = nullptr;
-            QAction *restoreAction = nullptr;
-            QAction *quitAction = nullptr;
-            QMenu *trayIconMenu = nullptr;
-            QSystemTrayIcon *trayIcon = nullptr;
+            QAction *show_action = nullptr;
+            QAction *startup_action = nullptr;
+            QAction *exit_action = nullptr;
+            QMenu *tray_icon_menu = nullptr;
+            QSystemTrayIcon *tray_icon = nullptr;
             QSettings *settings = nullptr;
             QButtonGroup* key_fnc_bttns_grp = nullptr;
             QVector<QRadioButton *> clrs_bttns_lst;
@@ -325,6 +325,7 @@
             bool is_drag = false;
             bool mnl_rdng = false;
             bool crrnt_ui_state = true;
+            bool show_hidden = false;
             bool prev_ui_state;
             uint16_t clr_scrl_area_max_width = 0;
             int16_t crrnt_img = -1;
@@ -334,6 +335,7 @@
             uint8_t mcrs_prssd_cnt = 0;
 
         private slots:
+            void closeEvent(QCloseEvent *event);
             void showEvent(QShowEvent *) override;
             void resizeEvent(QResizeEvent *) override;
             void mousePressEvent(QMouseEvent *event) override;

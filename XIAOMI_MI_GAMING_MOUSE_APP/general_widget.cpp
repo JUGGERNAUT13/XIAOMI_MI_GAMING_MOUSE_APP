@@ -91,9 +91,8 @@ bool general_widget::check_setting_exist(QSettings *settings, QString type, QVar
     if(!settings->contains(type)) {
         if(create) {
             save_setting(settings, type, val);
-            return true;
         }
-        return false;
+        return create;
     } else {
         return true;
     }
@@ -113,7 +112,7 @@ QString general_widget::get_style_sheet(QString pattern_1, QString pattern_2) {
 int general_widget::show_message_box(QString title, QString message, QMessageBox::Icon type, QWidget *parent) {
     QMessageBox msgBox(type, title, QString("\n").append(message));
     msgBox.setStyleSheet(get_style_sheet("QMessageBox", "QMessageBox QLabel { color: #000000; }"));
-    if(title.count() == 0) {
+    if(!title.count()) {
         msgBox.setWindowTitle(tr("Warning"));
         if(type == QMessageBox::Question) {
             msgBox.setWindowTitle(tr("Question"));

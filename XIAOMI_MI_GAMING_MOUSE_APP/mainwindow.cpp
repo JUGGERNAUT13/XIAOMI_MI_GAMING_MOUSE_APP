@@ -19,7 +19,7 @@
 #define PRODUCT_ID_WIRE         0x5009
 //#define PRODUCT_ID_WIRELESS     0x500b        //NOT WORKING IN WIRELESS MODE, BUT COMMANDS EXEC SUCCESSFULLY
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(bool _show_hidden, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     gen_widg = new general_widget();
     if(is_app_started()) {
@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         delete ui;
         throw std::runtime_error("Process exists");
     }
+    show_hidden = _show_hidden;
     this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint);
     ui->frm_mouse_img_anim->setAutoFillBackground(true);
     QDir::setCurrent(gen_widg->get_app_path());
@@ -54,25 +55,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->frm_clr_bttns->update();
     });
     crrnt_devs_clr_indxs_lst = {-1, -1};
-    connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::/*hide*/close);
-    connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::/*showMinimized*/hide);
-    minimizeAction = new QAction(tr("Minimize"), this);
-    connect(minimizeAction, &QAction::triggered, this, &MainWindow::hide);
-    maximizeAction = new QAction(tr("Maximize"), this);
-    connect(maximizeAction, &QAction::triggered, this, &MainWindow::showMaximized);
-    restoreAction = new QAction(tr("&Restore"), this);
-    connect(restoreAction, &QAction::triggered, this, &MainWindow::showNormal);
-    quitAction = new QAction(tr("&Quit"), this);
-    connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
-    trayIconMenu = new QMenu(this);
-    trayIconMenu->addAction(minimizeAction);
-    trayIconMenu->addAction(maximizeAction);
-    trayIconMenu->addAction(restoreAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
-    trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setContextMenu(trayIconMenu);
-    connect(trayIcon, &QSystemTrayIcon::activated, this, [=](QSystemTrayIcon::ActivationReason actvtn_rsn) {
+    connect(ui->pshBttn_close, &QPushButton::released, this, &MainWindow::hide);
+    connect(ui->pshBttn_mnmz, &QPushButton::released, this, &MainWindow::showMinimized);
+    show_action = new QAction(tr("Show"), this);
+    connect(show_action, &QAction::triggered, this, &MainWindow::showNormal);
+    startup_action = new QAction(tr("Startup"), this);
+    connect(startup_action, &QAction::triggered, this, [=](){});
+    exit_action = new QAction(tr("Exit"), this);
+    connect(exit_action, &QAction::triggered, qApp, &QCoreApplication::quit);
+    tray_icon_menu = new QMenu(this);
+    tray_icon_menu->addAction(show_action);
+    tray_icon_menu->addAction(startup_action);
+    tray_icon_menu->addAction(exit_action);
+    tray_icon = new QSystemTrayIcon(this);
+    tray_icon->setContextMenu(tray_icon_menu);
+    connect(tray_icon, &QSystemTrayIcon::activated, this, [=](QSystemTrayIcon::ActivationReason actvtn_rsn) {
         if(actvtn_rsn == QSystemTrayIcon::Trigger) {
             this->setVisible(!this->isVisible());
         }
@@ -103,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
     ui->lbl_logo->setPixmap(QPixmap(":/images/logo.png"));
     QIcon ico(":/images/icon.ico");
-    trayIcon->setIcon(ico);
+    tray_icon->setIcon(ico);
     qApp->setWindowIcon(ico);
     std::function<void(QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir)> anim_1 = [=](QString img_nam, int16_t crnt_val, int16_t end_val, int8_t cnt_dir) {
         anim_img_nam = img_nam;
@@ -319,19 +316,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                 }
                 on_pshBttn_clr_cstm_key_cmb_clicked();
                 clear_list_widget(ui->lstWdgt_mcrs_evnts_lst);
-                QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S,
-                                                   KEY_T, KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE,
-                                                   KEY_BACKSPACE, KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE,
-                                                   KEY_BACKTICK, KEY_COMMA, KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11,
-                                                   KEY_F12, KEY_PRINT_SCREEN, KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW,
-                                                   KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1,
-                                                   KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT,
-                                                   KEY_LESS, KEY_APPS_MENU, KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN};
-                QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3",
-                                          "4", "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1",
-                                          "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT",
-                                          "LEFT", "DOWN", "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU", "L CTRL", "L SHIFT", "L ALT", "L WIN",
-                                          "R CTRL", "R SHIFT", "R ALT", "R WIN"};
+                QVector<mouse_keys> mouse_keys_lst;
+                QVector<QString> keys_lst;
+                add_button_keys_to_list(&mouse_keys_lst, &keys_lst);
                 QVector<QPushButton *> bttns_pages_lst{ui->pshBttn_bttns_key_fnctns, ui->pshBttn_bttns_key_cmbntns, ui->pshBttn_bttns_key_macros};
                 if((mode == MACROS_NO_DELAY) || (mode == MACROS_WITH_DELAY)) {
                     mnl_chng = false;
@@ -500,12 +487,11 @@ MainWindow::~MainWindow() {
     anim_timer->stop();
     delete anim_timer;
     clear_list_widget(ui->lstWdgt_mcrs_evnts_lst);
-    delete minimizeAction;
-    delete maximizeAction;
-    delete restoreAction;
-    delete quitAction;
-    delete trayIconMenu;
-    delete trayIcon;
+    delete show_action;
+    delete startup_action;
+    delete exit_action;
+    delete tray_icon_menu;
+    delete tray_icon;
     delete settings;
     clear_vector(&bttns_wtchrs_lst);
     clear_vector(&chrctrstc_frms_wtchrs_lst);
@@ -513,6 +499,11 @@ MainWindow::~MainWindow() {
     delete key_fnc_bttns_grp;
     delete gen_widg;
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    event->ignore();
+    this->hide();
 }
 
 void MainWindow::showEvent(QShowEvent *) {
@@ -602,7 +593,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
                 if(mcrs_prssd_cnt == KEY_MACRO_LENGHT) {
                     mcrs_prssd_cnt = 0;
                     ui->pshBttn_strt_stp_rcrd_mcrs->setChecked(false);
-                } else if(pressed_keys_lst.count() == 0) {
+                } else if(!pressed_keys_lst.count()) {
                     between_key_timer.restart();
                 }
                 break;
@@ -716,17 +707,9 @@ void MainWindow::on_pshBttn_sav_cstm_key_cmb_clicked() {
         if(cmb_key.contains("+")) {
             cmb_keys_lst.append("+");
         }
-        QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
-                                           KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE,
-                                           KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_COMMA,
-                                           KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN,
-                                           KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW,
-                                           KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4,
-                                           KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_LESS, KEY_APPS_MENU};
-        QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
-                                  "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1", "F2", "F3",
-                                  "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN",
-                                  "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU"};
+        QVector<mouse_keys> mouse_keys_lst;
+        QVector<QString> keys_lst;
+        add_button_keys_to_list(&mouse_keys_lst, &keys_lst);
         QVector<mouse_key_modifiers> mouse_keys_mdfrs_lst{MOD_LEFT_CTRL, MOD_LEFT_SHIFT, MOD_LEFT_ALT, MOD_LEFT_WIN, MOD_RIGHT_CTRL, MOD_RIGHT_SHIFT, MOD_RIGHT_ALT, MOD_RIGHT_WIN};
         QVector<QString> keys_mdfrs_lst{"L CTRL", "L SHIFT", "L ALT", "L WIN", "R CTRL", "R SHIFT", "R ALT", "R WIN"};
         uint8_t key = 0;
@@ -759,19 +742,9 @@ void MainWindow::on_pshBttn_save_mcrs_clicked() {
         uint16_t crrnt_dly = 0;
         uint8_t crrnt_bttn_stat = 0;
         uint8_t crrnt_bttn = 0;
-        QVector<mouse_keys> mouse_keys_lst{KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T,
-                                           KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE,
-                                           KEY_TAB, KEY_SPACE, KEY_SUB, KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_COMMA,
-                                           KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN,
-                                           KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME, KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW,
-                                           KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT, KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4,
-                                           KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0, KEY_NUMPAD_DOT, KEY_LESS, KEY_APPS_MENU, KEY_LEFT_CTRL, KEY_LEFT_SHIFT,
-                                           KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN};
-        QVector<QString> keys_lst{"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4",
-                                  "5", "6", "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1", "F2", "F3",
-                                  "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN",
-                                  "UP", "NUMLOCK", "/", "*", "-", "+", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU", "L CTRL", "L SHIFT", "L ALT", "L WIN", "R CTRL", "R SHIFT",
-                                  "R ALT", "R WIN"};
+        QVector<mouse_keys> mouse_keys_lst;
+        QVector<QString> keys_lst;
+        add_button_keys_to_list(&mouse_keys_lst, &keys_lst);
         QByteArray mcrs_arr = "\x4d\xb1";
         uint16_t bttns_cnt_size = ceil(static_cast<double>(ui->lstWdgt_mcrs_evnts_lst->model()->rowCount()) / (2 << ui->rdBttn_dly_btwn_evnts->isChecked())) * BYTE;
         QVector<mouse_key_combos> mcrs_typ_lst{MACROS_NO_DELAY, MACROS_WITH_DELAY};
@@ -831,8 +804,10 @@ bool MainWindow::is_app_started() {
 void MainWindow::finish_init() {
     read_mouse_parameters();
     anim_img_nam = ":/images/anim/positionToStrabismus_015.png";
-    trayIcon->show();
-    this->show();
+    tray_icon->show();
+    if(!show_hidden) {
+        this->show();
+    }
 }
 
 void MainWindow::resize_images() {
@@ -944,7 +919,7 @@ void MainWindow::remove_color_buttons(int new_clrs_cnt) {
 }
 
 void MainWindow::remove_color_buttons_from_ui() {
-    while(clrs_dlt_bttns_lst.count() != 0) {
+    while(clrs_dlt_bttns_lst.count()) {
         clrs_bttns_lst[0]->disconnect();
         clrs_dlt_bttns_lst[0]->disconnect();
         ui->frm_clr_bttns->layout()->removeWidget(clrs_bttns_lst[0]);
@@ -990,16 +965,34 @@ void MainWindow::change_state_of_ui(bool flg) {
     }
 }
 
+void MainWindow::add_button_keys_to_list(QVector<mouse_keys> *mouse_keys_lst, QVector<QString> *keys_lst) {
+    if(mouse_keys_lst) {
+        mouse_keys_lst->append({KEY_CTRL_BREAK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T, KEY_U, KEY_V,
+                                KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_ENTER, KEY_ESCAPE, KEY_BACKSPACE, KEY_TAB, KEY_SPACE, KEY_SUB,
+                                KEY_EQUAL, KEY_SQR_BRCKT_OPEN, KEY_SQR_BRCKT_CLOSE, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_BACKTICK, KEY_COMMA, KEY_DOT, KEY_SLASH, KEY_CAPS_LOCK, KEY_F1,
+                                KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN, KEY_SCROLL_LOCK, KEY_PAUSE, KEY_INSERT, KEY_HOME,
+                                KEY_PAGE_UP, KEY_DELETE, KEY_END, KEY_PAGE_DOWN, KEY_RIGHT_ARROW, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_NUM_LOCK, KEY_NUMPAD_DIV, KEY_NUMPAD_MULT,
+                                KEY_NUMPAD_SUB, KEY_NUMPAD_ADD, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_NUMPAD_0,
+                                KEY_NUMPAD_DOT, KEY_LESS, KEY_APPS_MENU, KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_WIN, KEY_RIGHT_CTRL, KEY_RIGHT_SHIFT, KEY_RIGHT_ALT, KEY_RIGHT_WIN});
+    }
+    if(keys_lst) {
+        keys_lst->append({"CTRLBREAK", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6",
+                          "7", "8", "9", "0", "RETURN", "ESC", "BACKSPACE", "TAB", "SPACE", "-", "=", "[", "]", "\\", ";", "'", "`", ",", ".", "/", "CAPSLOCK", "F1", "F2", "F3", "F4", "F5", "F6", "F7",
+                          "F8", "F9", "F10", "F11", "F12", "PRINT", "SCROLLLOCK", "PAUSE", "INS", "HOME", "PGUP", "DEL", "END", "PGDOWN", "RIGHT", "LEFT", "DOWN", "UP", "NUMLOCK", "/", "*", "-", "+",
+                          "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "<", "MENU", "L CTRL", "L SHIFT", "L ALT", "L WIN", "R CTRL", "R SHIFT", "R ALT", "R WIN"});
+    }
+}
+
 template <typename T>
 void MainWindow::clear_vector(QVector<T *> *vctr) {
-    while(vctr->count() != 0) {
+    while(vctr->count()) {
         delete (*vctr)[0];
         vctr->removeAt(0);
     }
 }
 
 void MainWindow::clear_list_widget(QListWidget *widg, bool prcssng_flg) {
-    while(prcssng_flg && (widg->count() > 0)) {
+    while(prcssng_flg && widg->count()) {
         delete widg->takeItem(0);
     }
 }
@@ -1058,7 +1051,7 @@ void MainWindow::form_keys_combination() {
             }
         }
     }
-    if(cmb_key.count() != 0) {
+    if(cmb_key.count()) {
         cmb_str.append(cmb_key);
     } else {
         cmb_str.remove((cmb_str.count() - 1), 1);
@@ -1257,9 +1250,11 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
             crrnt_ui_state = (crrnt_prdct_id == PRODUCT_ID_WIRE);
             change_state_of_ui(crrnt_ui_state);
         }
-        if(handle) {
-            result = hid_send_feature_report(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
+        if(!handle) {
+            return -1;
         }
+        hid_set_nonblocking(handle, 1);
+        result = /*hid_send_feature_report*/hid_write(handle, reinterpret_cast<unsigned char *>(data.data()), data.count());
         if((result == 0) || (result == PACKET_SIZE) || (result == KEY_MACRO_LENGHT)) {
             result = 0;
             if(read) {
@@ -1270,6 +1265,7 @@ int MainWindow::write_to_mouse_hid(QByteArray &data, bool read, QByteArray *outp
 //            const wchar_t *string = hid_error(handle);
 //            qDebug() << "Failure: " << QString::fromWCharArray(string, (sizeof(string) / sizeof(const wchar_t *))) << ";  code:" << result;
         }
+        hid_set_nonblocking(handle, 0);
         hid_close(handle);
     }
 #elif __WIN32__
